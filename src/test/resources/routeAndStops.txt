@@ -1,0 +1,17 @@
+Ankara-Kocaeli,6,0
+Ankara-Kocaeli,14,135
+Ankara-Kocaeli,54,225
+Ankara-Kocaeli,41,270
+Ankara-Düzce,6,0
+Ankara-Düzce,14,135
+Ankara-Düzce,81,180
+İstanbul-İzmir,34,0
+İstanbul-İzmir,16,270
+İstanbul-İzmir,10,435
+İstanbul-İzmir,45,510
+İstanbul-İzmir,35,600
+Ankara-Antalya,6,0
+Ankara-Antalya,3,195
+Ankara-Antalya,20,360
+Ankara-Antalya,15,525
+Ankara-Antalya,7,630

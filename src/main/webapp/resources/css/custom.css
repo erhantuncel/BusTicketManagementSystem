@@ -1,0 +1,74 @@
+span.tab {
+	padding: 0 20px;
+}
+
+table.busSchema {
+	width: 100%;
+	/*
+	border-collapse:collapse;border-width:1px;
+	border-color:#000000;
+	border-style:solid;
+	*/
+	color: #000000;
+}
+
+table.busSchema tr {
+	height: 35px;
+}
+
+table.busSchema td.singleSeat, td.doubleSeat {
+	/*
+	border-width:1px;
+	border-color:#000000;
+	border-style:solid;
+	*/
+	width: 29%;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 2px;
+	padding-right: 1px;
+	font-weight: bold;
+	font-size: 16px;
+}
+
+table.busSchema td.hole {
+	border: none;
+	width: 13%;
+}
+
+table.passengerInfo tr.rowtemplate, tr.rowtemplateForFemale, tr.rowtemplateForMale {
+	display: none;
+}
+
+table.tableCentered, table.tableCentered th {
+	text-align: center;
+}
+
+table.seferBilgi {
+	font-size: medium;
+}
+
+table.seferBilgi.strong {
+	font-weight: bold;
+}
+
+.vertical-center {
+	min-height: 100%;
+	min-height: 80vh;
+	display: flex;
+	align-items: center;
+}
+
+#stopCountSlider .slider-selection, .slider-handle {
+	background: #00a65a;
+}
+
+ul.pagination-green li.active a {
+  color: #fff;
+  background-color: #00a65a;
+  border-color: #00a65a;
+}
+
+.stopsCollapse {
+	padding: 0;
+}

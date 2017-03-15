@@ -1,0 +1,4 @@
+Ankara-Kocaeli,9,0
+Ankara-Düzce,10,30
+İstanbul-İzmir,12,0
+Ankara-Antalya,13,30
