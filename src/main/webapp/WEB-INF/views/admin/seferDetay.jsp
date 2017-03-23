@@ -19,7 +19,7 @@
 
 		<!-- Your Page Content Here -->
 		<div class="row">
-			<div class="col-sm-4">
+			<div class="col-sm-5">
 				<div class="box box-success">
 					<div class="box-header">
 						<h3 class="box-title">Bilgiler</h3>
@@ -66,18 +66,6 @@
 								</td>
 							</tr>
 							<tr>
-								<th>Bilet Ücreti :</th>
-								<td>&#8378;ticketPrice</td>
-							</tr>
-							<tr>
-								<th>Bilet/Rezervasyon:</th>
-								<td>${ticketCount}/${reservationCount}</td>
-							</tr>
-							<tr>
-								<th>Boþ Koltuk:</th>
-								<td>${voyage.vehicle.seatCount - (ticketCount + reservationCount)}</td>
-							</tr>
-							<tr>
 								<th>Araç Plakasý :</th>
 								<td>${voyage.vehicle.plateCode}</td>
 							</tr>
@@ -85,6 +73,15 @@
 								<th>Araç Marka-Model :</th>
 								<td>${voyage.vehicle.model.brand.name}-${voyage.vehicle.model.modelName}</td>
 							</tr>
+							<tr>
+								<th>Bilet :</th>
+								<td>${ticketCount}</td>
+							</tr>
+							<tr>
+								<th>Rezervasyon :</th>
+								<td>${reservationCount}</td>
+							</tr>
+							
 							<c:if test="${not empty incomeTotal}">
 								<tr>
 									<th>Gelir:</th>
@@ -120,22 +117,12 @@
 									</td>
 								</tr>
 							</c:if>
-							<tr>
-								<th>Ýþlemler</th>
-								<td><a href="<c:url value="/admin/biletAl"/>"
-									class="btn btn-xs btn-success btn-flat"> <i
-										class="fa fa-ticket"></i>&nbsp;Rezervasyon Yap
-								</a><br> <a href="<c:url value="/admin/biletAl"/>"
-									class="btn btn-xs btn-success btn-flat"> <i
-										class="fa fa-ticket"></i>&nbsp;Bilet Al
-								</a></td>
-							</tr>
 						</table>
 					</div>
 				</div>
 			</div>
 
-			<div class="col-sm-8">
+			<div class="col-sm-7">
 				<div class="box box-success">
 					<div class="box-header ">
 						<h3 class="box-title">Yolcular</h3>
