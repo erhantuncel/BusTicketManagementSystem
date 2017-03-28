@@ -153,7 +153,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<c:forEach items="${ticketSet}" var="ticket">
+								<c:forEach items="${ticketSet}" var="ticket" >
 									<tr>
 										<td>${ticket.seatNumber}</td>
 										<td style="text-align: left;">${ticket.passangerName}
@@ -162,12 +162,12 @@
 										<td>${ticket.arrival.cityName}</td>
 										<td><c:choose>
 												<c:when test="${ticket.isReservation}">
-													<a href="<c:url value=""/>"
-														class="btn btn-xs btn-warning btn-flat btn-block">Rezervasyon</a>
+													<a class="btn btn-xs btn-warning btn-flat btn-block"
+														data-toggle="modal" data-id="${ticket.id}" data-target="#ticketModal">Rezervasyon</a>
 												</c:when>
 												<c:otherwise>
-													<a href="<c:url value=""/>"
-														class="btn btn-xs btn-primary btn-flat btn-block">Bilet</a>
+													<a class="btn btn-xs btn-primary btn-flat btn-block"
+														data-toggle="modal" data-id="${ticket.id}" data-target="#ticketModal">Bilet</a>
 												</c:otherwise>
 											</c:choose></td>
 									</tr>
@@ -200,6 +200,41 @@
 </div>
 <!-- /.content-wrapper -->
 
+<!-- Ticket Modal -->
+<div class="modal" id="ticketModal" tabindex="-1" role="dialog" aria-labelledby="ticketModalLabel">
+	<div class="modal-dialog">
+		<form class="form-horizontal">
+			<div class="modal-content">
+				<div class="modal-header">
+					<!-- 
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					 -->
+					<h4 class="modal-title">Bilet Detaylarý</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-sm-1"></div>
+						<div class="col-sm-8">
+							<p>Bilet detaylarý gelecek</p>
+						</div>
+						<div class="col-sm-2"></div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger pull-left"
+						data-dismiss="modal">Vazgeç</button>
+					<button type="submit" class="btn btn-primary">Onayla</button>
+				</div>
+			</div>
+		<!-- /.modal-content -->
+		</form>
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+
 
 <jsp:include page="fragments/mainFooter.jsp" />
 
@@ -220,6 +255,8 @@
 			dataTable.search(this.value).draw();
 		});
 	});
+	
+	
 </script>
 
 </body>
