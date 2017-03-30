@@ -142,6 +142,11 @@
 		    <artifactId>jackson-core</artifactId>
 		    <version>${com.fasterxml.jackson.core-version}</version>
 		</dependency>
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-databind</artifactId>
+		    <version>${com.fasterxml.jackson.core-version}</version>
+		</dependency>
 
 		<!-- Apache Common DBCP -->
 		<dependency>
