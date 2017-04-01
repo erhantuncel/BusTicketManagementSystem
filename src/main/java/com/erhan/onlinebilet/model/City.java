@@ -1,8 +1,11 @@
 package com.erhan.onlinebilet.model;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,8 +18,13 @@ import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity
 @Table(name = "SEHIRLER")
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class City {
 	
 	@Id
@@ -30,12 +38,19 @@ public class City {
 	
 	@OneToMany(mappedBy = "city", fetch = FetchType.LAZY)
 	@OrderBy("duration")
+	@JsonBackReference
 	private Set<Stop> stops = new HashSet<Stop>();
 	
 //	@OneToMany(mappedBy = "departure", fetch = FetchType.LAZY)
 //	private Set<CityDistance> cityDistances = new HashSet<CityDistance>();
 	
+	@OneToMany(mappedBy="arrival", cascade=CascadeType.ALL)
+	@JsonBackReference
+	private List<Ticket> ticketListArrival = new ArrayList<Ticket>(0);
 	
+	@OneToMany(mappedBy="departure", cascade=CascadeType.ALL)
+	@JsonBackReference
+	private List<Ticket> ticketListDeparture = new ArrayList<Ticket>(0);
 	
 	public City() {
 		
@@ -68,6 +83,22 @@ public class City {
 
 	public void setStops(Set<Stop> stops) {
 		this.stops = stops;
+	}
+
+	public List<Ticket> getTicketListArrival() {
+		return ticketListArrival;
+	}
+
+	public void setTicketListArrival(List<Ticket> ticketListArrival) {
+		this.ticketListArrival = ticketListArrival;
+	}
+
+	public List<Ticket> getTicketListDeparture() {
+		return ticketListDeparture;
+	}
+
+	public void setTicketListDeparture(List<Ticket> ticketListDeparture) {
+		this.ticketListDeparture = ticketListDeparture;
 	}
 
 	@Override

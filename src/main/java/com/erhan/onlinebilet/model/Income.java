@@ -16,6 +16,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+
 
 @Entity
 @Table(name = "GELIRLER")
@@ -33,6 +36,7 @@ public class Income {
 	@Temporal(TemporalType.TIMESTAMP)
 	@NotNull
 	@Column(name = "KAYIT_ZAMANI")
+	@JsonFormat(shape=Shape.STRING, pattern="dd.MM.yyyy HH:mm:ss")
 	private Date registeredTime;
 	
 	@Column(name = "TUTAR")

@@ -1,13 +1,20 @@
 package com.erhan.onlinebilet.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "GIDER_TIPLERI")
@@ -21,6 +28,10 @@ public class ExpenseType {
 	@Column(name = "GIDER_TIPI_ADI")
 	@NotEmpty
 	private String name;
+	
+	@OneToMany(mappedBy="type", cascade=CascadeType.ALL)
+	@JsonBackReference
+	private List<Expense> expenseList = new ArrayList<Expense>(0);
 	
 	public ExpenseType() {
 	
@@ -44,6 +55,14 @@ public class ExpenseType {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public List<Expense> getExpenseList() {
+		return expenseList;
+	}
+
+	public void setExpenseList(List<Expense> expenseList) {
+		this.expenseList = expenseList;
 	}
 
 	@Override

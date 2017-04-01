@@ -11,6 +11,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = "DURAKLAR")
 public class Stop {
@@ -22,10 +24,12 @@ public class Stop {
 	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "ROTA_ID")
+	@JsonManagedReference
 	private Route route;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "SEHIR_ID")
+	@JsonManagedReference
 	private City city;
 	
 	@Column(name = "SURE")

@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = "USER_ROLES")
 public class UserRole {
@@ -22,6 +24,7 @@ public class UserRole {
 	
 	@ManyToOne(cascade =CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "USERNAME", nullable = false)
+	@JsonManagedReference
 	private Customer user;
 	
 	@Column(name = "ROLE", nullable = false, length = 45)

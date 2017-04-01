@@ -1,7 +1,9 @@
 package com.erhan.onlinebilet.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -13,7 +15,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -29,9 +30,16 @@ import org.springframework.format.annotation.NumberFormat;
 import org.springframework.format.annotation.NumberFormat.Style;
 
 import com.erhan.onlinebilet.validator.TcNumber;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 
 @Entity
 @Table(name = "MUSTERILER")
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class Customer {
 	
 	@Id
@@ -60,7 +68,8 @@ public class Customer {
 	
 	@Column(name = "DOGUM_TARIHI")
 	@NotNull
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape=Shape.STRING, pattern="dd.MM.yyyy")
 	private Date dateOfBirth;
 	
 	@Column(name = "CEP_TEL")
@@ -82,15 +91,18 @@ public class Customer {
 		@Pattern(regexp = "(?=.*[0-9]).+$", message="Şifre en az bir adet nümerik karakter içermeli"),
 		@Pattern(regexp = "(?=.*[a-z]).+$", message = "Şifre en az bir küçük harf içermeli.")
 	})
+	@JsonIgnore
 	private String password;
 	
 	@Column(name = "KAYIT_ZAMANI")
 	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape=Shape.STRING, pattern="dd.MM.yyyy HH:mm:ss")
 	private Date dateOfRegister;
 	
 	@Column(name = "SON_GIRIS_ZAMANI")
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape=Shape.STRING, pattern="dd.MM.yyyy HH:mm:ss")
 	private Date timeOfLastOnline;
 	
 	@Column(name = "AKTIFMI")
@@ -98,7 +110,12 @@ public class Customer {
 	private Boolean enabled;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade =CascadeType.ALL)
+	@JsonBackReference
 	private Set<UserRole> userRole = new HashSet<UserRole>(0);
+	
+	@OneToMany(mappedBy="customer", cascade=CascadeType.ALL)
+	@JsonBackReference
+	private List<Ticket> ticketList = new ArrayList<Ticket>(0);
 	
 	public Customer() {
 		
@@ -221,6 +238,14 @@ public class Customer {
 
 	public void setUserRole(Set<UserRole> userRole) {
 		this.userRole = userRole;
+	}
+
+	public List<Ticket> getTicketList() {
+		return ticketList;
+	}
+
+	public void setTicketList(List<Ticket> ticketList) {
+		this.ticketList = ticketList;
 	}
 
 	@Override

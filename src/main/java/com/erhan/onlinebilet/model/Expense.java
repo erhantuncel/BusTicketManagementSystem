@@ -15,6 +15,11 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+
 @Entity
 @Table(name = "GIDERLER")
 public class Expense {
@@ -29,11 +34,17 @@ public class Expense {
 	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "GIDER_TIPI_ID")
+	@JsonBackReference
 	private ExpenseType type;
 	
 	@Column(name = "KAYIT_ZAMANI")
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape=Shape.STRING, pattern="dd.MM.yyyy HH:mm:ss")
 	private Date registeredTime;
+	
+	@ManyToOne(cascade=CascadeType.ALL)
+	@JsonManagedReference
+	private Voyage voyage;
 	
 	public Expense() {
 	
@@ -69,12 +80,21 @@ public class Expense {
 		this.type = type;
 	}
 
-	public Date getRegisterTime() {
+
+	public Date getRegisteredTime() {
 		return registeredTime;
 	}
 
-	public void setRegisterTime(Date registerTime) {
-		this.registeredTime = registerTime;
+	public void setRegisteredTime(Date registeredTime) {
+		this.registeredTime = registeredTime;
+	}
+
+	public Voyage getVoyage() {
+		return voyage;
+	}
+
+	public void setVoyage(Voyage voyage) {
+		this.voyage = voyage;
 	}
 
 	@Override

@@ -1,5 +1,8 @@
 package com.erhan.onlinebilet.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,11 +11,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "ARACLAR")
@@ -35,6 +42,7 @@ public class Vehicle {
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "MODEL_ID")
 	@NotNull
+	@JsonManagedReference
 	private VehicleModel model;
 	
 	@Column(name = "URETIM_YILI")
@@ -45,6 +53,10 @@ public class Vehicle {
 	@Column(name = "KAT_EDILEN_MESAFE")
 	@NotNull
 	private Integer milage;
+	
+	@OneToMany(mappedBy="vehicle", cascade=CascadeType.ALL)
+	@JsonBackReference
+	private List<Voyage> voyageList = new ArrayList<Voyage>(0);
 
 	public Vehicle() {
 
@@ -104,6 +116,14 @@ public class Vehicle {
 
 	public void setMilage(Integer milage) {
 		this.milage = milage;
+	}
+
+	public List<Voyage> getVoyageList() {
+		return voyageList;
+	}
+
+	public void setVoyageList(List<Voyage> voyageList) {
+		this.voyageList = voyageList;
 	}
 
 	@Override

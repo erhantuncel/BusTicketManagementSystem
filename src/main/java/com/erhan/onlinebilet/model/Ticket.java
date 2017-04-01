@@ -19,9 +19,15 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.erhan.onlinebilet.validator.TcNumber;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 
 @Entity
 @Table(name = "BILETLER")
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class Ticket {
 	
 	@Id
@@ -36,16 +42,19 @@ public class Ticket {
 	@ManyToOne
 	@JoinColumn(name = "SEFER_ID")
 	@NotNull
-	private Voyage voyage;
+	@JsonManagedReference
+	private Voyage voyage;	
 	
 	@ManyToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name="KALKIS_ID")
 	@NotNull
+	@JsonManagedReference
 	private City departure;
 	
 	@ManyToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name="VARIS_ID")
 	@NotNull
+	@JsonManagedReference
 	private City arrival;
 	
 	@Column(name = "KOLTUK_NO")
@@ -58,10 +67,12 @@ public class Ticket {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "KAYIT_ZAMANI")
 	@NotNull
+	@JsonFormat(shape=Shape.STRING, pattern="dd.MM.yyyy HH:mm:ss")
 	private Date registerTime;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "MUSTERI_ID")
+	@JsonManagedReference
 	private Customer customer;
 	
 	@Column(name = "YOLCU_TC_NO")
@@ -83,6 +94,7 @@ public class Ticket {
 	
 	@Column(name = "REZERVASYON_BITIS_ZAMANI", nullable = true)
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape=Shape.STRING, pattern="dd.MM.yyyy HH:mm:ss")
 	private Date reservExpirationDate;
 
 	public Ticket() {

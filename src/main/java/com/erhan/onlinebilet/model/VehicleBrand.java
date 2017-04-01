@@ -16,6 +16,8 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = "ARAC_MARKALARI")
 public class VehicleBrand {
@@ -31,6 +33,7 @@ public class VehicleBrand {
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "brand", fetch=FetchType.EAGER)
 	@NotEmpty
+	@JsonBackReference
 	private List<VehicleModel> vehicleModelList = new ArrayList<VehicleModel>(0);
 	
 	public VehicleBrand() {

@@ -1,6 +1,8 @@
 package com.erhan.onlinebilet.model;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -15,6 +17,8 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "ROTALAR")
@@ -31,7 +35,12 @@ public class Route {
 	
 	@OneToMany(mappedBy = "route", fetch=FetchType.EAGER)
 	@OrderBy("duration")
+	@JsonBackReference
 	private Set<Stop> stops = new HashSet<Stop>(0);
+	
+	@OneToMany(mappedBy="route", cascade=CascadeType.ALL)
+	@JsonBackReference
+	private List<Voyage> voyageList = new ArrayList<Voyage>(0);
 	
 	public Route() {
 	
@@ -63,6 +72,14 @@ public class Route {
 
 	public void setStops(Set<Stop> stops) {
 		this.stops = stops;
+	}
+
+	public List<Voyage> getVoyageList() {
+		return voyageList;
+	}
+
+	public void setVoyageList(List<Voyage> voyageList) {
+		this.voyageList = voyageList;
 	}
 
 	@Override

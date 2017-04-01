@@ -1,6 +1,5 @@
 package com.erhan.onlinebilet.model;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,9 +18,17 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+
 
 @Entity
 @Table(name = "SEFERLER")
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class Voyage implements Comparable<Voyage> {
 	
 	@Id
@@ -31,24 +38,33 @@ public class Voyage implements Comparable<Voyage> {
 	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "ARAC_ID")
+	@JsonManagedReference
 	private Vehicle vehicle;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
 	@JoinColumn(name = "ROTA_ID")
+	@JsonManagedReference
 	private Route route;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "KALKIS_ZAMANI")
+	@JsonFormat(shape=Shape.STRING, pattern="dd.MM.yyyy HH:mm:ss")
  	private Date departureTime; 
  	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "KAYIT_ZAMANI")
+	@JsonFormat(shape=Shape.STRING, pattern="dd.MM.yyyy HH:mm:ss")
  	private Date registerTime;
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
 	@JoinColumn(name = "SEFER_ID")
 	@Column(nullable = true)
+	@JsonBackReference
 	private List<Expense> expenseList = new ArrayList<Expense>(0);
+	
+	@OneToMany(mappedBy="voyage", cascade=CascadeType.ALL)
+	@JsonBackReference
+	private List<Ticket> ticketList = new ArrayList<Ticket>(0);
 	
 	public Voyage() {
 	
@@ -107,6 +123,14 @@ public class Voyage implements Comparable<Voyage> {
 
 	public void setExpenseList(List<Expense> expenseList) {
 		this.expenseList = expenseList;
+	}
+
+	public List<Ticket> getTicketList() {
+		return ticketList;
+	}
+
+	public void setTicketList(List<Ticket> ticketList) {
+		this.ticketList = ticketList;
 	}
 
 	@Override
