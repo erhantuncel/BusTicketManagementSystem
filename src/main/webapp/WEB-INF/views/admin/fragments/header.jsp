@@ -16,6 +16,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <meta
 	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
 	name="viewport">
+	
+<!-- CSRF Token for Spring Security When Ajax Request -->
+<meta name="_csrf" content="${_csrf.token}"/>
+<!-- default header name is X-CSRF-TOKEN -->
+<meta name="_csrf_header" content="${_csrf.headerName}"/>
+
 <!-- Bootstrap 3.3.5 -->
 <link rel="stylesheet"
 	href="<c:url value="/resources/css/bootstrap.min.css"/>">
@@ -30,7 +36,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 	href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
 <!-- Datatables -->
 <link rel="stylesheet"
-	href="/resources/js/plugins/datatables/dataTables.bootstrap.css">
+	href="<c:url value="/resources/js/plugins/datatables/dataTables.bootstrap.css"/>">
 <!-- Bootstrap time Picker -->
 <link rel="stylesheet"
 	href="<c:url value="/resources/js/plugins/timepicker/bootstrap-timepicker.min.css"/>">

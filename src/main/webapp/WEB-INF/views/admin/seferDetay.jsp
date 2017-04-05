@@ -162,12 +162,16 @@
 										<td>${ticket.arrival.cityName}</td>
 										<td><c:choose>
 												<c:when test="${ticket.isReservation}">
-													<a class="btn btn-xs btn-warning btn-flat btn-block"
+													<!--  
+													<a class="btn btn-xs btn-warning btn-flat btn-block ticketDetails"
 														data-toggle="modal" data-id="${ticket.id}" data-target="#ticketModal">Rezervasyon</a>
+													-->
+													<a class="btn btn-xs btn-warning btn-flat btn-block ticketDetails"
+														data-id="${ticket.id}">Rezervasyon</a>
 												</c:when>
 												<c:otherwise>
-													<a class="btn btn-xs btn-primary btn-flat btn-block"
-														data-toggle="modal" data-id="${ticket.id}" data-target="#ticketModal">Bilet</a>
+													<a class="btn btn-xs btn-primary btn-flat btn-block ticketDetails"
+														data-id="${ticket.id}">Bilet</a>
 												</c:otherwise>
 											</c:choose></td>
 									</tr>
@@ -201,32 +205,78 @@
 <!-- /.content-wrapper -->
 
 <!-- Ticket Modal -->
-<div class="modal" id="ticketModal" tabindex="-1" role="dialog" aria-labelledby="ticketModalLabel">
-	<div class="modal-dialog">
+<div class="modal bs-example-modal-lg" id="ticketModal" tabindex="-1" role="dialog" aria-labelledby="ticketModalLabel">
+	<div class="modal-dialog modal-lg">
 		<form class="form-horizontal">
 			<div class="modal-content">
 				<div class="modal-header">
-					<!-- 
 					<button type="button" class="close" data-dismiss="modal"
 						aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
-					 -->
 					<h4 class="modal-title">Bilet Detaylarý</h4>
 				</div>
 				<div class="modal-body">
 					<div class="row">
 						<div class="col-sm-1"></div>
 						<div class="col-sm-8">
-							<p>Bilet detaylarý gelecek</p>
+							<table class="table table-condensed" style="font-size: medium;" >
+								<tr>
+									<th style="width: 20%">Bilet No:</th>
+									<td id="ticketNumber" style="width: 30%"></td>
+									<th style="width: 20%">T.C. No:</th>
+									<td id="tcNumber" style="width: 30%"></td>
+								</tr>
+								<tr>
+									<th >Sefer No:</th>
+									<td id="voyageId"></td>
+									<th >Yolcu Ad:</th>
+									<td id="passangerName"></td>
+								</tr>
+								<tr>
+									<th >Rota:</th>
+									<td id="routeName"></td>
+									<th >Yolcu Soyad:</th>
+									<td id="passangerSurname"></td>
+								</tr>
+								<tr>
+									<th >Kalkýþ:</th>
+									<td id="departure"></td>
+									<th >Yolcu Cinsiyet:</th>
+									<td id="passangerGender"></td>
+								</tr>
+								<tr>
+									<th >Varýþ:</th>
+									<td id="arrival"></td>
+									<th >Koltuk No:</th>
+									<td id="seatNumber"></td>
+								</tr>
+								<tr>
+									<th >Tarih:</th>
+									<td id="departureDate"></td>
+									<th >Kayýt Zamaný:</th>
+									<td id="registerTime"></td>
+								</tr>
+								<tr>
+									<th >Saat:</th>
+									<td id="departureTime"></td>
+									<th >Ücret:</th>
+									<td id="price"></td>
+								</tr>
+								<tr>
+									<th >Plaka:</th>
+									<td id="plateCode"></td>
+									<th id="reservExpirationLabel">Rezervasyon:</th>
+									<td id="reservExpirationDate"></td>
+								</tr>
+							</table>
 						</div>
-						<div class="col-sm-2"></div>
+						<div class="col-sm-1"></div>
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-danger pull-left"
-						data-dismiss="modal">Vazgeç</button>
-					<button type="submit" class="btn btn-primary">Onayla</button>
+					<button type="submit" class="btn btn-flat btn-primary">Yazdýr</button>
+					<button id="convertTicketButton" class="btn btn-flat btn-warning">Bilete Çevir</button>
 				</div>
 			</div>
 		<!-- /.modal-content -->
@@ -240,6 +290,7 @@
 
 <jsp:include page="fragments/requiredScripts.jsp" />
 
+<c:url var="home" value="/" scope="request" />
 <script>
 	$(document).ready(function() {
 		var dataTable = $("#passangerTable").DataTable({
@@ -254,6 +305,64 @@
 		$("#searchPassanger").keyup(function() {
 			dataTable.search(this.value).draw();
 		});
+		
+		
+		$(".ticketDetails").click(function(e) {
+			e.preventDefault();
+			var ticketId = $(this).data("id");
+			$.ajax({
+				type : "POST",
+				contentType : "application/json",
+				url : "${home}admin/biletDetay/"+ticketId,
+				dataType : 'json',
+				timeout : 100000,
+				success : function(data) {
+					console.log("SUCCESS: ", data);
+					populateTicket(data);
+					if(data.ticket.isReservation) {
+						$("#convertTicketButton").show();
+						$("#reservExpirationLabel").html("Rezervasyon:");
+						$("#reservExpirationDate").css("color", "red");
+					} else {
+						$("#convertTicketButton").hide();
+						$("#reservExpirationLabel").html(" ");
+						$("#reservExpirationDate").html(" ");
+					}
+					$("#ticketModal").modal("show");
+				},
+				error : function(e) {
+					console.log("ERROR: ", e);
+					$("#ticketNumber").html(e);
+					$("#ticketModal").modal("show");
+				},
+				done : function(e) {
+					console.log("DONE");
+				}
+			});
+		});
+		
+		function populateTicket(data) {
+			$("#ticketNumber").html(data.ticket.id);
+			$("#tcNumber").html(data.ticket.passangerTcNumber);
+			$("#voyageId").html(data.ticket.voyage.id);
+			$("#passangerName").html(data.ticket.passangerName);
+			$("#routeName").html(data.ticket.voyage.route.routeName);
+			$("#passangerSurname").html(data.ticket.passangerSurname);
+			$("#departure").html(data.ticket.departure.cityName);
+			$("#passangerGender").html(data.ticket.passangerGender);
+			$("#arrival").html(data.ticket.arrival.cityName);
+			$("#seatNumber").html(data.ticket.seatNumber);
+			var departureTimeArr = data.ticket.voyage.departureTime.split(" ");
+			$("#departureDate").html(departureTimeArr[0]);
+			$("#registerTime").html(data.ticket.registerTime);
+			$("#departureTime").html(departureTimeArr[1]);
+			$("#price").html(data.ticket.price);
+			$("#plateCode").html(data.ticket.voyage.vehicle.plateCode);
+			$("#price").html(data.ticket.price);
+			if(data.ticket.isReservation) {
+				$("#reservExpirationDate").html(data.ticket.reservExpirationDate);
+			}
+		}
 	});
 	
 	

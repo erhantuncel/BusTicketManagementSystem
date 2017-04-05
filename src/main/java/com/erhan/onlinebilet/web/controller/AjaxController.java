@@ -25,7 +25,7 @@ public class AjaxController {
 		
 		result.setCode("200");
 		result.setMessage("");
-		result.setResponse(ticket);
+		result.setTicket(ticket);
 		
 		return result;
 	}

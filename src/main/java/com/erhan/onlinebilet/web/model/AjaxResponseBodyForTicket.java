@@ -11,20 +11,18 @@ public class AjaxResponseBodyForTicket {
 	@JsonView(Views.Public.class)
 	private String code;
 	
-	private Ticket response;
+	private Ticket ticket;
 
 	public AjaxResponseBodyForTicket() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public AjaxResponseBodyForTicket(String message, String code, Ticket response) {
+	public AjaxResponseBodyForTicket(String message, String code, Ticket ticket) {
 		super();
 		this.message = message;
 		this.code = code;
-		this.response = response;
+		this.ticket = ticket;
 	}
-
-
 
 	public String getMessage() {
 		return message;
@@ -42,18 +40,16 @@ public class AjaxResponseBodyForTicket {
 		this.code = code;
 	}
 
-	public Ticket getResponse() {
-		return response;
+	public Ticket getTicket() {
+		return ticket;
 	}
 
-	public void setResponse(Ticket response) {
-		this.response = response;
+	public void setTicket(Ticket ticket) {
+		this.ticket = ticket;
 	}
 
 	@Override
 	public String toString() {
-		return "AjaxResponseBodyForTicket [message=" + message + ", code=" + code + ", response=" + response + "]";
+		return "AjaxResponseBodyForTicket [message=" + message + ", code=" + code + ", ticket=" + ticket + "]";
 	}
-	
-	
 }

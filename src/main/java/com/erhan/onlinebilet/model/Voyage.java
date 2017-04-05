@@ -48,7 +48,7 @@ public class Voyage implements Comparable<Voyage> {
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "KALKIS_ZAMANI")
-	@JsonFormat(shape=Shape.STRING, pattern="dd.MM.yyyy HH:mm:ss")
+	@JsonFormat(shape=Shape.STRING, pattern="dd.MM.yyyy HH:mm")
  	private Date departureTime; 
  	
 	@Temporal(TemporalType.TIMESTAMP)
