@@ -19,7 +19,7 @@
 
 		<!-- Your Page Content Here -->
 		<div class="row">
-			<div class="col-sm-5">
+			<div class="col-sm-4">
 				<div class="box box-success">
 					<div class="box-header">
 						<h3 class="box-title">Bilgiler</h3>
@@ -122,7 +122,7 @@
 				</div>
 			</div>
 
-			<div class="col-sm-7">
+			<div class="col-sm-8">
 				<div class="box box-success">
 					<div class="box-header ">
 						<h3 class="box-title">Yolcular</h3>
@@ -145,11 +145,12 @@
 							class="table table-condensed table-hover">
 							<thead>
 								<tr>
-									<th>Koltuk No</th>
+									<th style="width: 5%">No</th>
 									<th>Ad Soyad</th>
 									<th>Kalkýþ</th>
 									<th>Varýþ</th>
-									<th>Durum</th>
+									<th>Rezerv. Bitiþ</th>
+									<th style="width: 9%">Ýþlemler</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -162,18 +163,20 @@
 										<td>${ticket.arrival.cityName}</td>
 										<td><c:choose>
 												<c:when test="${ticket.isReservation}">
-													<!--  
-													<a class="btn btn-xs btn-warning btn-flat btn-block ticketDetails"
-														data-toggle="modal" data-id="${ticket.id}" data-target="#ticketModal">Rezervasyon</a>
-													-->
-													<a class="btn btn-xs btn-warning btn-flat btn-block ticketDetails"
-														data-id="${ticket.id}">Rezervasyon</a>
+													<fmt:formatDate value="${ticket.reservExpirationDate}"
+														type="date" pattern="dd.MM.yyyy HH:mm:ss" var="ticketReservExpressionDate" />
+													${ticketReservExpressionDate}
 												</c:when>
-												<c:otherwise>
-													<a class="btn btn-xs btn-primary btn-flat btn-block ticketDetails"
-														data-id="${ticket.id}">Bilet</a>
-												</c:otherwise>
-											</c:choose></td>
+											</c:choose>
+										</td>
+										<td>
+											<a class="btn btn-xs btn-success btn-flat ticketDetails" title="Yazdýr" data-id="${ticket.id}">
+												<i class="fa fa-print"></i>
+											</a>
+											<a class="btn btn-xs btn-danger btn-flat ticketDetails" title="Sil" data-id="${ticket.id}">
+												<i class="fa fa-remove"></i>
+											</a>	
+										</td>
 									</tr>
 								</c:forEach>
 							</tbody>
