@@ -146,6 +146,23 @@ public class AdminController {
 		
 	}
 	
+	@RequestMapping(value="/admin/bilet/{id}/sil", method = RequestMethod.GET)
+	public ModelAndView deleteTicket(@PathVariable(value = "id") String id, HttpServletRequest request) {
+		int result = ticketService.delete(new Long(id));
+		String referer = request.getHeader("Referer");
+		ModelAndView model = new ModelAndView("redirect:" + referer); 
+		String resultMessage = null;
+		if(result > 0) {			
+			resultMessage = "" + id + " numaralı bilet silindi.";
+			model.addObject("statusCss", "success");
+		} else {
+			resultMessage = "" + id + " numaralı bilet silinemedi.";
+			model.addObject("statusCss", "danger");
+		}
+		model.addObject("msg", resultMessage);
+		return model;
+	}
+	
 	private Customer getCustomer() {
 		String tcNumber = null;
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
