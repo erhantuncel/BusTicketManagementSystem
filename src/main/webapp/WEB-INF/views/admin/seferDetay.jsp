@@ -170,11 +170,8 @@
 											</c:choose>
 										</td>
 										<td>
-											<a class="btn btn-xs btn-success btn-flat ticketDetails" title="Yazdýr" data-id="${ticket.id}">
-												<i class="fa fa-print"></i>
-											</a>
-											<a class="btn btn-xs btn-danger btn-flat ticketDetails" title="Sil" data-id="${ticket.id}">
-												<i class="fa fa-remove"></i>
+											<a class="btn btn-xs btn-success btn-flat ticketDetails" title="Detay" data-id="${ticket.id}">
+												<i class="fa fa-search"></i>&nbsp;Detay
 											</a>	
 										</td>
 									</tr>
@@ -221,9 +218,9 @@
 				</div>
 				<div class="modal-body">
 					<div class="row">
-						<div class="col-sm-1"></div>
+						<div class="col-sm-2"></div>
 						<div class="col-sm-8">
-							<table class="table table-condensed" style="font-size: medium;" >
+							<table class="table table-condensed">
 								<tr>
 									<th style="width: 20%">Bilet No:</th>
 									<td id="ticketNumber" style="width: 30%"></td>
@@ -274,12 +271,18 @@
 								</tr>
 							</table>
 						</div>
-						<div class="col-sm-1"></div>
+						<div class="col-sm-2"></div>
+					</div>
+					<div id="cancelWarning" class="row">
+						<h4 class="text-red text-center" ><strong>Bilet silinecek. Onaylýyor musunuz?</strong></h4>
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button type="submit" class="btn btn-flat btn-primary">Yazdýr</button>
-					<button id="convertTicketButton" class="btn btn-flat btn-warning">Bilete Çevir</button>
+					<a id="printButton" class="btn btn-flat btn-primary">Yazdýr</a>
+					<a id="deleteButton" class="btn btn-flat btn-danger">Ýptal Et</a>
+					<a id="closeButton" data-dismiss="modal" class="btn btn-flat btn-primary">Kapat</a>
+					<a id="cancelButton" data-dismiss="modal" class="btn btn-flat btn-default">Vazgeç</a>
+					<a id="okButton" class="btn btn-flat btn-danger">Onay</a>
 				</div>
 			</div>
 		<!-- /.modal-content -->
@@ -287,7 +290,6 @@
 	</div>
 	<!-- /.modal-dialog -->
 </div>
-
 
 <jsp:include page="fragments/mainFooter.jsp" />
 
@@ -312,7 +314,15 @@
 		
 		$(".ticketDetails").click(function(e) {
 			e.preventDefault();
+			$("#cancelButton").hide();
+			$("#okButton").hide();
+			$("#cancelWarning").hide();
+			$("#printButton").show();
+			$("#closeButton").show();
+			$("#deleteButton").show();
 			var ticketId = $(this).data("id");
+			var deleteUrl = "${home}/admin/bilet/" + ticketId + "/sil";
+			$("#okButton").attr("href", deleteUrl)
 			$.ajax({
 				type : "POST",
 				contentType : "application/json",
@@ -323,13 +333,13 @@
 					console.log("SUCCESS: ", data);
 					populateTicket(data);
 					if(data.ticket.isReservation) {
-						$("#convertTicketButton").show();
 						$("#reservExpirationLabel").html("Rezervasyon:");
 						$("#reservExpirationDate").css("color", "red");
+						$("#printButton").hide();
 					} else {
-						$("#convertTicketButton").hide();
 						$("#reservExpirationLabel").html(" ");
 						$("#reservExpirationDate").html(" ");
+						$("#printButton").show();
 					}
 					$("#ticketModal").modal("show");
 				},
@@ -366,6 +376,16 @@
 				$("#reservExpirationDate").html(data.ticket.reservExpirationDate);
 			}
 		}
+		
+		$("#deleteButton").click(function(e) {
+			$("#cancelButton").show();
+			$("#okButton").show();
+			$("#cancelWarning").show();
+			$("#printButton").hide();
+			$("#closeButton").hide();
+			$("#deleteButton").hide();
+			
+		});
 	});
 	
 	
