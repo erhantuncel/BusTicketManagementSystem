@@ -54,6 +54,15 @@ public class TicketDAOImpl implements TicketDAO {
 	}
 
 	@Override
+	public int delete(Long id) {
+		String hql = "delete Ticket where id = :ticketId";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setParameter("ticketId", id);
+		int result = query.executeUpdate();
+		return result;
+	}
+
+	@Override
 	public Integer countAll() {
 		Criteria crt = sessionFactory.getCurrentSession().createCriteria(Ticket.class);
 		crt.setProjection(Projections.rowCount());
