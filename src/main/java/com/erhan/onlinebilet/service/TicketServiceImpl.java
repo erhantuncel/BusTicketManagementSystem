@@ -1,7 +1,5 @@
 package com.erhan.onlinebilet.service;
 
-import static org.hamcrest.CoreMatchers.is;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -54,6 +52,13 @@ public class TicketServiceImpl implements TicketService {
 	public List<Ticket> findByCustomer(Customer customer) {
 		List<Ticket> ticketList = ticketDAO.findByCustomer(customer);
 		return ticketList;
+	}
+
+	@Override
+	@Transactional
+	public int delete(Long id) {
+		int result = ticketDAO.delete(id);
+		return result;
 	}
 
 	@Override

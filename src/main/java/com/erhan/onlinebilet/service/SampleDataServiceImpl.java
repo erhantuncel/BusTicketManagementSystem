@@ -8,7 +8,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -19,7 +18,6 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.erhan.onlinebilet.model.City;
 import com.erhan.onlinebilet.model.Customer;
@@ -743,6 +741,7 @@ public class SampleDataServiceImpl implements SampleDataService {
 		return name.toLowerCase();
 	}
 	
+	@SuppressWarnings("unused")
 	private String generateRandomPassword() {
 		String saltChars = "abcdefghijklmanoprstuvyz";
 		StringBuilder sb = new StringBuilder();
