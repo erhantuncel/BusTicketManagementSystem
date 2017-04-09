@@ -74,6 +74,19 @@ public class TicketTest extends BaseTest {
 	}
 	
 	@Test
+	public void testDelete() {
+		renewTransaction();
+		
+		int result = ticketService.delete(324L);
+		assertEquals(1, result);
+		
+		Ticket deletedTicket = ticketService.findById(324L);
+		assertNull(deletedTicket);
+//		System.out.println("Id = " + ticket324.getId().toString() + "\tYolcu Ad = " + ticket324.getPassangerName());
+		
+	}
+	
+	@Test
 	public void testCountAll() {
 		renewTransaction();
 		
