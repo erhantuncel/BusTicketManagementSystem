@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.erhan.onlinebilet.model.Customer;
 import com.erhan.onlinebilet.model.Stop;
@@ -147,19 +148,19 @@ public class AdminController {
 	}
 	
 	@RequestMapping(value="/admin/bilet/{id}/sil", method = RequestMethod.GET)
-	public ModelAndView deleteTicket(@PathVariable(value = "id") String id, HttpServletRequest request) {
+	public ModelAndView deleteTicket(@PathVariable(value = "id") String id, HttpServletRequest request, RedirectAttributes redir) {
 		int result = ticketService.delete(new Long(id));
 		String referer = request.getHeader("Referer");
 		ModelAndView model = new ModelAndView("redirect:" + referer); 
 		String resultMessage = null;
 		if(result > 0) {			
-			resultMessage = "" + id + " numaralı bilet silindi.";
-			model.addObject("statusCss", "success");
+			resultMessage = "" + id + " numaralı bilet iptal edildi.";
+			redir.addFlashAttribute("warningType", "info");
 		} else {
-			resultMessage = "" + id + " numaralı bilet silinemedi.";
-			model.addObject("statusCss", "danger");
+			resultMessage = "" + id + " numaralı bilet iptal edilmedi.";
+			redir.addFlashAttribute("warningType", "danger");
 		}
-		model.addObject("msg", resultMessage);
+		redir.addFlashAttribute("msg", resultMessage);
 		return model;
 	}
 	
