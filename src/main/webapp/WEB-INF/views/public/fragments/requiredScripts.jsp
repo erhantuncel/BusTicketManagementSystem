@@ -8,6 +8,8 @@
     <script src="<c:url value="/resources/js/jquery-1.12.0.min.js"/>"></script>
     <!-- Bootstrap 3.3.5 -->
     <script src="<c:url value="/resources/js/bootstrap.min.js"/>"></script>
+    <!-- Bootstrap-Notify 3.1.3 -->
+    <script src="<c:url value="/resources/js/bootstrap-notify.min.js"/>"></script>
     <!-- ChartJS 1.0.1 -->
     <script src="<c:url value="/resources/js/plugins/chartjs/Chart.min.js"/>"></script>
     <!-- AdminLTE App -->
