@@ -122,7 +122,7 @@ public class AdminController {
 		return model;
 	}
 	
-	@RequestMapping(value = "/admin/seferDetay/{id}", method = RequestMethod.GET) 
+	@RequestMapping(value = "/admin/sefer/{id}/detay", method = RequestMethod.GET) 
 	public ModelAndView seferDetail(@PathVariable(value = "id") String id) {
 		ModelAndView model = new ModelAndView();
 		Voyage voyage = voyageService.findById(new Long(id));

@@ -93,7 +93,7 @@
 									<td>
 										${voyageMap.value}
 									</td>
-									<td><a href="<c:url value="/admin/seferDetay/${voyageMap.key.id}"/>"
+									<td><a href="<c:url value="/admin/sefer/${voyageMap.key.id}/detay"/>"
 										class="btn btn-xs btn-success btn-flat"><i class="fa fa-search"></i>&nbsp;Detay</a></td>
 								<tr>
 							</c:forEach>
@@ -130,7 +130,7 @@
 										<fmt:formatDate value="${voyage.departureTime}" type="date" pattern="dd.MM.yyy HH:mm" var="departureTime"/>
 										${departureTime}
 									</td>
-									<td><a href="<c:url value="/admin/seferDetay/${voyage.id}"/>"
+									<td><a href="<c:url value="/admin/sefer/${voyage.id}/detay"/>"
 										class="btn btn-xs btn-success btn-flat"><i class="fa fa-search"></i>&nbsp;Detay</a></td>
 								</tr>								
 							</c:forEach>
