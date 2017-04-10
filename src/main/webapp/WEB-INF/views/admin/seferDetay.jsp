@@ -13,7 +13,7 @@
 	<section class="content-header">
 		<h1>Sefer Detaylarý</h1>
 	</section>
-
+	
 	<!-- Main content -->
 	<section class="content">
 
@@ -194,9 +194,6 @@
 				</div>
 				<!-- /.box -->
 			</div>
-			<!-- Otobüs Þemasý -->
-
-
 			<!-- /.box -->
 		</div>
 	</section>
@@ -291,11 +288,25 @@
 	<!-- /.modal-dialog -->
 </div>
 
+ <!-- 
+<div style="height: 15px;"></div>
+ -->
+
 <jsp:include page="fragments/mainFooter.jsp" />
 
 <jsp:include page="fragments/requiredScripts.jsp" />
 
 <c:url var="home" value="/" scope="request" />
+
+
+<c:if test="${not empty msg }">
+	<script>
+		$(function() {
+			callNotify("${msg}", "${warningType}");
+		});
+	</script>
+</c:if> 
+
 <script>
 	$(document).ready(function() {
 		var dataTable = $("#passangerTable").DataTable({
@@ -310,85 +321,130 @@
 		$("#searchPassanger").keyup(function() {
 			dataTable.search(this.value).draw();
 		});
-		
-		
-		$(".ticketDetails").click(function(e) {
-			e.preventDefault();
-			$("#cancelButton").hide();
-			$("#okButton").hide();
-			$("#cancelWarning").hide();
-			$("#printButton").show();
-			$("#closeButton").show();
-			$("#deleteButton").show();
-			var ticketId = $(this).data("id");
-			var deleteUrl = "${home}/admin/bilet/" + ticketId + "/sil";
-			$("#okButton").attr("href", deleteUrl)
-			$.ajax({
-				type : "POST",
-				contentType : "application/json",
-				url : "${home}admin/biletDetay/"+ticketId,
-				dataType : 'json',
-				timeout : 100000,
-				success : function(data) {
-					console.log("SUCCESS: ", data);
-					populateTicket(data);
-					if(data.ticket.isReservation) {
-						$("#reservExpirationLabel").html("Rezervasyon:");
-						$("#reservExpirationDate").css("color", "red");
-						$("#printButton").hide();
-					} else {
-						$("#reservExpirationLabel").html(" ");
-						$("#reservExpirationDate").html(" ");
-						$("#printButton").show();
-					}
-					$("#ticketModal").modal("show");
-				},
-				error : function(e) {
-					console.log("ERROR: ", e);
-					$("#ticketNumber").html(e);
-					$("#ticketModal").modal("show");
-				},
-				done : function(e) {
-					console.log("DONE");
+	});
+	
+	$(".ticketDetails").click(function(e) {
+		e.preventDefault();
+		$("#cancelButton").hide();
+		$("#okButton").hide();
+		$("#cancelWarning").hide();
+		$("#printButton").show();
+		$("#closeButton").show();
+		$("#deleteButton").show();
+		var ticketId = $(this).data("id");
+		var deleteUrl = "${home}/admin/bilet/" + ticketId + "/sil";
+		$("#okButton").attr("href", deleteUrl)
+		$.ajax({
+			type : "POST",
+			contentType : "application/json",
+			url : "${home}admin/biletDetay/"+ticketId,
+			dataType : 'json',
+			timeout : 100000,
+			success : function(data) {
+				console.log("SUCCESS: ", data);
+				populateTicket(data);
+				if(data.ticket.isReservation) {
+					$("#reservExpirationLabel").html("Rezervasyon:");
+					$("#reservExpirationDate").css("color", "red");
+					$("#printButton").hide();
+				} else {
+					$("#reservExpirationLabel").html(" ");
+					$("#reservExpirationDate").html(" ");
+					$("#printButton").show();
 				}
-			});
-		});
-		
-		function populateTicket(data) {
-			$("#ticketNumber").html(data.ticket.id);
-			$("#tcNumber").html(data.ticket.passangerTcNumber);
-			$("#voyageId").html(data.ticket.voyage.id);
-			$("#passangerName").html(data.ticket.passangerName);
-			$("#routeName").html(data.ticket.voyage.route.routeName);
-			$("#passangerSurname").html(data.ticket.passangerSurname);
-			$("#departure").html(data.ticket.departure.cityName);
-			$("#passangerGender").html(data.ticket.passangerGender);
-			$("#arrival").html(data.ticket.arrival.cityName);
-			$("#seatNumber").html(data.ticket.seatNumber);
-			var departureTimeArr = data.ticket.voyage.departureTime.split(" ");
-			$("#departureDate").html(departureTimeArr[0]);
-			$("#registerTime").html(data.ticket.registerTime);
-			$("#departureTime").html(departureTimeArr[1]);
-			$("#price").html(data.ticket.price);
-			$("#plateCode").html(data.ticket.voyage.vehicle.plateCode);
-			$("#price").html(data.ticket.price);
-			if(data.ticket.isReservation) {
-				$("#reservExpirationDate").html(data.ticket.reservExpirationDate);
+				$("#ticketModal").modal("show");
+			},
+			error : function(e) {
+				console.log("ERROR: ", e);
+				$("#ticketNumber").html(e);
+				$("#ticketModal").modal("show");
+			},
+			done : function(e) {
+				console.log("DONE");
 			}
-		}
-		
-		$("#deleteButton").click(function(e) {
-			$("#cancelButton").show();
-			$("#okButton").show();
-			$("#cancelWarning").show();
-			$("#printButton").hide();
-			$("#closeButton").hide();
-			$("#deleteButton").hide();
-			
 		});
 	});
 	
+	function populateTicket(data) {
+		$("#ticketNumber").html(data.ticket.id);
+		$("#tcNumber").html(data.ticket.passangerTcNumber);
+		$("#voyageId").html(data.ticket.voyage.id);
+		$("#passangerName").html(data.ticket.passangerName);
+		$("#routeName").html(data.ticket.voyage.route.routeName);
+		$("#passangerSurname").html(data.ticket.passangerSurname);
+		$("#departure").html(data.ticket.departure.cityName);
+		$("#passangerGender").html(data.ticket.passangerGender);
+		$("#arrival").html(data.ticket.arrival.cityName);
+		$("#seatNumber").html(data.ticket.seatNumber);
+		var departureTimeArr = data.ticket.voyage.departureTime.split(" ");
+		$("#departureDate").html(departureTimeArr[0]);
+		$("#registerTime").html(data.ticket.registerTime);
+		$("#departureTime").html(departureTimeArr[1]);
+		$("#price").html(data.ticket.price);
+		$("#plateCode").html(data.ticket.voyage.vehicle.plateCode);
+		$("#price").html(data.ticket.price);
+		if(data.ticket.isReservation) {
+			$("#reservExpirationDate").html(data.ticket.reservExpirationDate);
+		}
+	}
 	
+	$("#deleteButton").click(function(e) {
+		$("#cancelButton").show();
+		$("#okButton").show();
+		$("#cancelWarning").show();
+		$("#printButton").hide();
+		$("#closeButton").hide();
+		$("#deleteButton").hide();
+		
+	});
+	
+	function callNotify(message, type) {
+		$.notify({
+			// options
+			message: message,
+		},{
+			// settings
+			element: 'body',
+			position: null,
+			type: type,
+			allow_dismiss: true,
+			newest_on_top: false,
+			showProgressbar: false,
+			placement: {
+				from: "top",
+				align: "right"
+			},
+			offset: {
+				x: 5,
+				y: 53
+			},
+			spacing: 10,
+			z_index: 1031,
+			delay: 5000,
+			timer: 1000,
+			url_target: '_blank',
+			mouse_over: null,
+			animate: {
+				enter: 'animated fadeInRight',
+				exit: 'animated fadeOutRight'
+			},
+			onShow: null,
+			onShown: null,
+			onClose: null,
+			onClosed: null,
+			icon_type: 'class',
+			template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert" style="height: 50px;">' +
+				'<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+				'<span data-notify="icon"></span> ' +
+				'<span data-notify="title">{1}</span> ' +
+				'<span data-notify="message">{2}</span>' +
+				'<div class="progress" data-notify="progressbar">' +
+					'<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+				'</div>' +
+				'<a href="{3}" target="{4}" data-notify="url"></a>' +
+			'</div>' 
+		});
+	}
 </script>
 
 </body>
