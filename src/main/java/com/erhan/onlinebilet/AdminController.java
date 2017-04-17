@@ -123,7 +123,7 @@ public class AdminController {
 	}
 	
 	@RequestMapping(value = "/admin/sefer/{id}/detay", method = RequestMethod.GET) 
-	public ModelAndView seferDetail(@PathVariable(value = "id") String id) {
+	public ModelAndView voyageDetail(@PathVariable(value = "id") String id) {
 		ModelAndView model = new ModelAndView();
 		Voyage voyage = voyageService.findById(new Long(id));
 		model.addObject("voyage", voyage);
@@ -161,6 +161,16 @@ public class AdminController {
 			redir.addFlashAttribute("warningType", "danger");
 		}
 		redir.addFlashAttribute("msg", resultMessage);
+		return model;
+	}
+	
+	@RequestMapping(value = "/admin/seferler", method=RequestMethod.GET)
+	public ModelAndView voyages() {
+		
+		ModelAndView model = new ModelAndView();
+			
+		
+		model.setViewName("admin/seferler");
 		return model;
 	}
 	
