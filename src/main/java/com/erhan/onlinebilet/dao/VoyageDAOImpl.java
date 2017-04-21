@@ -8,6 +8,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,6 +129,7 @@ public class VoyageDAOImpl implements VoyageDAO {
 	@Override
 	public List<Voyage> findAllBetweenDates(Date start, Date end) {
 		Criteria crt = sessionFactory.getCurrentSession().createCriteria(Voyage.class);
+		crt.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		crt.add(Restrictions.between("departureTime", start, end));
 		crt.addOrder(Order.asc("departureTime"));
 		List<Voyage> voyageList = crt.list();
