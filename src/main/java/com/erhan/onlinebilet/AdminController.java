@@ -168,8 +168,13 @@ public class AdminController {
 	public ModelAndView voyages() {
 		
 		ModelAndView model = new ModelAndView();
-			
-		
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.setTime(new Date());
+		Date startDate = gc.getTime();
+		gc.set(Calendar.DAY_OF_MONTH, gc.get(Calendar.DAY_OF_MONTH)+10);
+		Date endDate = gc.getTime();
+		List<Voyage> voyageListForthComingTenDays = voyageService.findAllBetweenDates(startDate, endDate);
+		model.addObject("voyageListForthComingTenDays", voyageListForthComingTenDays);
 		model.setViewName("admin/seferler");
 		return model;
 	}
