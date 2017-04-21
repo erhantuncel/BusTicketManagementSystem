@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.transaction.TestTransaction;
 
+import com.erhan.onlinebilet.dao.VoyageDAO;
 import com.erhan.onlinebilet.model.City;
 import com.erhan.onlinebilet.model.Expense;
 import com.erhan.onlinebilet.model.Route;
@@ -339,6 +340,29 @@ public class VoyageTest extends BaseTest {
 			System.out.print("Route = " + voyage.getRoute().getRouteName() + "\t");
 			System.out.println("Time = " + df.format(voyage.getDepartureTime()) + "\t");
 		}
+	}
+	
+	@Test
+	public void testFindAllBeetweenDate() {
+		renewTransaction();
+		
+		GregorianCalendar start = new GregorianCalendar();
+		start.setTime(new Date());
+		
+		GregorianCalendar end = new GregorianCalendar();
+		end.set(Calendar.DAY_OF_MONTH, end.get(Calendar.DAY_OF_MONTH)+10);
+		
+		List<Voyage> voyageList = voyageService.findAllBetweenDates(start.getTime(), end.getTime());
+		assertNotNull(voyageList);
+		SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+		for(Voyage voyage : voyageList) {
+			System.out.print("Id = " + voyage.getId() + "\t");
+			System.out.print("Route = " + voyage.getRoute().getRouteName() + "\t");
+			System.out.println("Time = " + df.format(voyage.getDepartureTime()) + "\t");
+		}
+		System.out.println("Start = "+ df.format(start.getTime()) + "\t" + "End = " + df.format(end.getTime()));
+		System.out.println("Sefer Count = " + voyageList.size());
+		
 	}
 	
 	@Test
