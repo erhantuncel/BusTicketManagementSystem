@@ -124,6 +124,16 @@ public class VoyageDAOImpl implements VoyageDAO {
 		return voyageList;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Voyage> findAllBetweenDates(Date start, Date end) {
+		Criteria crt = sessionFactory.getCurrentSession().createCriteria(Voyage.class);
+		crt.add(Restrictions.between("departureTime", start, end));
+		crt.addOrder(Order.asc("departureTime"));
+		List<Voyage> voyageList = crt.list();
+		return voyageList;
+	}
+
 	@Override
 	public void delete(Voyage voyage) {
 		sessionFactory.getCurrentSession().delete(voyage);

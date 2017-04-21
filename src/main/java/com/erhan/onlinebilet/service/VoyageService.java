@@ -17,5 +17,6 @@ public interface VoyageService {
 	public List<Voyage> findAllByRouteAndDate(List<Route> routeList, Date date);
 	public Map<Voyage, String> findAllStartedInHourWithCompletionPercentage(Integer hour);
 	public List<Voyage> findAllSortedByDepartureTimeForRecords(Integer count);
+	public List<Voyage> findAllBetweenDates(Date start, Date end);
 	public void delete(Voyage voyage);
 }

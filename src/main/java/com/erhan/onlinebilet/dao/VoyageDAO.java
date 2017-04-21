@@ -15,5 +15,6 @@ public interface VoyageDAO {
 	public List<Voyage> findAllByRouteAndDate(Route route, Date date);
 	public List<Voyage> findAllStartedInHour(Integer hour);
 	public List<Voyage> findAllSortedByDepartureTimeForRecords(Integer count);
+	public List<Voyage> findAllBetweenDates(Date start, Date end);
 	public void delete(Voyage voyage);
 }

@@ -107,6 +107,13 @@ public class VoyageServiceImpl implements VoyageService {
 
 	@Override
 	@Transactional
+	public List<Voyage> findAllBetweenDates(Date start, Date end) {
+		List<Voyage> voyageList = voyageDAO.findAllBetweenDates(start, end);
+		return voyageList;
+	}
+
+	@Override
+	@Transactional
 	public void delete(Voyage voyage) {
 		voyageDAO.delete(voyage);
 	}
