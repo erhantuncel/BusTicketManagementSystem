@@ -125,6 +125,7 @@ public class AdminController {
 	@RequestMapping(value = "/admin/sefer/{id}/detay", method = RequestMethod.GET) 
 	public ModelAndView voyageDetail(@PathVariable(value = "id") String id) {
 		ModelAndView model = new ModelAndView();
+		model.addObject("title", "Online Bilet Sistemi | Yönetim Paneli - Sefer Detayları");
 		Voyage voyage = voyageService.findById(new Long(id));
 		model.addObject("voyage", voyage);
 		Map<String, Date> stopMap = stopService.getStopMapByVoyage(voyage);
@@ -168,6 +169,7 @@ public class AdminController {
 	public ModelAndView voyages() {
 		
 		ModelAndView model = new ModelAndView();
+		model.addObject("title", "Online Bilet Sistemi | Yönetim Paneli - Seferler");
 		GregorianCalendar gc = new GregorianCalendar();
 		gc.setTime(new Date());
 		Date startDate = gc.getTime();
