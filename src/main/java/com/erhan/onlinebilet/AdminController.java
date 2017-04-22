@@ -13,6 +13,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -176,7 +178,18 @@ public class AdminController {
 		gc.set(Calendar.DAY_OF_MONTH, gc.get(Calendar.DAY_OF_MONTH)+10);
 		Date endDate = gc.getTime();
 		List<Voyage> voyageListForthComingTenDays = voyageService.findAllBetweenDates(startDate, endDate);
-		model.addObject("voyageListForthComingTenDays", voyageListForthComingTenDays);
+		model.addObject("voyageList", voyageListForthComingTenDays);
+		model.setViewName("admin/seferler");
+		return model;
+	}
+	
+	@RequestMapping(value = "/admin/seferler", method=RequestMethod.POST)
+	public ModelAndView voyagesForDate(@RequestParam(value = "date") @DateTimeFormat(pattern = "dd.MM.yyyy") Date date) {
+		
+		ModelAndView model = new ModelAndView();
+		model.addObject("title", "Online Bilet Sistemi | Yönetim Paneli - Seferler");
+		List<Voyage> voyageListForDate = voyageService.findAllByDate(date);
+		model.addObject("voyageList", voyageListForDate);
 		model.setViewName("admin/seferler");
 		return model;
 	}
