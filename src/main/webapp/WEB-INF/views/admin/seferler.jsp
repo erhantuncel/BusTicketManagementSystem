@@ -1,10 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-9"
 	pageEncoding="ISO-8859-9"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <jsp:include page="fragments/header.jsp" />
 
 <jsp:include page="fragments/mainSideBar.jsp" />
+
+<c:url var="home" value="/" scope="request" />
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -23,80 +26,66 @@
 					<div class="box-header">
 						<h3 class="box-title"></h3>
 						<div class="box-tools">
-							<form class="form-inline">
-								<div class="form-group">
-									<select class="form-control input-sm" style="width: 150px;">
-										<option>Kalkýþ</option>
-										<option>Bolu</option>
-										<option>Ankara</option>
-										<option>Ýstanbul</option>
-										<option>Düzce</option>
-										<option>Ýzmir</option>
-										<option>Konya</option>
-										<option>Zonguldak</option>
-									</select>
-								</div>
-								<div class="form-group">
-									<select class="form-control input-sm" style="width: 150px;">
-										<option>Varýþ</option>
-										<option>Bolu</option>
-										<option>Ankara</option>
-										<option>Ýstanbul</option>
-										<option>Düzce</option>
-										<option>Ýzmir</option>
-										<option>Konya</option>
-										<option>Zonguldak</option>
-									</select>
-								</div>
+							<form id="searchForm" class="form-inline" action="${home}admin/seferler" method="POST">
 								<div class="form-group">
 									<div class="input-group date">
-										<input type="text" class="form-control input-sm date">
-										<span class="input-group-addon"><i
-											class="fa fa-calendar"></i> </span>
+										<input id="dateString" type="text" name="date" class="form-control input-sm date">
+										<span class="input-group-addon"><i class="fa fa-calendar"></i> </span>
 									</div>
 								</div>
-								<button class="btn btn-success btn-sm btn-flat">Sefer Ara</button>
+								<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+								<button id="searchByDateButton" class="btn btn-success btn-sm btn-flat">Sefer Ara</button>
 							</form>
 						</div>
 					</div>
 					<!-- /.box-header -->
-					<div class="box-body table-responsive no-padding">
-						<table class="table table-hover" style="text-align: center;">
-							<tr>
-								<th style="width: 18%; text-align: center;">Sefer No</th>
-								<th style="width: 18%; text-align: center;">Saat</th>
-								<th style="width: 18%; text-align: center;">Rota</th>
-								<th style="width: 18%; text-align: center;">Ücret</th>
-								<th style="width: 18%; text-align: center;">Bilet/Rezervasyon</th>
-								<th style="width: 10%; text-align: center;">Ýþlemler</th>
-							</tr>
-
-							<c:forEach begin="1" end="10">
+					<div class="box-body table-responsive" style="height: 67vh">
+						<table id="voyageListTable" class="table table-hover" style="text-align: center;">
+							<thead>
 								<tr>
-									<td>1546</td>
-									<td>07:00</td>
-									<td>Ankara-Ýzmit</td>
-									<td><span class="fa fa-turkish-lira"></span>33,00</td>
-									<td>21/42</td>
-									<td><a href="<c:url value="/admin/seferDetay"/>"
-										class="btn btn-xs btn-success btn-flat" title="Detay"><i class="fa fa-search"></i></a>
-										<a href="<c:url value="/admin/seferGuncelle"/>" class="btn btn-xs btn-success btn-flat" title="Güncelle"><i class="fa fa-refresh"></i></a>
-										<a class="btn btn-xs btn-danger btn-flat" title="Sil" data-toggle="modal" data-target="#deleteVoyageModal" ><i class="fa fa-remove"></i></a>
-									</td>
-									<!-- 
-									<td><a href="<c:url value="/admin/seferDetay"/>"
-										class="btn btn-xs btn-primary btn-flat"><i class="fa fa-search"></i>&nbsp;Detay</a>
-										<a href="<c:url value="/admin/seferGuncelle"/>" class="btn btn-xs btn-warning btn-flat"><i class="fa fa-refresh"></i>&nbsp;Güncelle</a>
-										<a class="btn btn-xs btn-danger btn-flat" data-toggle="modal" data-target="#deleteVoyageModal" ><i class="fa fa-remove"></i>&nbsp;Sil</a>
-									</td>
-									 -->
+									<th style="width: 15%; text-align: center;">Sefer No</th>
+									<th style="width: 15%; text-align: center;">Tarih</th>
+									<th style="width: 15%; text-align: center;">Saat</th>
+									<th style="width: 15%; text-align: center;">Rota</th>
+									<th style="width: 15%; text-align: center;">Araç Plakasý</th>
+									<th style="width: 10%; text-align: center;">Ýþlemler</th>
 								</tr>
-							</c:forEach>
+							</thead>
 
+							<tbody>
+								<c:forEach items="${voyageList}" var="voyage" >
+									<tr>
+										<td>${voyage.id}</td>
+										<td>
+											<fmt:formatDate value="${voyage.departureTime}"
+														type="date" pattern="dd.MM.yyyy" var="voyageDepartureDate" />
+													${voyageDepartureDate}
+										</td>
+										<td><fmt:formatDate value="${voyage.departureTime}"
+														type="date" pattern="HH:mm" var="voyageDepartureTime" />
+													${voyageDepartureTime}</td>
+										<td>${voyage.route.routeName}</td>
+										<td>${voyage.vehicle.plateCode}</td>
+										<td><a href="<c:url value="/admin/seferDetay"/>"
+											class="btn btn-xs btn-success btn-flat" title="Detay"><i class="fa fa-search"></i></a>
+											<a href="<c:url value="/admin/seferGuncelle"/>" class="btn btn-xs btn-success btn-flat" title="Güncelle"><i class="fa fa-refresh"></i></a>
+											<a class="btn btn-xs btn-danger btn-flat" title="Sil" data-toggle="modal" data-target="#deleteVoyageModal" ><i class="fa fa-remove"></i></a>
+										</td>
+										<!-- 
+										<td><a href="<c:url value="/admin/seferDetay"/>"
+											class="btn btn-xs btn-primary btn-flat"><i class="fa fa-search"></i>&nbsp;Detay</a>
+											<a href="<c:url value="/admin/seferGuncelle"/>" class="btn btn-xs btn-warning btn-flat"><i class="fa fa-refresh"></i>&nbsp;Güncelle</a>
+											<a class="btn btn-xs btn-danger btn-flat" data-toggle="modal" data-target="#deleteVoyageModal" ><i class="fa fa-remove"></i>&nbsp;Sil</a>
+										</td>
+										 -->
+									</tr>
+								</c:forEach>
+							</tbody>
 						</table>
 					</div>
 					<!-- /.box-body -->
 					<div class="box-footer clearfix">
+						<!-- 
 						<ul class="pagination pagination-green pagination-sm no-margin pull-right">
 							<li class="disabled"><a href="#">&laquo;</a></li>
 							<li class="active"><a href="#">1</a></li>
@@ -104,6 +93,7 @@
 							<li><a href="#">3</a></li>
 							<li><a href="#">&raquo;</a></li>
 						</ul>
+						 -->
 					</div>
 				</div>
 				<!-- /.box -->
@@ -172,14 +162,27 @@
 
 <jsp:include page="fragments/requiredScripts.jsp" />
 
+
 <script>
 	$(function() {
 		// Datepicker - voyage
 		$('.date').datepicker({
 			language : 'tr',
-			autoclose : true
+			autoclose : true,
 		});
 	});
+	
+	$(document).ready(function() {
+		var dataTable = $("#voyageListTable").DataTable({
+			"paging" : false,
+			"info" : false,
+			"order": [[1, "asc"]],
+			"searching" : false,
+		});
+
+	});
+	
+	
 </script>
 </body>
 </html>
