@@ -255,9 +255,9 @@ public class VoyageTest extends BaseTest {
 		gc.setTime(new Date());
 		List<Voyage> voyageListForToday = voyageService.findAllByDate(gc.getTime());
 		assertNotNull(voyageListForToday);
-		Set<Voyage> voyageSetForToday = new LinkedHashSet<Voyage>(voyageListForToday);		
+//		Set<Voyage> voyageSetForToday = new LinkedHashSet<Voyage>(voyageListForToday);		
 		SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-		for(Voyage v : voyageSetForToday) {
+		for(Voyage v : voyageListForToday) {
 			System.out.print("Id = " + v.getId() + "\t");
 			System.out.print("Route = " + v.getRoute().getRouteName() + "\t");
 			System.out.println("Time = " + df.format(v.getDepartureTime()) + "\t");
