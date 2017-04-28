@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -12,9 +11,9 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -26,7 +25,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.erhan.onlinebilet.model.Customer;
-import com.erhan.onlinebilet.model.Stop;
 import com.erhan.onlinebilet.model.Ticket;
 import com.erhan.onlinebilet.model.Voyage;
 import com.erhan.onlinebilet.service.CustomerService;
@@ -191,6 +189,28 @@ public class AdminController {
 		List<Voyage> voyageListForDate = voyageService.findAllByDate(date);
 		model.addObject("voyageList", voyageListForDate);
 		model.setViewName("admin/seferler");
+		return model;
+	}
+	
+	@RequestMapping(value="/admin/sefer/{id}/sil", method = RequestMethod.GET)
+	public ModelAndView deleteVoyage(@PathVariable(value = "id") String id, HttpServletRequest request, RedirectAttributes redir) {		
+		Voyage voyage = voyageService.findById(new Long(id));
+		String resultMessage = null;
+
+		try {
+			voyageService.delete(voyage);			
+		} catch (HibernateException e) {
+			resultMessage = "" + id + " numaralı sefer iptal edilmedi.";
+			redir.addFlashAttribute("warningType", "danger");
+		}
+		resultMessage = "" + id + " numaralı sefer iptal edildi.";
+		redir.addFlashAttribute("warningType", "info");
+
+		String referer = request.getHeader("Referer");
+		ModelAndView model = new ModelAndView("redirect:" + referer);
+
+		redir.addFlashAttribute("msg", resultMessage);
+		
 		return model;
 	}
 	
