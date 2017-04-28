@@ -27,6 +27,7 @@ import com.erhan.onlinebilet.service.CityService;
 import com.erhan.onlinebilet.service.ExpenseService;
 import com.erhan.onlinebilet.service.ExpenseTypeService;
 import com.erhan.onlinebilet.service.StopService;
+import com.erhan.onlinebilet.service.TicketService;
 import com.erhan.onlinebilet.service.VehicleBrandService;
 import com.erhan.onlinebilet.service.VoyageService;
 
@@ -50,6 +51,11 @@ public class VoyageTest extends BaseTest {
 	
 	@Autowired
 	ExpenseService expenseService;
+	
+//	@Autowired
+//	TicketService ticketService;
+	
+	
 //	
 //	private Long[] ids;
 //	
@@ -370,13 +376,12 @@ public class VoyageTest extends BaseTest {
 		renewTransaction();
 		
 		Voyage voyage12 = voyageService.findById(12L);
-		voyage12.setExpenseList(null);
-		voyage12.setRoute(null);
-		voyage12.setVehicle(null);
+//		voyage12.getExpenseList().clear();
+		voyage12.getRoute().getVoyageList().clear();
+		voyage12.getRoute().getStops().clear();
+//		voyage12.getTicketList().clear();
 		voyageService.delete(voyage12);
-		
-		renewTransaction();
-		
+		renewTransaction();		
 		Voyage voyageTest = voyageService.findById(12L);
 		assertNull(voyageTest);
 	}
