@@ -66,10 +66,10 @@
 													${voyageDepartureTime}</td>
 										<td>${voyage.route.routeName}</td>
 										<td>${voyage.vehicle.plateCode}</td>
-										<td><a href="<c:url value="/admin/seferDetay"/>"
+										
+										<td><a href="<c:url value="/admin/sefer/${voyage.id}/detay"/>"
 											class="btn btn-xs btn-success btn-flat" title="Detay"><i class="fa fa-search"></i></a>
-											<a href="<c:url value="/admin/seferGuncelle"/>" class="btn btn-xs btn-success btn-flat" title="Güncelle"><i class="fa fa-refresh"></i></a>
-											<a class="btn btn-xs btn-danger btn-flat" title="Sil" data-toggle="modal" data-target="#deleteVoyageModal" ><i class="fa fa-remove"></i></a>
+											<a class="btn btn-xs btn-danger btn-flat" title="Sil" id="deleteButton" data-id="${voyage.id}" ><i class="fa fa-remove"></i></a>
 										</td>
 										<!-- 
 										<td><a href="<c:url value="/admin/seferDetay"/>"
@@ -119,36 +119,21 @@
 				</div>
 				<div class="modal-body">
 					<div class="row">
-						<div class="col-xs-6">
-							<table class="table table-condensed" style="font-size: medium;">
-								<tr>
-									<th style="width: 30%">Sefer No :</th>
-									<td style="width: 15%">1546</td>
-								</tr>
-								<tr>
-									<th style="width: 30%">Rota :</th>
-									<td style="width: 15%">Bolu - Ankara</td>
-								</tr>
-								<tr>
-									<th style="width: 30%">Sefer Tarihi :</th>
-									<td style="width: 15%">24.10.2015</td>
-								</tr>
-								<tr>
-									<th style="width: 30%">Sefer Saati :</th>
-									<td style="width: 15%">13:00</td>
-								</tr>
-							</table>
+						<div class="col-xs-1">
+							
 						</div>
-						<div class="col-xs-6 text-center">
-							<span class="fa fa-remove text-red" style="font-size: 2.5em;"></span>
-							<h3 class="text-red"><strong>Sefer Sil!</strong></h3>								
+						<div class="col-xs-10 text-center">
+							<span class="fa fa-warning text-red" style="font-size: 2.5em;"></span>
+							<h3 class="text-red"><strong>Bu sefere ait biletler de silinecek. Onaylýyor musunuz?</strong></h3>								
+						</div>
+						<div class="col-xs-1">
+							
 						</div>
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-danger pull-left"
-						data-dismiss="modal">Vazgeç</button>
-					<button type="submit" class="btn btn-primary">Onayla</button>
+					<a id="cancelButton" data-dismiss="modal" class="btn btn-flat btn-danger">Vazgeç</a>
+					<a id="okButton" class="btn btn-flat btn-primary" href="">Onay</a>
 				</div>
 			</div>
 		<!-- /.modal-content -->
@@ -162,6 +147,13 @@
 
 <jsp:include page="fragments/requiredScripts.jsp" />
 
+<c:if test="${not empty msg }">
+	<script>
+		$(function() {
+			callNotify("${msg}", "${warningType}");
+		});
+	</script>
+</c:if> 
 
 <script>
 	$(function() {
@@ -182,6 +174,60 @@
 
 	});
 	
+	$("#deleteButton").click(function(e) {
+		var voyageId = $(this).data("id");
+		var deleteUrl = "${home}/admin/sefer/" + voyageId + "/sil";
+		$("#okButton").attr("href", deleteUrl)
+		$("#deleteVoyageModal").modal("show");
+	});
+	
+	function callNotify(message, type) {
+		$.notify({
+			// options
+			message: message,
+		},{
+			// settings
+			element: 'body',
+			position: null,
+			type: type,
+			allow_dismiss: true,
+			newest_on_top: false,
+			showProgressbar: false,
+			placement: {
+				from: "top",
+				align: "right"
+			},
+			offset: {
+				x: 5,
+				y: 53
+			},
+			spacing: 10,
+			z_index: 1031,
+			delay: 5000,
+			timer: 1000,
+			url_target: '_blank',
+			mouse_over: null,
+			animate: {
+				enter: 'animated fadeInRight',
+				exit: 'animated fadeOutRight'
+			},
+			onShow: null,
+			onShown: null,
+			onClose: null,
+			onClosed: null,
+			icon_type: 'class',
+			template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert" style="height: 50px;">' +
+				'<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+				'<span data-notify="icon"></span> ' +
+				'<span data-notify="title">{1}</span> ' +
+				'<span data-notify="message">{2}</span>' +
+				'<div class="progress" data-notify="progressbar">' +
+					'<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+				'</div>' +
+				'<a href="{3}" target="{4}" data-notify="url"></a>' +
+			'</div>' 
+		});
+	}
 	
 </script>
 </body>
