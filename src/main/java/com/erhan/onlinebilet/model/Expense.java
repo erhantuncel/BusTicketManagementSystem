@@ -3,7 +3,6 @@ package com.erhan.onlinebilet.model;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,6 +13,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -32,7 +34,8 @@ public class Expense {
 	@Column(name = "TUTAR")
 	private BigDecimal price;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne()
+	@Cascade(CascadeType.SAVE_UPDATE)
 	@JoinColumn(name = "GIDER_TIPI_ID")
 	@JsonBackReference
 	private ExpenseType type;
@@ -42,7 +45,8 @@ public class Expense {
 	@JsonFormat(shape=Shape.STRING, pattern="dd.MM.yyyy HH:mm:ss")
 	private Date registeredTime;
 	
-	@ManyToOne(cascade=CascadeType.ALL)
+	@ManyToOne()
+	@Cascade(CascadeType.SAVE_UPDATE)
 	@JsonManagedReference
 	private Voyage voyage;
 	

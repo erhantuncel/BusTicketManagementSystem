@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,6 +16,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -36,12 +38,12 @@ public class Voyage implements Comparable<Voyage> {
 	@Column(name = "ID")
 	private Long id;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name = "ARAC_ID")
 	@JsonManagedReference
 	private Vehicle vehicle;
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name = "ROTA_ID")
 	@JsonManagedReference
 	private Route route;
@@ -56,13 +58,15 @@ public class Voyage implements Comparable<Voyage> {
 	@JsonFormat(shape=Shape.STRING, pattern="dd.MM.yyyy HH:mm:ss")
  	private Date registerTime;
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+	@OneToMany(fetch=FetchType.EAGER)
+	@Cascade(CascadeType.ALL)
 	@JoinColumn(name = "SEFER_ID")
 	@Column(nullable = true)
 	@JsonBackReference
 	private List<Expense> expenseList = new ArrayList<Expense>(0);
 	
-	@OneToMany(mappedBy="voyage", cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="voyage")
+	@Cascade(CascadeType.ALL)
 	@JsonBackReference
 	private List<Ticket> ticketList = new ArrayList<Ticket>(0);
 	

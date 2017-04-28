@@ -3,9 +3,9 @@ package com.erhan.onlinebilet.model;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,6 +16,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.erhan.onlinebilet.validator.TcNumber;
@@ -39,19 +41,19 @@ public class Ticket {
 	@NotNull
 	private Boolean isReservation;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "SEFER_ID")
 	@NotNull
 	@JsonManagedReference
 	private Voyage voyage;	
 	
-	@ManyToOne(cascade=CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="KALKIS_ID")
 	@NotNull
 	@JsonManagedReference
 	private City departure;
 	
-	@ManyToOne(cascade=CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="VARIS_ID")
 	@NotNull
 	@JsonManagedReference
@@ -70,7 +72,8 @@ public class Ticket {
 	@JsonFormat(shape=Shape.STRING, pattern="dd.MM.yyyy HH:mm:ss")
 	private Date registerTime;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne()
+	@Cascade(CascadeType.SAVE_UPDATE)
 	@JoinColumn(name = "MUSTERI_ID")
 	@JsonManagedReference
 	private Customer customer;
