@@ -69,7 +69,9 @@
 										
 										<td><a href="<c:url value="/admin/sefer/${voyage.id}/detay"/>"
 											class="btn btn-xs btn-success btn-flat" title="Detay"><i class="fa fa-search"></i></a>
-											<a class="btn btn-xs btn-danger btn-flat" title="Sil" id="deleteButton" data-id="${voyage.id}" ><i class="fa fa-remove"></i></a>
+											<a class="btn btn-xs btn-danger btn-flat deleteVoyageButton" title="Sil" data-id="${voyage.id}" >
+												<i class="fa fa-remove"></i>
+											</a>
 										</td>
 										<!-- 
 										<td><a href="<c:url value="/admin/seferDetay"/>"
@@ -124,7 +126,7 @@
 						</div>
 						<div class="col-xs-10 text-center">
 							<span class="fa fa-warning text-red" style="font-size: 2.5em;"></span>
-							<h3 class="text-red"><strong>Bu sefere ait biletler de silinecek. Onaylýyor musunuz?</strong></h3>								
+							<h3 class="text-red deleteMessage"><strong>-- numaralý sefere ait biletler de silinecek. Onaylýyor musunuz?</strong></h3>								
 						</div>
 						<div class="col-xs-1">
 							
@@ -174,10 +176,11 @@
 
 	});
 	
-	$("#deleteButton").click(function(e) {
+	$(".deleteVoyageButton").click(function(e) {
 		var voyageId = $(this).data("id");
-		var deleteUrl = "${home}/admin/sefer/" + voyageId + "/sil";
+		var deleteUrl = "${home}admin/sefer/" + voyageId + "/sil";
 		$("#okButton").attr("href", deleteUrl)
+		$(".deleteMessage").html(voyageId + " numaralý sefere ait biletler de silinecek. Onaylýyor musunuz?");
 		$("#deleteVoyageModal").modal("show");
 	});
 	
