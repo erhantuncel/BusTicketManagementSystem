@@ -43,7 +43,7 @@
 								<th style="width: 13%; text-align: center;">Sefer No</th>
 								<th style="width: 13%; text-align: center;">Tarih</th>
 								<th style="width: 13%; text-align: center;">Saat</th>
-								<th style="width: 13%; text-align: center;">Rota</th>
+								<th style="width: 13%; text-align: center;">Güzergâh</th>
 								<th style="width: 13%; text-align: center;">Bilet Ücreti</th>
 								<th style="width: 13%; text-align: center;">Satýlan Bilet</th>
 								<th style="width: 13%; text-align: center;">Bilet Geliri</th>
@@ -119,7 +119,7 @@
 									<td>11:00</td>
 								</tr>
 								<tr>
-									<th>Rota :</th>
+									<th>Güzergâh :</th>
 									<td>Ankara - Bolu</td>
 								</tr>
 								<tr>

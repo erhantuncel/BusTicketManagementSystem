@@ -42,7 +42,7 @@
 								<th style="width: 22%; text-align: center;">Sefer No</th>
 								<th style="width: 22%; text-align: center;">Tarih</th>
 								<th style="width: 22%; text-align: center;">Saat</th>
-								<th style="width: 22%; text-align: center;">Rota</th>
+								<th style="width: 22%; text-align: center;">Güzergâh</th>
 								<th style="width: 12%; text-align: center;">Ýþlemler</th>
 							</tr>
 

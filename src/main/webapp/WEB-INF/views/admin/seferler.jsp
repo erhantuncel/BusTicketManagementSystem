@@ -46,7 +46,7 @@
 									<th style="width: 15%; text-align: center;">Sefer No</th>
 									<th style="width: 15%; text-align: center;">Tarih</th>
 									<th style="width: 15%; text-align: center;">Saat</th>
-									<th style="width: 15%; text-align: center;">Rota</th>
+									<th style="width: 15%; text-align: center;">Güzergâh</th>
 									<th style="width: 15%; text-align: center;">Araç Plakasý</th>
 									<th style="width: 10%; text-align: center;">Ýþlemler</th>
 								</tr>

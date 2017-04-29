@@ -166,7 +166,7 @@
 			<div class="col-sm-9">
 				<div class="box box-success">
 					<div class="box-header">
-						<div class="col-xs-4"><h3 class="box-title"><strong>Rota :</strong> Bolu - Ankara</h3></div>
+						<div class="col-xs-4"><h3 class="box-title"><strong>Güzergâh :</strong> Bolu - Ankara</h3></div>
 						<div class="col-xs-4"><h3 class="box-title"><strong>Tarih : </strong>02.02.2016 Pazartesi</h3></div>
 						<div class="col-xs-4"><h3 class="box-title pull-right"><strong>Saat : </strong> 19:00</h3></div>
 						<div class="box-tools"></div>

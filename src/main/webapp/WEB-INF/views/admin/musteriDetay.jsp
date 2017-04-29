@@ -90,7 +90,7 @@
 								<tr>
 									<th style="width: 11%">Bilet No</th>
 									<th style="width: 11%">Ad Soyad</th>
-									<th style="width: 11%">Rota</th>
+									<th style="width: 11%">Güzergâh</th>
 									<th style="width: 11%">Tarih</th>
 									<th style="width: 11%">Saat</th>
 									<th style="width: 11%">Koltuk No</th>

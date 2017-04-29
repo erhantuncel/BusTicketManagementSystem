@@ -44,10 +44,10 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="fromCity" class="col-sm-2 control-label">Rota</label>
+								<label for="fromCity" class="col-sm-2 control-label">Güzergâh</label>
 								<div class="col-sm-4">
 									<select class="form-control" id="fromCity">
-										<option>Rota Seçiniz</option>
+										<option>Güzergâh Seçiniz</option>
 										<option>Ankara-Bolu-Sakarya-Ýzmit</option>
 										<option>Ankara-Bolu-Düzce</option>
 										<option>Ýstanbul-Bursa-Balýkesir-Manisa-Ýzmir</option>

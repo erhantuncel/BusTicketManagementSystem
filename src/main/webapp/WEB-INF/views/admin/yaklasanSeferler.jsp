@@ -31,7 +31,7 @@
 						<table class="table table-hover" style="text-align: center;">
 							<tr>
 								<th style="width: 21%; text-align: center;">Sefer No</th>
-								<th style="width: 21%; text-align: center;">Rota</th>
+								<th style="width: 21%; text-align: center;">Güzergâh</th>
 								<th style="width: 21%; text-align: center;">Kalkýþ</th>
 								<th style="width: 6%; text-align: center;">Ýþlemler</th>
 							</tr>

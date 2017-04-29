@@ -78,7 +78,7 @@
 						<table class="table table-bordered table-condensed">
 							<tr>
 								<th style="width: 13%;">Sefer No</th>
-								<th style="width: 35%;">Rota</th>
+								<th style="width: 35%;">Güzergâh</th>
 								<th>Kalkýþ</th>
 								<th>Kalan Süre</th>
 								<th style="width: 5%;">Ýþlem</th>
@@ -118,7 +118,7 @@
 						<table class="table table-bordered table-condensed">
 							<tr>
 								<th style="width: 20%;">Sefer No</th>
-								<th>Rota</th>
+								<th>Güzergâh</th>
 								<th style="width: 25%;">Kalkýþ</th>
 								<th style="width: 5%;">Ýþlem</th>
 							</tr>

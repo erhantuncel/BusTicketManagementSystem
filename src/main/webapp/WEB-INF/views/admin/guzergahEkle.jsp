@@ -11,7 +11,7 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
           <h1>
-            Rota Ekle
+            Güzergâh Ekle
           </h1>
         </section>
 
@@ -32,7 +32,7 @@
 	       			<div class="box-body">
 			          	<form class="form-horizontal">
 				          	<div class="form-group">
-								<label for="routeName" class="col-sm-2 control-label">Rota Adý</label>
+								<label for="routeName" class="col-sm-2 control-label">Güzergâh Adý</label>
 								<div class="col-sm-4">
 									<input type="text" class="form-control" id="routeName">
 								</div>
@@ -123,7 +123,7 @@
 							</div>
 							<div class="form-group">
 								<div class="col-sm-offset-2 col-sm-6">
-									<button type="submit" class="btn btn-success btn-flat">Rota Ekle</button>
+									<button type="submit" class="btn btn-success btn-flat">Güzergâh Ekle</button>
 								</div>
 							</div>
 						</form>   			
