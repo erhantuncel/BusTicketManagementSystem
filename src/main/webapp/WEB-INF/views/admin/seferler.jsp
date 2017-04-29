@@ -56,7 +56,7 @@
 								<c:forEach items="${voyageList}" var="voyage" >
 									<tr>
 										<td>${voyage.id}</td>
-										<td>
+										<td data-order="${voyage.departureTime.time}">
 											<fmt:formatDate value="${voyage.departureTime}"
 														type="date" pattern="dd.MM.yyyy" var="voyageDepartureDate" />
 													${voyageDepartureDate}
