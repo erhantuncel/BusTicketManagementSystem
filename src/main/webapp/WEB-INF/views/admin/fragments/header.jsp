@@ -40,6 +40,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <!-- Datatables -->
 <link rel="stylesheet"
 	href="<c:url value="/resources/js/plugins/datatables/dataTables.bootstrap.css"/>">
+<!-- Bootstrap datetimepicker -->
+<link rel="stylesheet"
+	href="<c:url value="/resources/js/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css"/>">
 <!-- Bootstrap time Picker -->
 <link rel="stylesheet"
 	href="<c:url value="/resources/js/plugins/timepicker/bootstrap-timepicker.min.css"/>">

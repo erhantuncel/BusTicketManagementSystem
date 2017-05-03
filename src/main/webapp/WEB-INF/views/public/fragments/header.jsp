@@ -27,6 +27,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <!-- Font Awesome -->
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+<!-- Bootstrap datetimepicker -->
+<link rel="stylesheet"
+	href="<c:url value="/resources/js/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css"/>">
 <!-- Datepicker -->
 <link rel="stylesheet"
 	href="<c:url value="/resources/js/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css"/>">

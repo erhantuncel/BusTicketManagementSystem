@@ -20,6 +20,9 @@
          user experience. Slimscroll is required when using the
          fixed layout. -->
 
+	<!-- Bootstrap-datetimepicker -->
+    <script src="<c:url value="/resources/js/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"/>" charset="UTF-8"></script>
+
     <!-- Datepicker -->
     <script src="<c:url value="/resources/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"/>" charset="UTF-8"></script>
     <script src="<c:url value="/resources/js/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.tr.min.js"/>" charset="UTF-8"></script>
