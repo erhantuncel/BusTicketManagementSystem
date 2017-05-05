@@ -1,9 +1,12 @@
 package com.erhan.onlinebilet;
 
+import java.beans.PropertyEditorSupport;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -13,10 +16,15 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,13 +33,17 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.erhan.onlinebilet.model.Customer;
+import com.erhan.onlinebilet.model.Route;
 import com.erhan.onlinebilet.model.Ticket;
+import com.erhan.onlinebilet.model.Vehicle;
 import com.erhan.onlinebilet.model.Voyage;
 import com.erhan.onlinebilet.service.CustomerService;
 import com.erhan.onlinebilet.service.ExpenseService;
 import com.erhan.onlinebilet.service.IncomeService;
+import com.erhan.onlinebilet.service.RouteService;
 import com.erhan.onlinebilet.service.StopService;
 import com.erhan.onlinebilet.service.TicketService;
+import com.erhan.onlinebilet.service.VehicleService;
 import com.erhan.onlinebilet.service.VoyageService;
 
 @Controller
@@ -55,6 +67,31 @@ public class AdminController {
 	@Autowired
 	StopService stopService;
 	
+	@Autowired
+	VehicleService vehicleService;
+	
+	@Autowired
+	RouteService routeService;
+	
+	@InitBinder("voyageForm")
+	protected void initBinder(WebDataBinder binder) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
+		
+		binder.registerCustomEditor(Vehicle.class, new PropertyEditorSupport() {
+			@Override
+			public void setAsText(String text) {
+				setValue(vehicleService.findById(new Long(text)));
+			}
+		});
+		
+		binder.registerCustomEditor(Route.class, new PropertyEditorSupport() {
+			@Override
+			public void setAsText(String text) {
+				setValue(routeService.findById(new Long(text)));
+			}
+		});
+	}
 	
 	@RequestMapping(value = "/admin", method = RequestMethod.GET)
 	public ModelAndView home(HttpServletRequest request) {
@@ -183,7 +220,7 @@ public class AdminController {
 	
 	@RequestMapping(value = "/admin/seferler", method=RequestMethod.POST)
 	public ModelAndView voyagesForDate(@RequestParam(value = "date") @DateTimeFormat(pattern = "dd.MM.yyyy") Date date) {
-		
+
 		ModelAndView model = new ModelAndView();
 		model.addObject("title", "Online Bilet Sistemi | Yönetim Paneli - Seferler");
 		List<Voyage> voyageListForDate = voyageService.findAllByDate(date);
@@ -214,6 +251,44 @@ public class AdminController {
 		return model;
 	}
 	
+	@RequestMapping(value = "/admin/seferEkle", method=RequestMethod.GET)
+	public ModelAndView showAddVoyageForm() {
+		
+		ModelAndView model = new ModelAndView();
+		model.addObject("title", "Online Bilet Sistemi | Yönetim Paneli - Sefer Ekleme");
+		 
+		populateModelWithVehicle(vehicleService.findAll(), model);
+		populateModelWithRoute(routeService.findAll(), model);
+		
+		model.addObject("voyageForm", new Voyage());
+		
+		model.setViewName("admin/seferEkle");
+		return model;
+	}
+	
+	@RequestMapping(value = "/admin/seferEkle", method=RequestMethod.POST)
+	public ModelAndView saveVoyage(@ModelAttribute("voyageForm") Voyage voyage, BindingResult result,
+			HttpServletRequest request, RedirectAttributes redir) {
+		 
+		String resultMessage = null;
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.setTime(new Date());
+		voyage.setRegisterTime(gc.getTime());
+		Long id = voyageService.create(voyage);
+		
+		Voyage createdVoyage = voyageService.findById(id);
+		SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+		
+		resultMessage = df.format(createdVoyage.getDepartureTime()) + " tarihli sefer oluşturuldu.";
+		
+		redir.addFlashAttribute("warningType", "info");
+		redir.addFlashAttribute("msg", resultMessage);
+		ModelAndView model = new ModelAndView();
+		model.setViewName("redirect:" + "/admin/seferler");
+		
+		return model;
+	}
+	
 	private Customer getCustomer() {
 		String tcNumber = null;
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -225,6 +300,22 @@ public class AdminController {
 		
 		Customer customer = customerService.findByTcNumber(tcNumber);
 		return customer;
+	}
+	
+	private void populateModelWithVehicle(List<Vehicle> vehicleList, ModelAndView model) {
+		Map<String, String> vehicleMap = new LinkedHashMap<String, String>();
+		for (Vehicle vehicle : vehicleList) {
+			vehicleMap.put(vehicle.getId().toString(), vehicle.getPlateCode());
+		}
+		model.addObject("vehicleMap", vehicleMap);
+	}
+	
+	private void populateModelWithRoute(List<Route> routeList, ModelAndView model) {
+		Map<String, String> routeMap = new LinkedHashMap<String, String>();
+		for (Route route: routeList) {
+			routeMap.put(route.getId().toString(), route.getRouteName());
+		}
+		model.addObject("routeMap", routeMap);
 	}
 	
 	
