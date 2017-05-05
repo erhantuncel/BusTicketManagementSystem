@@ -310,6 +310,9 @@
 <script>
 	$(document).ready(function() {
 		var dataTable = $("#passangerTable").DataTable({
+			"language": {
+			      "emptyTable": "Bu seferde kayýtlý yolcu bulunamadý."
+			    },
 			"paging" : false,
 			"info" : false,
 			"search" : {
