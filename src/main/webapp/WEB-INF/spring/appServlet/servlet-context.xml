@@ -30,46 +30,6 @@
 	<context:component-scan base-package="com.erhan.onlinebilet.dao" />
 	<context:component-scan base-package="com.erhan.onlinebilet.service" />
 	
-	<!-- 
-	<context:property-placeholder location="classpath:application.properties"/>
-	
-	<beans:bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
-		<beans:property name="driverClassName" value="${jdbc.driverClassName}"/>
-		<beans:property name="url" value="${jdbc.url}"/>
-		<beans:property name="username" value="${jdbc.username}"/>
-		<beans:property name="password" value="${jdbc.password}"/>
-	</beans:bean>
-	 -->
-	
 	<tx:annotation-driven transaction-manager="transactionManager"/>
 	
-	<!-- 
-	<beans:bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
-		<beans:property name="dataSource" ref="dataSource"/>
-		<beans:property name="packagesToScan">
-			<beans:list>
-				<beans:value>com.erhan.onlinebilet.model</beans:value>
-			</beans:list>
-		</beans:property>
-		<beans:property name="hibernateProperties">
-			<beans:props>
-				<beans:prop key="hibernate.dialect">${hibernate.dialect}</beans:prop>
-				<beans:prop key="hibernate.show_sql">${hibernate.show_sql:true}</beans:prop>
-				<beans:prop key="hibernate.format_sql">${hibernate.format_sql:true}</beans:prop>
-			</beans:props>
-		</beans:property>
-	</beans:bean>
-	-->
-	
-<!-- 	<beans:bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager"> -->
-<!-- 		<beans:property name="sessionFactory" ref="sessionFactory"/> -->
-<!-- 	</beans:bean> -->
-	
-	
-	<!-- 
-	<beans:bean id="customerDAO" class="com.erhan.onlinebilet.dao.CustomerDAOImpl" />
-	<beans:bean id="customerService" class="com.erhan.onlinebilet.service.CustomerServiceImpl" />
-	 -->
-	 
-
 </beans:beans>
