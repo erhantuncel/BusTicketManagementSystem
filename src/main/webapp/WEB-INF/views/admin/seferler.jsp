@@ -25,6 +25,11 @@
 				<div class="box box-success">
 					<div class="box-header">
 						<h3 class="box-title"></h3>
+						<div class="pull-left" style="padding-top: 0px;">
+							<a class="btn btn-sm btn-success btn-flat" title="Sefer Ekle" href="<c:url value="/admin/seferEkle"/>">
+								<i class="fa fa-plus"></i>&nbsp;&nbsp;Sefer Ekle
+							</a>													
+						</div>
 						<div class="box-tools">
 							<form id="searchForm" class="form-inline" action="${home}admin/seferler" method="POST">
 								<div class="form-group">
@@ -39,7 +44,7 @@
 						</div>
 					</div>
 					<!-- /.box-header -->
-					<div class="box-body table-responsive" style="height: 67vh">
+					<div class="box-body table-responsive" style="height: 62vh">
 						<table id="voyageListTable" class="table table-hover" style="text-align: center;">
 							<thead>
 								<tr>
@@ -163,14 +168,19 @@
 		$('.date').datepicker({
 			language : 'tr',
 			autoclose : true,
+			orientation: "bottom auto",
+			todayHighlight: true,
 		});
 	});
 	
 	$(document).ready(function() {
 		var dataTable = $("#voyageListTable").DataTable({
+			"language": {
+			      "emptyTable": "Seçilen tarihte sefer bulunamadý."
+			    },
 			"paging" : false,
 			"info" : false,
-			"order": [[1, "asc"]],
+			"order": [[1, "desc"]],
 			"searching" : false,
 		});
 
