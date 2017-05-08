@@ -16,9 +16,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -41,16 +44,21 @@ public class Voyage implements Comparable<Voyage> {
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name = "ARAC_ID")
 	@JsonManagedReference
+	@NotNull
+	@Valid
 	private Vehicle vehicle;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name = "ROTA_ID")
 	@JsonManagedReference
+	@NotNull
+	@Valid
 	private Route route;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "KALKIS_ZAMANI")
 	@JsonFormat(shape=Shape.STRING, pattern="dd.MM.yyyy HH:mm")
+	@NotNull
  	private Date departureTime; 
  	
 	@Temporal(TemporalType.TIMESTAMP)

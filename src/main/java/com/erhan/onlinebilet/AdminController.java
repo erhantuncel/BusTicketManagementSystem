@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,21 +77,32 @@ public class AdminController {
 	@InitBinder("voyageForm")
 	protected void initBinder(WebDataBinder binder) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
 		
 		binder.registerCustomEditor(Vehicle.class, new PropertyEditorSupport() {
 			@Override
-			public void setAsText(String text) {
-				setValue(vehicleService.findById(new Long(text)));
+			public void setAsText(String id) {
+				if(id == "") {					
+					setValue(null);
+				} else {
+					setValue(vehicleService.findById(new Long(id)));
+				}
 			}
 		});
 		
 		binder.registerCustomEditor(Route.class, new PropertyEditorSupport() {
 			@Override
-			public void setAsText(String text) {
-				setValue(routeService.findById(new Long(text)));
+			public void setAsText(String id) {
+				if(id == "") {					
+					setValue(null);
+				} else {
+					setValue(routeService.findById(new Long(id)));
+				}
 			}
 		});
+		
+		binder.setDisallowedFields("expenseList");
+		binder.setDisallowedFields("ticketList");
 	}
 	
 	@RequestMapping(value = "/admin", method = RequestMethod.GET)
@@ -267,24 +279,31 @@ public class AdminController {
 	}
 	
 	@RequestMapping(value = "/admin/seferEkle", method=RequestMethod.POST)
-	public ModelAndView saveVoyage(@ModelAttribute("voyageForm") Voyage voyage, BindingResult result,
-			HttpServletRequest request, RedirectAttributes redir) {
-		 
-		String resultMessage = null;
-		GregorianCalendar gc = new GregorianCalendar();
-		gc.setTime(new Date());
-		voyage.setRegisterTime(gc.getTime());
-		Long id = voyageService.create(voyage);
+	public ModelAndView saveVoyage(@ModelAttribute("voyageForm") @Valid Voyage voyage, BindingResult result, 
+									ModelAndView model, RedirectAttributes redir) {
 		
-		Voyage createdVoyage = voyageService.findById(id);
-		SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-		
-		resultMessage = df.format(createdVoyage.getDepartureTime()) + " tarihli sefer oluşturuldu.";
-		
-		redir.addFlashAttribute("warningType", "info");
-		redir.addFlashAttribute("msg", resultMessage);
-		ModelAndView model = new ModelAndView();
-		model.setViewName("redirect:" + "/admin/seferler");
+		if(result.hasErrors()) {
+			populateModelWithVehicle(vehicleService.findAll(), model);
+			populateModelWithRoute(routeService.findAll(), model);
+			System.out.println(result.getAllErrors());
+			model.setViewName("/admin/seferEkle");
+		} else {			
+			String resultMessage = null;
+			GregorianCalendar gc = new GregorianCalendar();
+			gc.setTime(new Date());
+			voyage.setRegisterTime(gc.getTime());
+			Long id = voyageService.create(voyage);
+			
+			Voyage createdVoyage = voyageService.findById(id);
+			SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+			
+			resultMessage = df.format(createdVoyage.getDepartureTime()) + " tarihli sefer oluşturuldu.";
+			
+			redir.addFlashAttribute("warningType", "info");
+			redir.addFlashAttribute("msg", resultMessage);
+			
+			model.setViewName("redirect:" + "/admin/seferler");
+		}
 		
 		return model;
 	}

@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -32,7 +33,7 @@ public class Vehicle {
 	
 	@Column(name = "PLAKA")
 	@NotEmpty
-	@Size(min = 7, max = 7)
+	@Pattern(regexp="[A-Z0-9]{7}")
 	private String plateCode;
 	
 	@Column(name = "KOLTUK_SAYISI")
@@ -47,7 +48,7 @@ public class Vehicle {
 	
 	@Column(name = "URETIM_YILI")
 	@NotEmpty
-	@Size(min = 4, max = 4)
+	@Pattern(regexp="[0-9]{4}")
 	private String year;
 	
 	@Column(name = "KAT_EDILEN_MESAFE")

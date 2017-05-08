@@ -36,48 +36,55 @@
 	       				
 	       				<form:form class="form-horizontal" modelAttribute="voyageForm" 
 	       							action="${home}admin/seferEkle" method="POST">
+	       					<!-- 
 	       					<form:hidden path="id"/>
-	       					
+	       					 -->
+	       					 
 	       					<spring:bind path="vehicle">
-	       						<div class="form-group">
+	       						<div class="form-group ${status.error ? 'has-error' : ''}">
 	       							<label for="vehicle" class="col-sm-2 control-label">Araç</label>
 	       							<div class="col-sm-4">
 	       								<form:select path="vehicle" class="form-control">
-	       									<form:option value="NONE" label="Araç Seçiniz" />
+	       									<form:option value="" label="Araç Seçiniz" />
 	       									<form:options items="${vehicleMap}"/>
 	       								</form:select>
+	       								<form:errors path="vehicle" cssClass="control-label error" />
 	       							</div>
 	       						</div>
 	       					</spring:bind>
 	       					
 	       					<spring:bind path="route">
-	       						<div class="form-group">
+	       						<div class="form-group ${status.error ? 'has-error' : ''}">
 	       							<label for="route" class="col-sm-2 control-label">Güzergâh</label>
 	       							<div class="col-sm-4">
 	       								<form:select path="route" class="form-control">
-	       									<form:option value="NONE" label="Güzergâh Seçiniz" />
+	       									<form:option value="" label="Güzergâh Seçiniz" />
 	       									<form:options items="${routeMap}"/>
 	       								</form:select>
+	       								<form:errors path="route" cssClass="control-label error" />
 	       							</div>
 	       						</div>
 	       					</spring:bind>
 	       					
 	       					<spring:bind path="departureTime">
-	       						<div class="form-group">
+	       						<div class="form-group ${status.error ? 'has-error' : ''}">
 	       							<label for="departureTime" class="col-sm-2 control-label">Kalkýþ Zamaný</label>
 	       							<div class="col-sm-4">
 	       								<div class="input-group">
 		       								<form:input path="departureTime" type="text" class="form-control datepicker" id="voyageDate"/>
 		       								<span class="input-group-addon"><i class="fa fa-calendar"></i> </span>	       								
 	       								</div>
+	       								<form:errors path="departureTime" cssClass="control-label error"/>
 	       							</div>
 	       						</div>
 	       					</spring:bind>
 	       					
+	       					<!-- 
 	       					<form:hidden path="registerTime"/>
 	       					<form:hidden path="expenseList"/>
 	       					<form:hidden path="ticketList"/>
-	       					
+	       					 -->
+	       					 
 	       					<div class="form-group">
 								<div class="col-sm-offset-2 col-sm-4">
 									<button type="submit" class="btn btn-success btn-flat">Sefer Oluþtur</button>
