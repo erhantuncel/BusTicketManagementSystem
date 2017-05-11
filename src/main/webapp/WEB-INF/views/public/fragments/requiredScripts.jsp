@@ -29,3 +29,5 @@
     <!-- bootstrap time picker -->
     <script src="<c:url value="/resources/js/plugins/timepicker/bootstrap-timepicker.min.js"/>"></script>
     
+	<!-- Select2 -->
+    <script src="<c:url value="/resources/js/plugins/select2/js/select2.min.js"/>"></script>

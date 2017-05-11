@@ -46,6 +46,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <!-- Bootstrap time Picker -->
 <link rel="stylesheet"
 	href="<c:url value="/resources/js/plugins/timepicker/bootstrap-timepicker.min.css"/>">
+<!-- Select2 -->
+<link rel="stylesheet"
+	href="<c:url value="/resources/js/plugins/select2/css/select2.min.css"/>">	
 <!-- Bootstrap slider -->
     <link rel="stylesheet" href="<c:url value="/resources/js/plugins/bootstrap-slider/bootstrap-slider.min.css"/>">
 <!-- Theme style -->
