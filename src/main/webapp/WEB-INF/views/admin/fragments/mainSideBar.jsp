@@ -31,7 +31,7 @@
               <a href="#"><i class="fa fa-random"></i> <span>Sefer Yönetimi</span> <i class="fa fa-angle-left pull-right"></i></a>
               <ul class="treeview-menu">
                 <li><a href="<c:url value="/admin/seferler"/>">Seferler</a></li>
-                <li><a href="<c:url value="/admin/rotaEkle"/>">Güzergâh Ekle</a></li>
+                <li><a href="<c:url value="/admin/guzergahEkle"/>">Güzergâh Ekle</a></li>
                 <li><a href="<c:url value="/admin/seferEkle"/>">Sefer Ekle</a></li>
                 <li><a href="<c:url value="/admin/aktifSeferler"/>">Aktif Seferler</a></li>
                 <li><a href="<c:url value="/admin/yaklasanSeferler"/>">Yaklaşan Seferler</a></li>
