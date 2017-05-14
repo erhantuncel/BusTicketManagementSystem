@@ -30,7 +30,7 @@ public class CityTest extends BaseTest {
 		assertEquals(cityList.size(), 81);
 		assertEquals(cityList.get(13).getCityName(), "BOLU");
 		for(City c : cityList) {
-			System.out.println(c);
+			System.out.println("Id: " + c.getId().toString() + " Name: " + c.getCityName());
 		}
 	}
 }
