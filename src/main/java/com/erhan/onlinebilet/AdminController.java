@@ -33,11 +33,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.erhan.onlinebilet.model.City;
+import com.erhan.onlinebilet.model.CityDistance;
 import com.erhan.onlinebilet.model.Customer;
 import com.erhan.onlinebilet.model.Route;
+import com.erhan.onlinebilet.model.Stop;
 import com.erhan.onlinebilet.model.Ticket;
 import com.erhan.onlinebilet.model.Vehicle;
 import com.erhan.onlinebilet.model.Voyage;
+import com.erhan.onlinebilet.service.CityDistanceService;
+import com.erhan.onlinebilet.service.CityService;
 import com.erhan.onlinebilet.service.CustomerService;
 import com.erhan.onlinebilet.service.ExpenseService;
 import com.erhan.onlinebilet.service.IncomeService;
@@ -46,6 +51,7 @@ import com.erhan.onlinebilet.service.StopService;
 import com.erhan.onlinebilet.service.TicketService;
 import com.erhan.onlinebilet.service.VehicleService;
 import com.erhan.onlinebilet.service.VoyageService;
+import com.erhan.onlinebilet.web.model.AddRouteForm;
 
 @Controller
 public class AdminController {
@@ -73,6 +79,12 @@ public class AdminController {
 	
 	@Autowired
 	RouteService routeService;
+	
+	@Autowired
+	CityService cityService;
+	
+	@Autowired
+	CityDistanceService cityDistanceService;
 	
 	@InitBinder("voyageForm")
 	protected void initBinder(WebDataBinder binder) {
@@ -285,7 +297,6 @@ public class AdminController {
 		if(result.hasErrors()) {
 			populateModelWithVehicle(vehicleService.findAll(), model);
 			populateModelWithRoute(routeService.findAll(), model);
-			System.out.println(result.getAllErrors());
 			model.setViewName("/admin/seferEkle");
 		} else {			
 			String resultMessage = null;
@@ -305,6 +316,66 @@ public class AdminController {
 			model.setViewName("redirect:" + "/admin/seferler");
 		}
 		
+		return model;
+	}
+	
+	@RequestMapping(value = "/admin/guzergahEkle", method=RequestMethod.GET)
+	public ModelAndView showAddRouteForm() {
+		
+		ModelAndView model = new ModelAndView();
+		model.addObject("title", "Online Bilet Sistemi | Yönetim Paneli - Güzergah Ekleme");
+		populateModelWithCity(cityService.findAll(), model);
+		
+		model.addObject("addRouteForm", new AddRouteForm());
+		model.setViewName("admin/guzergahEkle");
+		return model;
+	}
+	
+	@RequestMapping(value = "/admin/guzergahEkle", method=RequestMethod.POST)
+	public ModelAndView saveRouteAndStops(@ModelAttribute("addRouteForm") @Valid AddRouteForm addRouteForm, BindingResult result,
+											ModelAndView model, RedirectAttributes redir) {
+		List<String> stopPlateCodes = addRouteForm.getStopList();
+		if(result.hasErrors()) {
+			populateModelWithCity(cityService.findAll(), model);
+			model.setViewName("admin/guzergahEkle");
+		} else {
+			Route route = new Route();
+			route.setRouteName(addRouteForm.getRouteName());
+			City departure = null;
+			Stop stop = null;
+			Integer lastDuration = 0;
+			for (int i=0; i<stopPlateCodes.size(); i++) {
+				if(i==0) {
+					departure = cityService.findById(new Long(stopPlateCodes.get(i)));
+					stop = new Stop(route, departure, 0, 0);
+				} else {
+					City arrival = cityService.findById(new Long(stopPlateCodes.get(i)));
+					
+					Integer averageSpeed = 90;
+					Integer timePeriodInMinutes = 15;
+					Integer extraTime = 15;
+					CityDistance distance = cityDistanceService.findByDepartureAndArrival(departure, arrival);
+					Integer calculatedDurationMin = (int) Math.ceil((distance.getDistance().doubleValue() / averageSpeed.doubleValue())*60);
+					Integer modDuration15 = calculatedDurationMin % timePeriodInMinutes;
+					Integer duration = calculatedDurationMin + (timePeriodInMinutes - modDuration15) + extraTime;
+					lastDuration = lastDuration + duration;
+					stop = new Stop(route, arrival, lastDuration, 0);
+					departure = arrival;
+				}
+				stopService.create(stop);
+				route.getStops().add(stop);
+				routeService.create(route);
+			}
+			
+//			System.out.println("Route Name = " + addRouteForm.getRouteName());
+//			for (int i=0; i<stopPlateCodes.size(); i++) {
+//				System.out.println("i = " + i + " Stop = " + stopPlateCodes.get(i));
+//			}
+		}
+		
+		model.addObject("title", "Online Bilet Sistemi | Yönetim Paneli - Güzergah Ekleme");
+		populateModelWithCity(cityService.findAll(), model);
+		model.setViewName("admin/guzergahlar");
 		return model;
 	}
 	
@@ -335,6 +406,14 @@ public class AdminController {
 			routeMap.put(route.getId().toString(), route.getRouteName());
 		}
 		model.addObject("routeMap", routeMap);
+	}
+	
+	private void populateModelWithCity(List<City> cityList, ModelAndView model) {
+		Map<String, String> cityMap = new LinkedHashMap<String, String>();
+		for(City city : cityList) {
+			cityMap.put(city.getId().toString(), city.getCityName());
+		}
+		model.addObject("cityMap", cityMap);
 	}
 	
 	
