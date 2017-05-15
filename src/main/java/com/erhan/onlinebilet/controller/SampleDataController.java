@@ -1,4 +1,4 @@
-package com.erhan.onlinebilet;
+package com.erhan.onlinebilet.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
