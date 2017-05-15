@@ -8,13 +8,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.erhan.onlinebilet.dao.RouteDAO;
 import com.erhan.onlinebilet.model.City;
+import com.erhan.onlinebilet.model.CityDistance;
 import com.erhan.onlinebilet.model.Route;
+import com.erhan.onlinebilet.model.Stop;
 
 @Service("routeService")
 public class RouteServiceImpl implements RouteService {
 
 	@Autowired
 	RouteDAO routeDAO;
+	
+	@Autowired
+	CityDistanceService cityDistanceService;
 	
 	@Override
 	@Transactional
@@ -49,5 +54,36 @@ public class RouteServiceImpl implements RouteService {
 	public List<Route> findAllByDepartureAndArrival(City departure, City arrival) {
 		List<Route> routeList = routeDAO.findAllByDepartureAndArrival(departure, arrival);
 		return routeList;
+	}
+
+	@Override
+	public String[] getTotalDistanceAndDurationForRoute(Route route, Integer averageSpeed, Integer timePeriod, Integer extraTime) {
+		Integer totalDistance = 0;
+		Integer totalDurationMin = 0;
+		City departure = null;
+		int index = 0;
+		for(Stop stop : route.getStops()) {
+			if(index == 0) {
+				departure = stop.getCity();
+				index++;
+				continue;
+			}
+			City arrival = stop.getCity();
+			CityDistance distance = cityDistanceService.findByDepartureAndArrival(departure, arrival);
+			Integer calculatedDurationMin = (int) Math.ceil((distance.getDistance().doubleValue() / averageSpeed.doubleValue())*60);
+			Integer modDuration15 = calculatedDurationMin % timePeriod;
+			Integer duration = calculatedDurationMin + (timePeriod - modDuration15) + extraTime;
+			totalDurationMin = totalDurationMin + duration;
+			totalDistance = totalDistance + distance.getDistance();
+			departure = arrival;
+		}
+		Integer durationHour = totalDurationMin / 60;
+		Integer durationMin = totalDurationMin % 60;
+		String durationStr = durationHour + " sa. " + durationMin + " dk.";
+		String[] distanceAndDurationArray = new String[2];
+		distanceAndDurationArray[0] = totalDistance.toString();
+		distanceAndDurationArray[1] = durationStr;		
+		
+		return distanceAndDurationArray;
 	}
 }
