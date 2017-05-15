@@ -319,6 +319,23 @@ public class AdminController {
 		return model;
 	}
 	
+	@RequestMapping(value = "/admin/guzergahlar", method=RequestMethod.GET)
+	public ModelAndView routes() {
+		ModelAndView model = new ModelAndView();
+		model.addObject("title", "Online Bilet Sistemi | Yönetim Paneli - Güzergâhlar");
+
+		List<Route> routeList = routeService.findAll();
+		Map<Route, String[]> routeAndDistanceDurationMap = new LinkedHashMap<Route, String[]>();
+		for(Route route : routeList) {
+			String[] distanceAndDurationForRoute = routeService.getTotalDistanceAndDurationForRoute(route, 90, 15, 15);
+			routeAndDistanceDurationMap.put(route, distanceAndDurationForRoute);
+		}		
+		
+		model.addObject("routeAndDistanceDurationMap", routeAndDistanceDurationMap);
+		model.setViewName("admin/guzergahlar");
+		return model;
+	}
+	
 	@RequestMapping(value = "/admin/guzergahEkle", method=RequestMethod.GET)
 	public ModelAndView showAddRouteForm() {
 		
@@ -371,11 +388,16 @@ public class AdminController {
 //			for (int i=0; i<stopPlateCodes.size(); i++) {
 //				System.out.println("i = " + i + " Stop = " + stopPlateCodes.get(i));
 //			}
+			
+			String resultMessage = route.getRouteName() + " güzergâhı oluşturuldu.";
+			
+			redir.addFlashAttribute("warningType", "info");
+			redir.addFlashAttribute("msg", resultMessage);
 		}
 		
-		model.addObject("title", "Online Bilet Sistemi | Yönetim Paneli - Güzergah Ekleme");
-		populateModelWithCity(cityService.findAll(), model);
-		model.setViewName("admin/guzergahlar");
+//		model.addObject("title", "Online Bilet Sistemi | Yönetim Paneli - Güzergah Ekleme");
+//		populateModelWithCity(cityService.findAll(), model);
+		model.setViewName("redirect:" + "/admin/guzergahlar");
 		return model;
 	}
 	
