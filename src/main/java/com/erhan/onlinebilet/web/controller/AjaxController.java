@@ -14,12 +14,15 @@ import com.erhan.onlinebilet.model.City;
 import com.erhan.onlinebilet.model.Route;
 import com.erhan.onlinebilet.model.Stop;
 import com.erhan.onlinebilet.model.Ticket;
+import com.erhan.onlinebilet.model.Vehicle;
 import com.erhan.onlinebilet.service.CityDistanceService;
 import com.erhan.onlinebilet.service.CityService;
 import com.erhan.onlinebilet.service.RouteService;
 import com.erhan.onlinebilet.service.TicketService;
+import com.erhan.onlinebilet.service.VehicleService;
 import com.erhan.onlinebilet.web.model.AjaxResponseBodyForRouteDistance;
 import com.erhan.onlinebilet.web.model.AjaxResponseBodyForTicket;
+import com.erhan.onlinebilet.web.model.AjaxResponseBodyForVehicle;
 
 
 @RestController
@@ -36,6 +39,9 @@ public class AjaxController {
 	
 	@Autowired
 	RouteService routeService;
+	
+	@Autowired
+	VehicleService vehicleService;
 	
 	@RequestMapping(value = "/admin/biletDetay/{id}")
 	public AjaxResponseBodyForTicket getTicketSearchResultById2(@PathVariable(value="id") String id) {
@@ -62,6 +68,20 @@ public class AjaxController {
 		result.setMessage("");
 		result.setDistance(new Integer(distanceAndDuration[0]));
 		result.setDuration(distanceAndDuration[1]);
+		return result;
+	}
+	
+	@RequestMapping(value = "/admin/aracDetay/{id}")
+	public AjaxResponseBodyForVehicle getVehicleSearchResultById(@PathVariable(value="id") String id) {
+		
+		AjaxResponseBodyForVehicle result = new AjaxResponseBodyForVehicle();
+		
+		Vehicle vehicle = vehicleService.findById(new Long(id));
+		
+		result.setCode("200");
+		result.setMessage("");
+		result.setVehicle(vehicle);
+		
 		return result;
 	}
 	
