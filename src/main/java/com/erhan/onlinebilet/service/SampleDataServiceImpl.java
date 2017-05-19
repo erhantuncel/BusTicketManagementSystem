@@ -201,7 +201,7 @@ public class SampleDataServiceImpl implements SampleDataService {
 		for(int i=0; i<12; i++) {
 			int platePostfix = 40 + i;
 			String plate = "14BL1" + platePostfix;
-			Integer seatCount = 37;
+//			Integer seatCount = 37;
 //			VehicleModel model = vehicleModelService.findById(Long.valueOf(String.valueOf(randBetween(1, 7))));
 //			VehicleModel model = vehicleModelService.findById(new Long(randBetween(1, 7)));
 			VehicleModel model = vehicleModelList.get(randBetween(0, 6));
@@ -221,7 +221,7 @@ public class SampleDataServiceImpl implements SampleDataService {
 				milage = Integer.valueOf(randBetween(0, 100000));
 				break;
 			}
-			Vehicle vehicle = new Vehicle(plate, seatCount, model, String.valueOf(year), milage);
+			Vehicle vehicle = new Vehicle(plate, model, String.valueOf(year), milage);
 			vehicleService.create(vehicle);
 		}
 		

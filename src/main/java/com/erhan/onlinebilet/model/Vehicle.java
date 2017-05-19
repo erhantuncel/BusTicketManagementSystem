@@ -38,10 +38,6 @@ public class Vehicle {
 	@Pattern(regexp="[A-Z0-9]{7}")
 	private String plateCode;
 	
-	@Column(name = "KOLTUK_SAYISI")
-	@NotNull
-	private Integer seatCount;
-	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "MODEL_ID")
 	@NotNull
@@ -65,9 +61,8 @@ public class Vehicle {
 
 	}
 
-	public Vehicle(String plateCode, Integer seatCount, VehicleModel model, String year, Integer milage) {
+	public Vehicle(String plateCode, VehicleModel model, String year, Integer milage) {
 		this.plateCode = plateCode;
-		this.seatCount = seatCount;
 		this.model = model;
 		this.year = year;
 		this.milage = milage;
@@ -87,14 +82,6 @@ public class Vehicle {
 
 	public void setPlateCode(String plateCode) {
 		this.plateCode = plateCode;
-	}
-
-	public Integer getSeatCount() {
-		return seatCount;
-	}
-
-	public void setSeatCount(Integer seatCount) {
-		this.seatCount = seatCount;
 	}
 
 	public VehicleModel getModel() {
@@ -128,7 +115,7 @@ public class Vehicle {
 	public void setVoyageList(List<Voyage> voyageList) {
 		this.voyageList = voyageList;
 	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -137,71 +124,56 @@ public class Vehicle {
 		result = prime * result + ((milage == null) ? 0 : milage.hashCode());
 		result = prime * result + ((model == null) ? 0 : model.hashCode());
 		result = prime * result + ((plateCode == null) ? 0 : plateCode.hashCode());
-		result = prime * result + ((seatCount == null) ? 0 : seatCount.hashCode());
+		result = prime * result + ((voyageList == null) ? 0 : voyageList.hashCode());
 		result = prime * result + ((year == null) ? 0 : year.hashCode());
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (this == obj)
 			return true;
-		}
-		if (obj == null) {
+		if (obj == null)
 			return false;
-		}
-		if (!(obj instanceof Vehicle)) {
+		if (getClass() != obj.getClass())
 			return false;
-		}
 		Vehicle other = (Vehicle) obj;
 		if (id == null) {
-			if (other.id != null) {
+			if (other.id != null)
 				return false;
-			}
-		} else if (!id.equals(other.id)) {
+		} else if (!id.equals(other.id))
 			return false;
-		}
 		if (milage == null) {
-			if (other.milage != null) {
+			if (other.milage != null)
 				return false;
-			}
-		} else if (!milage.equals(other.milage)) {
+		} else if (!milage.equals(other.milage))
 			return false;
-		}
 		if (model == null) {
-			if (other.model != null) {
+			if (other.model != null)
 				return false;
-			}
-		} else if (!model.equals(other.model)) {
+		} else if (!model.equals(other.model))
 			return false;
-		}
 		if (plateCode == null) {
-			if (other.plateCode != null) {
+			if (other.plateCode != null)
 				return false;
-			}
-		} else if (!plateCode.equals(other.plateCode)) {
+		} else if (!plateCode.equals(other.plateCode))
 			return false;
-		}
-		if (seatCount == null) {
-			if (other.seatCount != null) {
+		if (voyageList == null) {
+			if (other.voyageList != null)
 				return false;
-			}
-		} else if (!seatCount.equals(other.seatCount)) {
+		} else if (!voyageList.equals(other.voyageList))
 			return false;
-		}
 		if (year == null) {
-			if (other.year != null) {
+			if (other.year != null)
 				return false;
-			}
-		} else if (!year.equals(other.year)) {
+		} else if (!year.equals(other.year))
 			return false;
-		}
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Vehicle [id=" + id + ", plateCode=" + plateCode + ", seatCount=" + seatCount + ", model=" + model
+		return "Vehicle [id=" + id + ", plateCode=" + plateCode + ", model=" + model
 				+ ", year=" + year + ", milage=" + milage + "]";
 	}
 }

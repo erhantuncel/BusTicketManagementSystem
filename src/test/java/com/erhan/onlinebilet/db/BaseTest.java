@@ -223,7 +223,7 @@ public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 		for(int i=0; i<12; i++) {
 			int platePostfix = 40 + i;
 			String plate = "14BL1" + platePostfix;
-			Integer seatCount = 37;
+//			Integer seatCount = 37;
 			VehicleModel model = vehicleModelService.findById(Long.valueOf(String.valueOf(randBetween(1, 7))));
 			int year = randBetween(2013, 2016);
 			Integer milage = 0;
@@ -241,7 +241,7 @@ public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 				milage = Integer.valueOf(randBetween(0, 100000));
 				break;
 			}
-			Vehicle vehicle = new Vehicle(plate, seatCount, model, String.valueOf(year), milage);
+			Vehicle vehicle = new Vehicle(plate, model, String.valueOf(year), milage);
 			vehicleService.create(vehicle);
 		}
 		

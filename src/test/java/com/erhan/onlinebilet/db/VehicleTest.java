@@ -85,7 +85,7 @@ public class VehicleTest extends BaseTest {
 		
 		VehicleModel model = vehicleModelService.findById(1L);
 		
-		Vehicle vehicle = new Vehicle("14AS957", 37, model, "2014", 85366);
+		Vehicle vehicle = new Vehicle("14AS957", model, "2014", 85366);
 		vehicleService.create(vehicle);
 
 		renewTransaction();

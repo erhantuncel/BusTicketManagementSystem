@@ -1,114 +1,132 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-9"
-    pageEncoding="ISO-8859-9"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
+	pageEncoding="ISO-8859-9"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 <jsp:include page="fragments/header.jsp" />
 
 <jsp:include page="fragments/mainSideBar.jsp" />
 
+<c:url var="home" value="/" scope="request" />
+
 <!-- Content Wrapper. Contains page content -->
-      <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
-        <section class="content-header">
-          <h1>
-            Araç Ekle
-          </h1>
-        </section>
+<div class="content-wrapper">
+	<!-- Content Header (Page header) -->
+	<section class="content-header">
+		<h1>Sefer Ekle</h1>
+	</section>
 
-        <!-- Main content -->
-        <section class="content">
+	<!-- Main content -->
+	<section class="content">
 
-          <!-- Your Page Content Here -->
-          <div class="row">
+		<!-- Your Page Content Here -->
+		
+		<div class="row">
           	<div class="col-xs-12">
 	       		<div class="box box-success">
-	       			<!-- 
+	       			
 	       			<div class="box-header">
 	       				<h3 class="box-title"></h3>
 	       				<div class="box-tools"> 
 	       				</div>
 	       			</div>
-	       			 -->
-	       			<div class="box-body">
-			          	<form class="form-horizontal">
-			          		<div class="form-group">
-								<label for="numberPlate" class="col-sm-2 control-label">Plaka</label>
-								<div class="col-sm-4">
-									<input type="text" class="form-control" id="numberPlate">
-								</div>
-								<!-- /.input group -->
-							</div>
+	       			 
+	       			<div class="box-body" style="height: 64vh">
+	       				<form:form class="form-horizontal" modelAttribute="addVehicleForm" 
+	       							action="${home}admin/aracEkle" method="POST">
 							<div class="form-group">
-								<label for="seatCount" class="col-sm-2 control-label">Koltuk Miktarý</label>
+								<label for="vehicleBrandSelect" class="col-sm-2 control-label">Marka</label>
 								<div class="col-sm-4">
-									<input type="text" class="form-control" id="seatCount" value="37" disabled="disabled">
-								</div>
-								<!-- /.input group -->
-							</div>
-							<div class="form-group">
-								<label for="vehicleBrand" class="col-sm-2 control-label">Marka</label>
-								<div class="col-sm-4">
-									<select class="form-control" id="vehicleBrand">
-										<option selected="selected">Marka Seçiniz</option>
-										<option>Mercedes</option>
-										<option>Setra</option>
-										<option>Neoplan</option>
-										<option>Man</option>
-										<option>Temsa</option>
-										<option>Temsa</option>
+									<select class="form-control" id="vehicleBrandSelect">
+										<option val="">Marka Seçiniz</option>
+										<c:forEach items="${vehicleBrandMap}" var="brand">
+											<option value="${brand.key}">${brand.value}</option>																					
+										</c:forEach>
 									</select>
 								</div>
 							</div>
-							<div class="form-group">
-								<label for="vehicleModel" class="col-sm-2 control-label">Model</label>
-								<div class="col-sm-4">
-									<select class="form-control" id="vehicleModel">
-										<option>Model Seçiniz</option>
-										<option>Tourismo 15 RHD</option>
-										<option>Tourismo 16 RHD</option>
-										<option>Tourismo 17 RHD</option>
-										<option>O403</option>
-										<option>Travego 15 SHD</option>
-										<option>Travego 17 SHD</option>
-									</select>
+							<spring:bind path="model">							
+								<div class="form-group">
+									<label for="vehicleModelSelect" class="col-sm-2 control-label">Model</label>
+									<div class="col-sm-4">
+										<select class="form-control" id="vehicleModelSelect">
+											<option value="">Model Seçiniz</option>
+										</select>
+									</div>
 								</div>
-							</div>
-							<div class="form-group">
-								<label for="modelYear" class="col-sm-2 control-label">Model Yýlý</label>
-								<div class="col-sm-4">
-									<select class="form-control" id="modelYear">
-										<option>Model Yýlý Seçiniz</option>
-										<option>2015</option>
-										<option>2014</option>
-										<option>2013</option>
-										<option>2012</option>
-										<option>2011</option>
-										<option>2010</option>
-									</select>
+							</spring:bind>
+							<spring:bind path="year">
+								<div class="form-group">
+									<label for="year" class="col-sm-2 control-label">Model Yýlý</label>
+									<div class="col-sm-4">
+										<form:input path="year" cssClass="form-control"/>
+									</div>
+								</div>								
+							</spring:bind>
+							<spring:bind path="plateCode">							
+				          		<div class="form-group ${status.error ? 'has-error' : ''}">
+									<label for="plateCode" class="col-sm-2 control-label">Plaka</label>
+									<div class="col-sm-4">
+										<form:input path="plateCode" cssClass="form-control"/>
+										<form:errors path="plateCode" cssClass="control-label error"/>
+									</div>
+									<!-- /.input group -->
 								</div>
-							</div>
+							</spring:bind>
 							<div class="form-group">
 								<div class="col-sm-offset-2 col-sm-4">
 									<button type="submit" class="btn btn-success btn-flat">Araç Ekle</button>
 								</div>
 							</div>
-						</form>   			
+						</form:form>
+	       				<!-- 
+			          	<form class="form-horizontal">
+							<div class="form-group">
+								<label for="voyageDate" class="col-sm-2 control-label">Tarih</label>
+								<div class="col-sm-4">
+									<div class="input-group">
+										<input type="text" class="form-control datepicker" id="voyageDate">
+										<span class="input-group-addon"><i
+											class="fa fa-calendar"></i> </span>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-sm-offset-2 col-sm-4">
+									<button type="submit" class="btn btn-success btn-flat">Sefer Ekle</button>
+								</div>
+							</div>
+						</form>  
+						 --> 			
 	       			</div>
 	       		</div>
           	</div>
-          
-          
           </div>
-          
-          
-        </section><!-- /.content -->
-      </div><!-- /.content-wrapper -->
+	</section>
+	<!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
 
 
 <jsp:include page="fragments/mainFooter.jsp" />
 
 <jsp:include page="fragments/requiredScripts.jsp" />
 
-  </body>
+<script>
+	$(function() {
+		// Datepicker - voyage
+		$('.datepicker').datetimepicker({
+			language : 'tr',
+			autoclose : 1,
+			pickerPosition: "bottom auto",
+			todayHighlight: 1,
+			startDate: new Date(),
+			format: "dd.mm.yyyy hh:ii:00"
+		});
+	});
+</script>
+
+</body>
 </html>
 
