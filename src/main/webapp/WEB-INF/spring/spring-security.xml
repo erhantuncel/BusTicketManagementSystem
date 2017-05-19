@@ -43,6 +43,8 @@
 	</authentication-manager>
 	
 	<context:component-scan base-package="com.erhan.onlinebilet" />
+	<context:component-scan base-package="com.erhan.onlinebilet.controller" />
+	<context:component-scan base-package="com.erhan.onlinebilet.controller.admin" />
 	<context:component-scan base-package="com.erhan.onlinebilet.model" />
 	<context:component-scan base-package="com.erhan.onlinebilet.dao" />
 	<context:component-scan base-package="com.erhan.onlinebilet.service" />
