@@ -14,7 +14,7 @@
 <div class="content-wrapper">
 	<!-- Content Header (Page header) -->
 	<section class="content-header">
-		<h1>Sefer Ekle</h1>
+		<h1>Araç Ekle</h1>
 	</section>
 
 	<!-- Main content -->
@@ -37,9 +37,9 @@
 	       							action="${home}admin/aracEkle" method="POST">
 							<div class="form-group">
 								<label for="vehicleBrandSelect" class="col-sm-2 control-label">Marka</label>
-								<div class="col-sm-4">
-									<select class="form-control" id="vehicleBrandSelect">
-										<option val="">Marka Seçiniz</option>
+								<div class="col-sm-3">
+									<select class="form-control" id="vehicleBrandSelect" data-placeholder="Marka Seçiniz">
+										<option></option>
 										<c:forEach items="${vehicleBrandMap}" var="brand">
 											<option value="${brand.key}">${brand.value}</option>																					
 										</c:forEach>
@@ -47,29 +47,40 @@
 								</div>
 							</div>
 							<spring:bind path="model">							
-								<div class="form-group">
+								<div class="form-group ${status.error ? 'has-error' : ''}">
 									<label for="vehicleModelSelect" class="col-sm-2 control-label">Model</label>
-									<div class="col-sm-4">
-										<select class="form-control" id="vehicleModelSelect">
-											<option value="">Model Seçiniz</option>
-										</select>
+									<div class="col-sm-3">
+										<form:select path="model" class="form-control" id="vehicleModelSelect" data-placeholder="Model Seçiniz">
+										</form:select>
+										<form:errors path="model" cssClass="control-label error"/>
 									</div>
 								</div>
 							</spring:bind>
 							<spring:bind path="year">
-								<div class="form-group">
+								<div class="form-group ${status.error ? 'has-error' : ''}">
 									<label for="year" class="col-sm-2 control-label">Model Yýlý</label>
-									<div class="col-sm-4">
+									<div class="col-sm-3">
 										<form:input path="year" cssClass="form-control"/>
+										<form:errors path="year" cssClass="control-label error"/>
 									</div>
 								</div>								
 							</spring:bind>
 							<spring:bind path="plateCode">							
 				          		<div class="form-group ${status.error ? 'has-error' : ''}">
 									<label for="plateCode" class="col-sm-2 control-label">Plaka</label>
-									<div class="col-sm-4">
+									<div class="col-sm-3">
 										<form:input path="plateCode" cssClass="form-control"/>
 										<form:errors path="plateCode" cssClass="control-label error"/>
+									</div>
+									<!-- /.input group -->
+								</div>
+							</spring:bind>
+							<spring:bind path="milage">							
+				          		<div class="form-group ${status.error ? 'has-error' : ''}">
+									<label for="milage" class="col-sm-2 control-label">Mesafe</label>
+									<div class="col-sm-3">
+										<form:input path="milage" cssClass="form-control"/>
+										<form:errors path="milage" cssClass="control-label error"/>
 									</div>
 									<!-- /.input group -->
 								</div>
@@ -79,26 +90,7 @@
 									<button type="submit" class="btn btn-success btn-flat">Araç Ekle</button>
 								</div>
 							</div>
-						</form:form>
-	       				<!-- 
-			          	<form class="form-horizontal">
-							<div class="form-group">
-								<label for="voyageDate" class="col-sm-2 control-label">Tarih</label>
-								<div class="col-sm-4">
-									<div class="input-group">
-										<input type="text" class="form-control datepicker" id="voyageDate">
-										<span class="input-group-addon"><i
-											class="fa fa-calendar"></i> </span>
-									</div>
-								</div>
-							</div>
-							<div class="form-group">
-								<div class="col-sm-offset-2 col-sm-4">
-									<button type="submit" class="btn btn-success btn-flat">Sefer Ekle</button>
-								</div>
-							</div>
-						</form>  
-						 --> 			
+						</form:form>		
 	       			</div>
 	       		</div>
           	</div>
@@ -114,17 +106,47 @@
 <jsp:include page="fragments/requiredScripts.jsp" />
 
 <script>
-	$(function() {
-		// Datepicker - voyage
-		$('.datepicker').datetimepicker({
-			language : 'tr',
-			autoclose : 1,
-			pickerPosition: "bottom auto",
-			todayHighlight: 1,
-			startDate: new Date(),
-			format: "dd.mm.yyyy hh:ii:00"
+	var BrandSelect = $("#vehicleBrandSelect");
+	var ModelSelect = $("#vehicleModelSelect");
+	callSelect2(BrandSelect);
+	callSelect2(ModelSelect);
+	
+	$("#vehicleBrandSelect").on("change", (function() {
+		var brandId = $(this).val();
+		// console.log("Selected Id : " + brandId);
+		
+		$.ajax({
+			type : "POST",
+			contentType : "application/json",
+			url : "${home}admin/vehicleModel/brand/"+brandId,
+			dataType : 'json',
+			timeout : 100000,
+			success : function(data) {
+				// console.log("SUCCESS: ", data);
+				//var ModelSelect = $("#vehicleModelSelect");
+				ModelSelect.empty();
+				ModelSelect.append($("<option>").text("").attr("value", ""));
+				$.each(data.modelMap, function(key, value) {
+					// console.log("key: " + key + " value: " + value);
+					ModelSelect.append($("<option>").text(value).attr("value", key));
+				});
+				callSelect2(ModelSelect);
+			},
+			error : function(e) {
+				console.log("ERROR: ", e);
+			},
+			done : function(e) {
+				console.log("DONE");
+			}
 		});
-	});
+	}))
+	
+	
+	function callSelect2(selectInput) {
+		$(selectInput).select2({
+			language: "tr"
+		})
+	}
 </script>
 
 </body>
