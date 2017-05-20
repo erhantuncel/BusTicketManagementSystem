@@ -47,7 +47,6 @@
 							<thead>
 								<tr>
 									<th style="width: 15%; text-align: center;">Plaka</th>
-									<th style="width: 15%; text-align: center;">Koltuk Sayýsý</th>
 									<th style="width: 15%; text-align: center;">Marka</th>
 									<th style="width: 15%; text-align: center;">Model</th>
 									<th style="width: 15%; text-align: center;">Model Yýlý</th>
@@ -59,7 +58,6 @@
 								<c:forEach items="${vehicleList}" var="vehicle">
 									<tr>
 										<td>${vehicle.plateCode}</td>
-										<td>${vehicle.seatCount}</td>
 										<td>${vehicle.model.brand.name}</td>
 										<td>${vehicle.model.modelName}</td>
 										<td>${vehicle.year}</td>
