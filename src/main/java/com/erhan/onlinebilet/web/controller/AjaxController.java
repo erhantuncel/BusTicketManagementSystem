@@ -1,6 +1,8 @@
 package com.erhan.onlinebilet.web.controller;
 
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,14 +17,18 @@ import com.erhan.onlinebilet.model.Route;
 import com.erhan.onlinebilet.model.Stop;
 import com.erhan.onlinebilet.model.Ticket;
 import com.erhan.onlinebilet.model.Vehicle;
+import com.erhan.onlinebilet.model.VehicleBrand;
+import com.erhan.onlinebilet.model.VehicleModel;
 import com.erhan.onlinebilet.service.CityDistanceService;
 import com.erhan.onlinebilet.service.CityService;
 import com.erhan.onlinebilet.service.RouteService;
 import com.erhan.onlinebilet.service.TicketService;
+import com.erhan.onlinebilet.service.VehicleBrandService;
 import com.erhan.onlinebilet.service.VehicleService;
 import com.erhan.onlinebilet.web.model.AjaxResponseBodyForRouteDistance;
 import com.erhan.onlinebilet.web.model.AjaxResponseBodyForTicket;
 import com.erhan.onlinebilet.web.model.AjaxResponseBodyForVehicle;
+import com.erhan.onlinebilet.web.model.AjaxResponseBodyForVehicleModelMap;
 
 
 @RestController
@@ -42,6 +48,9 @@ public class AjaxController {
 	
 	@Autowired
 	VehicleService vehicleService;
+	
+	@Autowired
+	VehicleBrandService vehicleBrandService;
 	
 	@RequestMapping(value = "/admin/biletDetay/{id}")
 	public AjaxResponseBodyForTicket getTicketSearchResultById2(@PathVariable(value="id") String id) {
@@ -82,6 +91,22 @@ public class AjaxController {
 		result.setMessage("");
 		result.setVehicle(vehicle);
 		
+		return result;
+	}
+	
+	@RequestMapping(value = "/admin/vehicleModel/brand/{brandId}")
+	public AjaxResponseBodyForVehicleModelMap getVehicleModelListByBrand(@PathVariable(value="brandId") String id) {
+		
+		AjaxResponseBodyForVehicleModelMap result = new AjaxResponseBodyForVehicleModelMap();
+		
+		VehicleBrand vehicleBrand = vehicleBrandService.findById(new Long(id));
+		Map<String, String> modelMap = new LinkedHashMap<String, String>();
+		for(VehicleModel model : vehicleBrand.getVehicleModelList()) {
+			modelMap.put(model.getId().toString(), model.getModelName());
+		}
+		result.setMessage("");
+		result.setCode("200");
+		result.setModelMap(modelMap);
 		return result;
 	}
 	
