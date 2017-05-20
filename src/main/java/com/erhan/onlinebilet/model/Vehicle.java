@@ -35,7 +35,7 @@ public class Vehicle {
 	
 	@Column(name = "PLAKA")
 	@NotEmpty
-	@Pattern(regexp="[A-Z0-9]{7}")
+	@Pattern(regexp="^[0-8][0-9][A-Z]{1,3}[0-9]{2,5}")
 	private String plateCode;
 	
 	@ManyToOne(cascade = CascadeType.ALL)

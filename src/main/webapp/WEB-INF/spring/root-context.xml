@@ -45,5 +45,11 @@
 		<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
 	
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename">
+			<value>messages/validation</value>
+		</property>
+	</bean>
+	
 <!-- 	<import resource="spring-security.xml"/> -->
 </beans>
