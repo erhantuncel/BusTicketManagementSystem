@@ -1,10 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-9"
 	pageEncoding="ISO-8859-9"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <jsp:include page="fragments/header.jsp" />
 
 <jsp:include page="fragments/mainSideBar.jsp" />
+
+<c:url var="home" value="/" scope="request" />
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -23,12 +26,11 @@
 					<div class="box-header">
 						<h3 class="box-title"></h3>
 						<div class="box-tools">
-							<form class="form-inline">
+							<form id="searchByTcNumberForm" class="form-inline" action="${home}admin/musteriAra" method="POST">
 								<div class="form-group">
 									<div class="input-group" style="width: 150px;">
-										<input type="text" name="table_search"
-											class="form-control input-sm pull-right"
-											placeholder="T.C Numarasý">
+										<input type="text" name="tcNumber" class="form-control input-sm pull-right" placeholder="T.C Numarasý">
+										<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 										<div class="input-group-btn">
 											<button class="btn btn-sm btn-success btn-flat">
 												<i class="fa fa-search"></i>
@@ -40,35 +42,46 @@
 						</div>
 					</div>
 					<!-- /.box-header -->
-					<div class="box-body table-responsive no-padding">
-						<table class="table table-hover" style="text-align: center;">
-							<tr>
-								<th style="width: 18%; text-align: center;">T.C. Numarasý</th>
-								<th style="width: 18%; text-align: center;">Ad Soyad</th>
-								<th style="width: 18%; text-align: center;">Doðum Tarihi</th>
-								<th style="width: 18%; text-align: center;">Cep Telefonu</th>
-								<th style="width: 18%; text-align: center;">E-Posta</th>
-								<th style="width: 10%; text-align: center;">Ýþlemler</th>
-							</tr>
-
-							<c:forEach begin="1" end="10">
+					<div class="box-body table-responsive" style="height: 62vh;">
+						<table id="customerListTable" class="table table-hover" style="text-align: center;">
+							<thead>
 								<tr>
-									<td>21756984547</td>
-									<td>Erhan TUNÇEL</td>
-									<td>29.11.1984</td>
-									<td>5489657841</td>
-									<td>erhan@abc.com</td>
-									<td>
-										<a href="<c:url value="/admin/musteriDetay"/>" class="btn btn-xs btn-success btn-flat" title="Detay"><i class="fa fa-search"></i></a>
-										<a href="<c:url value="/admin/musteriGuncelle"/>" class="btn btn-xs btn-success btn-flat" title="Güncelle"><i class="fa fa-refresh"></i></a>
-										<a class="btn btn-xs btn-danger btn-flat" title="Sil" data-toggle="modal" data-target="#deleteCustomerModal"><i class="fa fa-remove"></i></a>
-									</td>
-								</tr>
-							</c:forEach>
+									<th style="width: 18%; text-align: center;">T.C. Numarasý</th>
+									<th style="width: 18%; text-align: center;">Ad Soyad</th>
+									<th style="width: 18%; text-align: center;">Doðum Tarihi</th>
+									<th style="width: 18%; text-align: center;">Kayýt Tarihi</th>
+									<th style="width: 18%; text-align: center;">Son Giriþ Tarihi</th>
+									<th style="width: 10%; text-align: center;">Ýþlemler</th>
+								</tr>							
+							</thead>
+							<tbody>
+								<c:forEach items="${customerList}" var="customer">
+									<tr>
+										<td>${customer.tcNumber }</td>
+										<td>${customer.name}&nbsp;${customer.surname}</td>
+										<td>
+											<fmt:formatDate value="${customer.dateOfBirth}" type="date" pattern="dd.MM.yyyy" var="dateOfBirth"/>
+											${dateOfBirth}
+										</td>
+										<td>
+											<fmt:formatDate value="${customer.dateOfRegister}" type="date" pattern="dd.MM.yyyy HH:mm:ss" var="dateOfRegister"/>
+											${dateOfRegister}
+										</td>
+										<td>
+											<fmt:formatDate value="${customer.timeOfLastOnline}" type="date" pattern="dd.MM.yyyy HH:mm:ss" var="timeOfLastOnline"/>
+											${timeOfLastOnline}
+										</td>
+										<td>
+											<a href="<c:url value="/admin/musteriDetay"/>" class="btn btn-xs btn-success btn-flat" title="Detay"><i class="fa fa-search"></i></a>
+										</td>
+									</tr>
+								</c:forEach>							
+							</tbody>
 						</table>
 					</div>
 					<!-- /.box-body -->
 					<div class="box-footer clearfix">
+						<!-- 
 						<ul class="pagination pagination-sm no-margin pull-right">
 							<li class="disabled"><a href="#">&laquo;</a></li>
 							<li class="active"><a href="#">1</a></li>
@@ -76,6 +89,7 @@
 							<li><a href="#">3</a></li>
 							<li><a href="#">&raquo;</a></li>
 						</ul>
+						 -->
 					</div>
 				</div>
 				<!-- /.box -->
@@ -147,6 +161,77 @@
 <jsp:include page="fragments/mainFooter.jsp" />
 
 <jsp:include page="fragments/requiredScripts.jsp" />
+
+<c:if test="${not empty msg }">
+	<script>
+		$(function() {
+			callNotify("${msg}", "${warningType}");
+		});
+	</script>
+</c:if> 
+
+<script>
+	$(document).ready(function() {
+		var dataTable = $("#customerListTable").DataTable({
+			"language": {
+			      "emptyTable": "Müþteri bulunamadý."
+			    },
+			"paging" : false,
+			"info" : false,
+			"ordering": false,
+			"searching" : false,
+		});
+	
+	});
+	
+	function callNotify(message, type) {
+		$.notify({
+			// options
+			message: message,
+		},{
+			// settings
+			element: 'body',
+			position: null,
+			type: type,
+			allow_dismiss: true,
+			newest_on_top: false,
+			showProgressbar: false,
+			placement: {
+				from: "top",
+				align: "right"
+			},
+			offset: {
+				x: 5,
+				y: 53
+			},
+			spacing: 10,
+			z_index: 1031,
+			delay: 5000,
+			timer: 1000,
+			url_target: '_blank',
+			mouse_over: null,
+			animate: {
+				enter: 'animated fadeInRight',
+				exit: 'animated fadeOutRight'
+			},
+			onShow: null,
+			onShown: null,
+			onClose: null,
+			onClosed: null,
+			icon_type: 'class',
+			template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert" style="height: 50px;">' +
+				'<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+				'<span data-notify="icon"></span> ' +
+				'<span data-notify="title">{1}</span> ' +
+				'<span data-notify="message">{2}</span>' +
+				'<div class="progress" data-notify="progressbar">' +
+					'<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+				'</div>' +
+				'<a href="{3}" target="{4}" data-notify="url"></a>' +
+			'</div>' 
+		});
+	}
+</script>
 
 </body>
 </html>
