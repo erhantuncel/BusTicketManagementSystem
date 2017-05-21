@@ -14,7 +14,7 @@
               <img src="<c:url value="/resources/img/avatar5.png"/>" class="img-circle" alt="User Image">
             </div>
             <div class="pull-left info">
-              <p>${customer.name}&nbsp;${customer.surname }</p>
+              <p>${admin.name}&nbsp;${admin.surname }</p>
               <p></p>
             </div>
           </div>

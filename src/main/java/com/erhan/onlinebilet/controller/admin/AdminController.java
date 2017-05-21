@@ -47,7 +47,7 @@ public class AdminController {
 		model.addObject("title", "Online Bilet Sistemi | Yönetim Paneli");
 		
 		// Customer - Admin
-		request.getSession().setAttribute("customer", getCustomer());
+		request.getSession().setAttribute("admin", getCustomer());
 		
 		// Ticket Count
 		Integer ticketCount = ticketService.countAll();
