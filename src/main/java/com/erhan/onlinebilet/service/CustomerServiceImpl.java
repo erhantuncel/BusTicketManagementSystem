@@ -46,6 +46,13 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	@Transactional
+	public Customer findByTcNumber(String tcNumber, String userRole) {
+		Customer customer = customerDAO.findByTcNumber(tcNumber, userRole);
+		return customer;
+	}
+
+	@Override
+	@Transactional
 	public Integer countAll() {
 		Integer count = customerDAO.countAll();
 		return count;
@@ -77,6 +84,13 @@ public class CustomerServiceImpl implements CustomerService {
 	@Transactional
 	public List<Customer> findAllSortedByLastRegistered() {
 		List<Customer> customerList = customerDAO.findAllSortedByLastRegistered();
+		return customerList;
+	}
+
+	@Override
+	@Transactional
+	public List<Customer> findAllSortedByLastRegistered(Integer count) {
+		List<Customer> customerList = customerDAO.findAllSortedByLastRegistered(count);
 		return customerList;
 	}
 

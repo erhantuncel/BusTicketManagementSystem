@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -40,8 +40,16 @@ public class CustomerDAOImpl implements CustomerDAO {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Customer> findAll() {
-		Query query = sessionFactory.getCurrentSession().createQuery("from Customer");
-		List<Customer> customerList = query.list();
+		
+//		Query query = sessionFactory.getCurrentSession().createQuery("from Customer");
+//		List<Customer> customerList = query.list();
+		
+		Criteria crt = sessionFactory.getCurrentSession().createCriteria(Customer.class, "customer");
+		crt.createAlias("customer.userRole", "user_role");
+		crt.add(Restrictions.eq("user_role.role", "ROLE_USER"));
+		crt.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+		List<Customer> customerList = crt.list();
+		
 		return customerList;
 	}
 
@@ -62,9 +70,30 @@ public class CustomerDAOImpl implements CustomerDAO {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public Customer findByTcNumber(String tcNumber, String userRole) {
+		List<Customer> customers = new ArrayList<Customer>();
+		
+		Criteria crt = sessionFactory.getCurrentSession().createCriteria(Customer.class, "customer");
+		crt.createAlias("customer.userRole", "user_role");
+		crt.add(Restrictions.eq("user_role.role", userRole));
+		crt.add(Restrictions.eq("tcNumber", tcNumber));
+		crt.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+		customers = crt.list();
+		
+		if(customers.size() > 0) {
+			return customers.get(0);
+		} else {
+			return null;
+		}
+	}
+
 	@Override
 	public Integer countAll() {
-		Criteria crt = sessionFactory.getCurrentSession().createCriteria(Customer.class);
+		Criteria crt = sessionFactory.getCurrentSession().createCriteria(Customer.class, "customer");
+		crt.createAlias("customer.userRole", "user_role");
+		crt.add(Restrictions.eq("user_role.role", "ROLE_USER"));
 		crt.setProjection(Projections.rowCount());
 		Long countLong = (Long) crt.uniqueResult();
 		Integer count = countLong.intValue();
@@ -74,7 +103,9 @@ public class CustomerDAOImpl implements CustomerDAO {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object[]> countMonthly(Integer year) {
-		Criteria crt = sessionFactory.getCurrentSession().createCriteria(Customer.class);
+		Criteria crt = sessionFactory.getCurrentSession().createCriteria(Customer.class, "customer");
+		crt.createAlias("customer.userRole", "user_role");
+		crt.add(Restrictions.eq("user_role.role", "ROLE_USER"));
 		crt.add(Restrictions.sqlRestriction("year({alias}.KAYIT_ZAMANI) = ?", year, IntegerType.INSTANCE));
 		crt.setProjection(Projections.projectionList()
 				.add(Projections.sqlGroupProjection(
@@ -91,8 +122,24 @@ public class CustomerDAOImpl implements CustomerDAO {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Customer> findAllSortedByLastRegistered() {
-		Criteria crt = sessionFactory.getCurrentSession().createCriteria(Customer.class);
+		Criteria crt = sessionFactory.getCurrentSession().createCriteria(Customer.class, "customer");
+		crt.createAlias("customer.userRole", "user_role");
+		crt.add(Restrictions.eq("user_role.role", "ROLE_USER"));
 		crt.addOrder(Order.desc("dateOfRegister"));
+		crt.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+		List<Customer> customerList = crt.list();
+		return customerList;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Customer> findAllSortedByLastRegistered(Integer count) {
+		Criteria crt = sessionFactory.getCurrentSession().createCriteria(Customer.class, "customer");
+		crt.createAlias("customer.userRole", "user_role");
+		crt.add(Restrictions.eq("user_role.role", "ROLE_USER"));
+		crt.addOrder(Order.desc("dateOfRegister"));
+		crt.setMaxResults(count);
+		crt.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		List<Customer> customerList = crt.list();
 		return customerList;
 	}
@@ -106,6 +153,4 @@ public class CustomerDAOImpl implements CustomerDAO {
 	public void delete(Customer customer) {
 		sessionFactory.getCurrentSession().delete(customer);
 	}
-
-	
 }

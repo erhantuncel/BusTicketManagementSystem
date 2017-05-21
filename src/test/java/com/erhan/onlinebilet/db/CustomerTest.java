@@ -4,14 +4,12 @@ import static org.junit.Assert.*;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.transaction.TestTransaction;
 
 import com.erhan.onlinebilet.model.Customer;
-import com.erhan.onlinebilet.model.UserRole;
 import com.erhan.onlinebilet.service.CustomerService;
 
 public class CustomerTest extends BaseTest {
@@ -27,6 +25,8 @@ public class CustomerTest extends BaseTest {
 //		assertTrue(customerList.size()>24);
 		assertNotNull(customerList);
 		System.out.println("Customer Count : " + customerList.size());
+		Customer customer0 = customerList.get(0);
+		System.out.println("Customer 0 = " + customer0.getName() + " " + customer0.getSurname());
 //		for(Customer c : customerList) {
 //			System.out.print("Id = " + c.getId() + "\t");
 //			System.out.print("Name = " + c.getName() + "\t");
@@ -60,6 +60,9 @@ public class CustomerTest extends BaseTest {
 		
 		Customer customer = customerService.findByTcNumber(CustomerForTestID10.getTcNumber());
 		assertEquals(CustomerForTestID10.getName(), customer.getName());
+//		Customer admin = customerService.findByTcNumber("10987654321");
+//		assertNull(admin);
+		
 	}
 	
 	@Test
@@ -77,9 +80,9 @@ public class CustomerTest extends BaseTest {
 		
 		List<String[]> countList = customerService.countMonthly(2016);
 		assertEquals(countList.size(), 12);
-//		for(String[] o : countList) {
-//			System.out.println(o[0] + "\t" + o[1]);
-//		}
+		for(String[] o : countList) {
+			System.out.println(o[0] + "\t" + o[1]);
+		}
 	}
 	
 	@SuppressWarnings("unused")
@@ -88,6 +91,8 @@ public class CustomerTest extends BaseTest {
 		renewTransaction();
 		
 		List<Customer> customerList = customerService.findAllSortedByLastRegistered();
+//		assertNotEquals(customerList.get(0).getName(), "Erhan");
+//		System.out.println("First Name = " + customerList.get(0).getName());
 		assertTrue(customerList.get(2).getDateOfRegister().before(customerList.get(1).getDateOfRegister()));
 		SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 //		for(Customer c : customerList) {
@@ -133,7 +138,5 @@ public class CustomerTest extends BaseTest {
 		TestTransaction.end();
 		assertFalse(TestTransaction.isActive());
 		TestTransaction.start();
-	}
-	
-	
+	}	
 }
