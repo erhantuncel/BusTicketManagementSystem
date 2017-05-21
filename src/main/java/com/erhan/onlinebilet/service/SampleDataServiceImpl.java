@@ -377,6 +377,7 @@ public class SampleDataServiceImpl implements SampleDataService {
 						int randomNumber = randBetween(0, 150);
 						if (randomNumber <= 100) { 
 							// Customer or By Customer
+							UserRole userRoleForCustomer = new UserRole("ROLE_USER");
 							Customer customer = new Customer();
 							customer.setGender(gender);
 							String[] name = generateName(customer.getGender());
@@ -392,6 +393,8 @@ public class SampleDataServiceImpl implements SampleDataService {
 							customer.setDateOfRegister(generateCustomerRegisteredTime(150, dayOfYearForToday-dayOfYearForDepartureTime));
 							customer.setTimeOfLastOnline(generateCustomerLastOnlineTimeForTicket(departureTime.getTime()));
 							customer.setEnabled(true);
+							userRoleForCustomer.setUser(customer);
+							userRoleService.create(userRoleForCustomer);
 							if(randomNumber <50) {
 								// Customer
 								ticket.setIsReservation(isReservation);

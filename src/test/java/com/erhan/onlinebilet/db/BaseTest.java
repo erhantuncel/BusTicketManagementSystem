@@ -8,24 +8,19 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 
-import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.BeforeTransaction;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.erhan.onlinebilet.model.City;
 import com.erhan.onlinebilet.model.CityDistance;
@@ -398,6 +393,7 @@ public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 						int randomNumber = randBetween(0, 150);
 						if (randomNumber <= 100) { 
 							// Customer or By Customer
+							UserRole userRoleForCustomer = new UserRole("ROLE_USER");
 							Customer customer = new Customer();
 							customer.setGender(gender);
 							String[] name = generateName(customer.getGender());
@@ -413,6 +409,8 @@ public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 							customer.setDateOfRegister(generateCustomerRegisteredTime(150, dayOfYearForToday-dayOfYearForDepartureTime));
 							customer.setTimeOfLastOnline(generateCustomerLastOnlineTimeForTicket(departureTime.getTime()));
 							customer.setEnabled(true);
+							userRoleForCustomer.setUser(customer);
+							userRoleService.create(userRoleForCustomer);
 							if(randomNumber <50) {
 								// Customer
 								ticket.setIsReservation(isReservation);
