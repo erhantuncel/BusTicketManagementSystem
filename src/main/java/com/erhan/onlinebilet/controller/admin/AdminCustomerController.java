@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.erhan.onlinebilet.model.Customer;
+import com.erhan.onlinebilet.model.Ticket;
 import com.erhan.onlinebilet.service.CustomerService;
 
 @Controller
@@ -60,6 +62,22 @@ public class AdminCustomerController {
 				model.setViewName("admin/musteriler");				
 			}
 		}		
+		return model;
+	}
+	
+	@RequestMapping(value="/admin/musteri/{id}/detay", method=RequestMethod.GET)
+	public ModelAndView customerDetails(@PathVariable(value="id") String id, ModelAndView model) {
+		model.addObject("title", "Online Bilet Sistemi | Yönetim Paneli - Müşteri Detayları");
+		
+		Customer customer = customerService.findById(new Long(id));
+		List<Ticket> ticketList = customer.getTicketList(); 
+		
+		model.addObject("customerForDetails", customer);
+		if(ticketList.size() != 0) {			
+			model.addObject("ticketListForCustomerDetails", ticketList);
+		}
+		
+		model.setViewName("admin/musteriDetay");
 		return model;
 	}
 	
