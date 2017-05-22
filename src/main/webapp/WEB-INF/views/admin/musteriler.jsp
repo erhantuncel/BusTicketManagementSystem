@@ -72,7 +72,7 @@
 											${timeOfLastOnline}
 										</td>
 										<td>
-											<a href="<c:url value="/admin/musteriDetay"/>" class="btn btn-xs btn-success btn-flat" title="Detay"><i class="fa fa-search"></i></a>
+											<a href="<c:url value="/admin/musteri/${customer.id}/detay"/>" class="btn btn-xs btn-success btn-flat" title="Detay"><i class="fa fa-search"></i></a>
 										</td>
 									</tr>
 								</c:forEach>							
