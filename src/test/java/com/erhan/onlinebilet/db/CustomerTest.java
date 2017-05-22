@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.transaction.TestTransaction;
 
 import com.erhan.onlinebilet.model.Customer;
+import com.erhan.onlinebilet.model.Ticket;
 import com.erhan.onlinebilet.service.CustomerService;
 
 public class CustomerTest extends BaseTest {
@@ -48,6 +49,10 @@ public class CustomerTest extends BaseTest {
 //		for(UserRole role : roleSet) {			
 //			System.out.println("Role : " + role.getRole());
 //		}
+		System.out.println("Ticket List size = " + cust.getTicketList().size());
+		for(Ticket ticket : cust.getTicketList()) {
+			System.out.println("Ticket Id = " + ticket.getId() + "Name = " + ticket.getPassangerName());
+		}
 	}
 	
 	@Test

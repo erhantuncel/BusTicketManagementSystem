@@ -113,7 +113,7 @@ public class Customer {
 	@JsonBackReference
 	private Set<UserRole> userRole = new HashSet<UserRole>(0);
 	
-	@OneToMany(mappedBy="customer", cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="customer", cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	@JsonBackReference
 	private List<Ticket> ticketList = new ArrayList<Ticket>(0);
 	
