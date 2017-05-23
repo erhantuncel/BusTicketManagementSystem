@@ -95,6 +95,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
+	@Transactional
 	public void update(Customer customer) {
 		customerDAO.update(customer);
 	}
