@@ -21,11 +21,11 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.NumberFormat;
 import org.springframework.format.annotation.NumberFormat.Style;
 
@@ -69,12 +69,13 @@ public class Customer {
 	@Column(name = "DOGUM_TARIHI")
 	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern="dd.MM.yyyy")
 	@JsonFormat(shape=Shape.STRING, pattern="dd.MM.yyyy")
 	private Date dateOfBirth;
 	
 	@Column(name = "CEP_TEL")
 	@NotEmpty
-	@Size(min = 10, max = 10)
+	@Pattern(regexp="[0-9]{10}")
 	@NumberFormat(style = Style.NUMBER)
 	private String mobileNumber;
 	
@@ -97,11 +98,14 @@ public class Customer {
 	@Column(name = "KAYIT_ZAMANI")
 	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern="dd.MM.yyyy HH:mm:ss")
 	@JsonFormat(shape=Shape.STRING, pattern="dd.MM.yyyy HH:mm:ss")
 	private Date dateOfRegister;
 	
 	@Column(name = "SON_GIRIS_ZAMANI")
+	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern="dd.MM.yyyy HH:mm:ss")
 	@JsonFormat(shape=Shape.STRING, pattern="dd.MM.yyyy HH:mm:ss")
 	private Date timeOfLastOnline;
 	
