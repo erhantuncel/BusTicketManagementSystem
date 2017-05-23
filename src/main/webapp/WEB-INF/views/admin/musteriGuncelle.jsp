@@ -1,10 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-9"
     pageEncoding="ISO-8859-9"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 <jsp:include page="fragments/header.jsp" />
 
 <jsp:include page="fragments/mainSideBar.jsp" />
+
+<c:url var="home" value="/" scope="request" />
 
 <!-- Content Wrapper. Contains page content -->
       <div class="content-wrapper">
@@ -30,89 +34,96 @@
 	       			</div>
 	       			 -->
 	       			<div class="box-body">
-			          	<form class="form-horizontal">
-			          		<div class="form-group">
-								<label for="customerNumber" class="col-sm-2 control-label">Müþteri No</label>
-								<div class="col-sm-4">
-									<input type="text" class="form-control" id="customerNumber" disabled>
+	       				<form:form class="form-horizontal" modelAttribute="updateCustomerForm" action="${home}admin/musteri/${updateCustomerForm.id}/guncelle" method="POST">
+	       					<form:hidden path="password"/>
+	       					<form:hidden path="enabled"/>
+	       					<form:hidden path="dateOfRegister"/>
+	       					<form:hidden path="timeOfLastOnline"/>
+	       					
+			          		<spring:bind path="id">
+				          		<div class="form-group">
+									<label for="customerNumber" class="col-sm-2 control-label">Müþteri No</label>
+									<div class="col-sm-4">
+										<form:input path="id" type="text" class="form-control" id="customerNumber" readonly="true"/>
+									</div>
+									<!-- /.input group -->
+								</div>			          		
+			          		</spring:bind>
+			          		<spring:bind path="tcNumber">			          		
+					          	<div class="form-group">
+									<label for="tcNumber" class="col-sm-2 control-label">T.C Numarasý</label>
+									<div class="col-sm-4">
+										<form:input path="tcNumber" type="text" class="form-control" id="tcNumber" readonly="true"/>
+									</div>
+									<!-- /.input group -->
 								</div>
-								<!-- /.input group -->
-							</div>
-				          	<div class="form-group">
-								<label for="tcNumber" class="col-sm-2 control-label">T.C Numarasý</label>
-								<div class="col-sm-4">
-									<input type="text" class="form-control" id="tcNumber">
+			          		</spring:bind>
+			          		<spring:bind path="name">			          		
+				          		<div class="form-group">
+									<label for="name" class="col-sm-2 control-label">Ad</label>
+									<div class="col-sm-4">
+										<form:input path="name" type="text" class="form-control" id="customerName" readonly="true"/>
+									</div>
+									<!-- /.input group -->
 								</div>
-								<!-- /.input group -->
-							</div>
-			          		<div class="form-group">
-								<label for="name" class="col-sm-2 control-label">Ad</label>
-								<div class="col-sm-4">
-									<input type="text" class="form-control" id="name">
+			          		</spring:bind>
+			          		<spring:bind path="surname">			          		
+								<div class="form-group">
+									<label for="surname" class="col-sm-2 control-label">Soyad</label>
+									<div class="col-sm-4">
+										<form:input path="surname" type="text" class="form-control" id="customerSurname" readonly="true"/>
+									</div>
+									<!-- /.input group -->
 								</div>
-								<!-- /.input group -->
-							</div>
-							<div class="form-group">
-								<label for="surname" class="col-sm-2 control-label">Soyad</label>
-								<div class="col-sm-4">
-									<input type="text" class="form-control" id="surname">
-								</div>
-								<!-- /.input group -->
-							</div>
-							<div class="form-group">
-								<label for="gender" class="col-sm-2 control-label">Cinsiyet</label>
-								<div class="col-sm-4">
-									<select class="form-control" id="gender">
-										<option selected="selected">Cinsiyet Seçiniz</option>
-										<option>Kadýn</option>
-										<option>Erkek</option>
-									</select>
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="dob" class="col-sm-2 control-label">Doðum Tarihi</label>
-								<div class="col-sm-4">
-									<div class="input-group">
-										<input type="text" class="form-control datepicker" id="dob">
-										<span class="input-group-addon"><i
-											class="fa fa-calendar"></i> </span>
+			          		</spring:bind>
+			          		<spring:bind path="gender">
+								<div class="form-group">
+									<label for="gender" class="col-sm-2 control-label">Cinsiyet</label>
+									<div class="col-sm-4">
+										<form:select path="gender" class="form-control" id="customerGender" readonly="true">
+											<form:options items="${genderValues}"/>
+										</form:select>
 									</div>
 								</div>
-							</div>
-							<div class="form-group">
-								<label for="gsm" class="col-sm-2 control-label">Cep Telefonu</label>
-								<div class="col-sm-4">
-									<input type="text" class="form-control" id="gsm">
-								</div>
-								<!-- /.input group -->
-							</div>
-							<div class="form-group">
-								<label for="email" class="col-sm-2 control-label">E-mail</label>
-								<div class="col-sm-4">
-									<input type="text" class="form-control" id="email">
-								</div>
-								<!-- /.input group -->
-							</div>
-							<div class="form-group">
-								<label for="password" class="col-sm-2 control-label">Þifre</label>
-								<div class="col-sm-4">
-									<input type="password" class="form-control" id="password">
-								</div>
-								<!-- /.input group -->
-							</div>
-							<div class="form-group">
-								<label for="password2" class="col-sm-2 control-label">Þifre Tekrar</label>
-								<div class="col-sm-4">
-									<input type="password" class="form-control" id="password2">
-								</div>
-								<!-- /.input group -->
-							</div>
+			          		</spring:bind>
+			          		<spring:bind path="dateOfBirth">
+								<div class="form-group">
+									<label for="dob" class="col-sm-2 control-label">Doðum Tarihi</label>
+									<div class="col-sm-4">
+										<div class="input-group">
+											<form:input path="dateOfBirth" type="text" class="form-control datepicker" id="customerDateOfBirth" readonly="true"/>
+											<span class="input-group-addon"><i
+												class="fa fa-calendar"></i> </span>
+										</div>
+									</div>
+								</div>			          		
+			          		</spring:bind>
+							<spring:bind path="mobileNumber">
+								<div class="form-group ${status.error ? 'has-error' : ''}">
+									<label for="mobileNumber" class="col-sm-2 control-label">Cep Telefonu</label>
+									<div class="col-sm-4">
+										<form:input path="mobileNumber" type="text" class="form-control" id="mobileNumber"/>
+										<form:errors path="mobileNumber" cssClass="control-label error"/>
+									</div>
+									<!-- /.input group -->
+								</div>							
+							</spring:bind>
+							<spring:bind path="eMail">
+								<div class="form-group ${status.error ? 'has-error' : ''}">
+									<label for="eMail" class="col-sm-2 control-label">E-mail</label>
+									<div class="col-sm-4">
+										<form:input path="eMail" type="text" class="form-control" id="eMail"/>
+										<form:errors path="eMail" cssClass="control-label error"/>
+									</div>
+									<!-- /.input group -->
+								</div>							
+							</spring:bind>
 							<div class="form-group">
 								<div class="col-sm-offset-2 col-sm-4">
-									<button type="submit" class="btn btn-primary">Müþteri Güncelle</button>
+									<button type="submit" class="btn btn-success btn-flat">Müþteri Güncelle</button>
 								</div>
 							</div>
-						</form>   			
+						</form:form>  			
 	       			</div>
 	       		</div>
           	</div>

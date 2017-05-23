@@ -3,8 +3,12 @@ package com.erhan.onlinebilet.controller.admin;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.erhan.onlinebilet.model.Customer;
+import com.erhan.onlinebilet.model.Gender;
 import com.erhan.onlinebilet.model.Ticket;
 import com.erhan.onlinebilet.service.CustomerService;
 
@@ -20,7 +25,7 @@ import com.erhan.onlinebilet.service.CustomerService;
 public class AdminCustomerController {
 	
 	@Autowired
-	CustomerService customerService;
+	CustomerService customerService;	
 	
 	@RequestMapping(value="/admin/musteriler", method=RequestMethod.GET)
 	public ModelAndView customers(ModelAndView model) {
@@ -81,4 +86,31 @@ public class AdminCustomerController {
 		return model;
 	}
 	
+	@RequestMapping(value="/admin/musteri/{id}/guncelle", method=RequestMethod.GET)
+	public ModelAndView showUpdateCustomerForm(@PathVariable(value="id") String id, ModelAndView model) {
+		model.addObject("title", "Online Bilet Sistemi | Yönetim Paneli - Müşteri Güncelle");
+		
+		model.addObject("updateCustomerForm", customerService.findById(new Long(id)));
+		model.addObject("genderValues", Gender.values());
+		model.setViewName("admin/musteriGuncelle");
+		return model;
+	}
+	
+	@RequestMapping(value="/admin/musteri/{id}/guncelle", method=RequestMethod.POST)
+	public ModelAndView updateCustomerForm(@PathVariable(value="id") String id, @ModelAttribute("updateCustomerForm") @Valid Customer customer, 
+					BindingResult result, ModelAndView model, RedirectAttributes redir) {
+		String resultMessage = null;
+		if(result.hasErrors()) {
+			model.addObject("updateCustomerForm", customer);
+			model.addObject("genderValues", Gender.values());
+			model.setViewName("admin/musteriGuncelle");
+		} else {
+			customerService.update(customer);
+			resultMessage = "Müşteri bilgleri güncellendi!";
+			redir.addFlashAttribute("warningType", "info");
+			redir.addFlashAttribute("msg", resultMessage);
+			model.setViewName("redirect:" + "/admin/musteri/" + customer.getId() + "/detay");
+		}
+		return model;
+	}
 }

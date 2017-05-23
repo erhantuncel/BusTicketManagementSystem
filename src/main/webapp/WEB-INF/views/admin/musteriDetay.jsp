@@ -8,6 +8,8 @@
 
 <jsp:include page="fragments/mainSideBar.jsp" />
 
+<c:url var="home" value="/" scope="request" />
+
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
 	<!-- Content Header (Page header) -->
@@ -86,7 +88,8 @@
 							</table>
 						</div>
 						<div class="col-xs-4">
-							<a class="btn btn-success btn-flat" title="Bilgileri Güncelle"></i>Bilgleri Güncelle</a>
+							<a class="btn btn-success btn-flat" href="${home}admin/musteri/${customerForDetails.id}/guncelle" 
+								title="Bilgileri Güncelle"></i>Bilgleri Güncelle</a>
 						</div>
 					</div>
 				</div>
@@ -297,7 +300,7 @@
 
 <jsp:include page="fragments/requiredScripts.jsp" />
 
-<c:url var="home" value="/" scope="request" />
+
 
 <c:if test="${not empty msg }">
 	<script>
