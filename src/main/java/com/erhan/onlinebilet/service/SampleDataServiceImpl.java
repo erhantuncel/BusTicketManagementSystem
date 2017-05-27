@@ -3,6 +3,7 @@ package com.erhan.onlinebilet.service;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -13,7 +14,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
-import javax.servlet.ServletContext;
 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.erhan.onlinebilet.model.City;
-import com.erhan.onlinebilet.model.CityDistance;
 import com.erhan.onlinebilet.model.Customer;
 import com.erhan.onlinebilet.model.Expense;
 import com.erhan.onlinebilet.model.ExpenseType;
@@ -92,7 +91,7 @@ public class SampleDataServiceImpl implements SampleDataService {
 	SessionFactory sessionFactory;
 	
 	@SuppressWarnings("unused")
-	public void populateData(ServletContext servletContext) {
+	public void populateData() {
 		maleNames = populateNames("maleNames.txt");
 		femaleNames = populateNames("femaleNames.txt");
 		surnames = populateNames("surnames.txt");
@@ -380,9 +379,9 @@ public class SampleDataServiceImpl implements SampleDataService {
 						
 						// Ticket details
 						boolean isReservation = new  Random().nextBoolean();
-						String pricePerDistance = servletContext.getInitParameter("pricePerDistance");
-						CityDistance distance = cityDistanceService.findByDepartureAndArrival(ticket.getDeparture(), ticket.getArrival());
-						BigDecimal ticketPrice = new BigDecimal(pricePerDistance).multiply(new BigDecimal(distance.getDistance()));
+//						String pricePerDistance = servletContext.getInitParameter("pricePerDistance");
+//						CityDistance distance = cityDistanceService.findByDepartureAndArrival(ticket.getDeparture(), ticket.getArrival());
+						BigDecimal ticketPrice = calculateTicketPriceForDistance(ticket.getDeparture(), ticket.getArrival());
 						if(!isReservation) {
 							ticket.setPrice(ticketPrice);							
 						} else {
@@ -1013,5 +1012,30 @@ public class SampleDataServiceImpl implements SampleDataService {
 		return diffInMilliSeconds / (24 * 60 * 60 * 1000);
 	}
 	
-	
+	private BigDecimal calculateTicketPriceForDistance(City departure, City arrival) {
+		BigDecimal price = new BigDecimal(0);
+		Integer distance = cityDistanceService.findByDepartureAndArrival(departure, arrival).getDistance();
+		double pricePerDistance = 0.0;
+		if(distance <= 200) {
+			pricePerDistance = 0.20;
+		} else if(distance > 200 && distance <= 400) {
+			pricePerDistance = 0.17;
+		} else if(distance > 400 && distance <= 600) {
+			pricePerDistance = 0.15;
+		} else if(distance > 600 && distance <= 800) {
+			pricePerDistance = 0.14;
+		} else if(distance > 800 && distance <= 1000) {
+			pricePerDistance = 0.12;
+		} else if(distance > 1000 && distance <= 1200) {
+			pricePerDistance = 0.11;
+		} else if(distance > 1200 && distance <= 1600) {
+			pricePerDistance = 0.10;
+		} else if(distance > 1600) {
+			pricePerDistance = 0.09;
+		}
+ 		
+		price = new BigDecimal(pricePerDistance).multiply(new BigDecimal(distance));
+		price = price.setScale(0, RoundingMode.UP);
+		return price;
+	}
 }

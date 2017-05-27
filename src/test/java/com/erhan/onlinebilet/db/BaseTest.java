@@ -379,9 +379,9 @@ public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 						
 						// Ticket details
 						boolean isReservation = new  Random().nextBoolean();
-						String pricePerDistance = "0.15";
-						CityDistance distance = cityDistanceService.findByDepartureAndArrival(ticket.getDeparture(), ticket.getArrival());
-						BigDecimal ticketPrice = new BigDecimal(pricePerDistance).multiply(new BigDecimal(distance.getDistance()));
+//						String pricePerDistance = "0.15";
+//						CityDistance distance = cityDistanceService.findByDepartureAndArrival(ticket.getDeparture(), ticket.getArrival());
+						BigDecimal ticketPrice = calculateTicketPriceForDistance(ticket.getDeparture(), ticket.getArrival());
 						if(!isReservation) {
 							ticket.setPrice(ticketPrice);							
 						} else {
@@ -1025,5 +1025,31 @@ public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 		
 		long diffInMilliSeconds = endDate.getTimeInMillis() - startDate.getTimeInMillis(); 
 		return diffInMilliSeconds / (24 * 60 * 60 * 1000);
+	}
+	
+	private BigDecimal calculateTicketPriceForDistance(City departure, City arrival) {
+		BigDecimal price = new BigDecimal(0);
+		Integer distance = cityDistanceService.findByDepartureAndArrival(departure, arrival).getDistance();
+		double pricePerDistance = 0.0;
+		if(distance <= 200) {
+			pricePerDistance = 0.20;
+		} else if(distance > 200 && distance <= 400) {
+			pricePerDistance = 0.17;
+		} else if(distance > 400 && distance <= 600) {
+			pricePerDistance = 0.15;
+		} else if(distance > 600 && distance <= 800) {
+			pricePerDistance = 0.14;
+		} else if(distance > 800 && distance <= 1000) {
+			pricePerDistance = 0.12;
+		} else if(distance > 1000 && distance <= 1200) {
+			pricePerDistance = 0.11;
+		} else if(distance > 1200 && distance <= 1600) {
+			pricePerDistance = 0.10;
+		} else if(distance > 1600) {
+			pricePerDistance = 0.09;
+		}
+ 		
+		price = new BigDecimal(pricePerDistance).multiply(new BigDecimal(distance));
+		return price;
 	}
 }

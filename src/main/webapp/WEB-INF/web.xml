@@ -71,10 +71,4 @@
 <!-- 		<filter-name>openSessionInViewFilter</filter-name> -->
 <!-- 		<url-pattern>/*</url-pattern> -->
 <!-- 	</filter-mapping> -->
-
-	<context-param>
-		<param-name>pricePerDistance</param-name>
-		<param-value>0.15</param-value>
-	</context-param>
-
 </web-app>
