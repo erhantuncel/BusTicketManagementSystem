@@ -62,9 +62,15 @@ public class IncomeServiceImpl implements IncomeService {
 
 	@Override
 	@Transactional
-	public BigDecimal getTotalForVoyage(Voyage voyage) {
-		BigDecimal sumTotal = incomeDAO.getTotalForVoyage(voyage);
-		return sumTotal;
+	public Income findByVoyage(Voyage voyage) {
+		Income income = incomeDAO.findByVoyage(voyage);
+		return income;
+	}
+
+	@Override
+	@Transactional
+	public void update(Income income) {
+		incomeDAO.update(income);
 	}
 
 }

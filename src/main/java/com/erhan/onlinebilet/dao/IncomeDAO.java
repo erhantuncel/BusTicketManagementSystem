@@ -14,5 +14,6 @@ public interface IncomeDAO {
 	public BigDecimal getTotalForCurrentYear();
 	public List<Income> findAllByDate(Date date);
 	public List<Income> findAllOrderByDate();
-	public BigDecimal getTotalForVoyage(Voyage voyage);
+	public Income findByVoyage(Voyage voyage);
+	public void update(Income income);
 }

@@ -86,11 +86,15 @@ public class IncomeDAOImpl implements IncomeDAO {
 	}
 
 	@Override
-	public BigDecimal getTotalForVoyage(Voyage voyage) {
+	public Income findByVoyage(Voyage voyage) {
 		Criteria crt = sessionFactory.getCurrentSession().createCriteria(Income.class);
 		crt.add(Restrictions.eq("voyage", voyage));
-		crt.setProjection(Projections.sum("price"));
-		BigDecimal sumTotal = (BigDecimal) crt.uniqueResult();
-		return sumTotal;
+		Income income = (Income) crt.uniqueResult();
+		return income;
+	}
+
+	@Override
+	public void update(Income income) {
+		sessionFactory.getCurrentSession().update(income);
 	}
 }

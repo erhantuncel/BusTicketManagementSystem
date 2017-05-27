@@ -29,8 +29,8 @@ public class Income {
 	@Column(name = "ID")
 	private Long id;
 	
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "SEFER_ID")
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="SEFER_ID")
 	private Voyage voyage;
 	
 	@Temporal(TemporalType.TIMESTAMP)
@@ -48,6 +48,7 @@ public class Income {
 	}
 
 	public Income(Voyage voyage, Date registeredTime, BigDecimal price) {
+		super();
 		this.voyage = voyage;
 		this.registeredTime = registeredTime;
 		this.price = price;
@@ -92,48 +93,44 @@ public class Income {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((price == null) ? 0 : price.hashCode());
 		result = prime * result + ((registeredTime == null) ? 0 : registeredTime.hashCode());
+		result = prime * result + ((voyage == null) ? 0 : voyage.hashCode());
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (this == obj)
 			return true;
-		}
-		if (obj == null) {
+		if (obj == null)
 			return false;
-		}
-		if (!(obj instanceof Income)) {
+		if (getClass() != obj.getClass())
 			return false;
-		}
 		Income other = (Income) obj;
 		if (id == null) {
-			if (other.id != null) {
+			if (other.id != null)
 				return false;
-			}
-		} else if (!id.equals(other.id)) {
+		} else if (!id.equals(other.id))
 			return false;
-		}
 		if (price == null) {
-			if (other.price != null) {
+			if (other.price != null)
 				return false;
-			}
-		} else if (!price.equals(other.price)) {
+		} else if (!price.equals(other.price))
 			return false;
-		}
 		if (registeredTime == null) {
-			if (other.registeredTime != null) {
+			if (other.registeredTime != null)
 				return false;
-			}
-		} else if (!registeredTime.equals(other.registeredTime)) {
+		} else if (!registeredTime.equals(other.registeredTime))
 			return false;
-		}
+		if (voyage == null) {
+			if (other.voyage != null)
+				return false;
+		} else if (!voyage.equals(other.voyage))
+			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Income [id=" + id + ", voyage=" + voyage + ", registeredTime=" + registeredTime + ", price=" + price
-				+ "]";
+		return "Income [id=" + id + ", voyage=" + voyage + ", registeredTime=" + registeredTime + ", price=" + price + "]";
 	}
 }
