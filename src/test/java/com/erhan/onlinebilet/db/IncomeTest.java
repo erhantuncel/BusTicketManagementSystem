@@ -41,7 +41,7 @@ public class IncomeTest extends BaseTest {
 		System.out.println("Income count : " + incomeList.size());
 		Income i = incomeList.get(incomeList.size()-1);
 		System.out.println("Id : " + i.getId());
-		System.out.println("Voyage Id : " + i.getVoyage().getId());
+		System.out.println("Voyage Id " + i.getVoyage().getId());
 		System.out.println("Route : " + i.getVoyage().getRoute().getRouteName());
 		System.out.println("Total Price : " + i.getPrice());
 		System.out.println("Register Time : " + df.format(i.getRegisteredTime()));
@@ -68,7 +68,7 @@ public class IncomeTest extends BaseTest {
 		System.out.println(incomeList.size());
 		for(Income i : incomeList) {
 			System.out.println("Id : " + i.getId());
-			System.out.println("Voyage Id : " + i.getVoyage().getId());
+			System.out.println("Voyage Id " + i.getVoyage().getId());
 			System.out.println("Route : " + i.getVoyage().getRoute().getRouteName());
 			System.out.println("Total Price : " + i.getPrice());
 			System.out.println("Register Time : " + df.format(i.getRegisteredTime()));
@@ -91,13 +91,36 @@ public class IncomeTest extends BaseTest {
 	}
 	
 	@Test
-	public void testGetTotalForVoyage() {
+	public void testFindByVoyge() {
 		renewTransaction();
 		
 		Voyage voyage10 = voyageService.findById(10L);
-		BigDecimal incomeForVoyage10 = incomeService.getTotalForVoyage(voyage10);
+		Income incomeForVoyage10 = incomeService.findByVoyage(voyage10);
 		assertNotNull(incomeForVoyage10);
-		System.out.println("Income = " + incomeForVoyage10);
+		System.out.println("Id : " + incomeForVoyage10.getId());
+		System.out.println("Voyage Id " + incomeForVoyage10.getVoyage().getId());
+		System.out.println("Route : " + incomeForVoyage10.getVoyage().getRoute().getRouteName());
+		System.out.println("Total Price : " + incomeForVoyage10.getPrice());
+	}
+	
+	@Test
+	public void testUpdate() {
+		renewTransaction();
+		
+		Income income10 = incomeService.findById(10L);
+		BigDecimal price10 = income10.getPrice();
+		System.out.println("price10 = " + price10);
+		
+		income10.setPrice(price10.add(new BigDecimal(100)));
+		incomeService.update(income10);
+		
+		renewTransaction();
+		
+		Income income10afterUpd = incomeService.findById(10L);
+		System.out.println("price10 = " + income10afterUpd.getPrice() + " (After Update)");
+		
+		assertNotEquals(income10afterUpd.getPrice(), price10);
+		
 	}
 	
 	private void renewTransaction() {

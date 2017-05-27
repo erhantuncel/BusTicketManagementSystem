@@ -12,7 +12,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
-import java.util.Set;
 
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,11 +55,11 @@ import com.erhan.onlinebilet.service.VoyageService;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "file:src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml",
 		"file:src/main/webapp/WEB-INF/spring/root-context.xml" })
-public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
-
+public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests { 
+	
 	@Autowired
 	AdminService adminService;
-
+	
 	@Autowired
 	CustomerService customerService;
 
@@ -171,32 +170,23 @@ public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 		LinkedList<String> stopLists = getListOfDataFromTxtFile("routeAndStops.txt");
 		Stop stop;
 		int stopListSize = stopLists.size();
-		City previousCity = null;
-		Integer distance = 0;
 		for(int i=0; i<stopListSize; i++) {
 			String[] stopData = stopLists.removeFirst().split(",");
-			Route route = routeService.findByRouteName(stopData[0]);
-			if(route == null) {
+			Route routeFromDb = routeService.findByRouteName(stopData[0]);
+			Route route = null;
+			if(routeFromDb == null) {
 				route = new Route(stopData[0]);
+			} else {
+				route = routeFromDb;
 			}
-			City city = cityService.findById(Long.valueOf(stopData[1]));
-			if(Integer.valueOf(stopData[2]) == 0) {
-				distance = 0;
-			}
-			if(Integer.valueOf(stopData[2]) != 0) {				
-				System.out.println("Prev City = " + previousCity.getCityName());
-				System.out.println("City = " + city.getCityName());
-				CityDistance cityDistance = cityDistanceService.findByDepartureAndArrival(previousCity, city);
-				distance = distance + cityDistance.getDistance();
-			}
+			
 			stop = new Stop(
 					route, 
-					city, 
+					cityService.findById(Long.valueOf(stopData[1])), 
 					Integer.valueOf(stopData[2]),
-					distance
+					Integer.valueOf(100)
 					);
 			stopService.create(stop);
-			previousCity = city;
 		}
 		
 		// Vehicle Brand and Models
@@ -302,6 +292,8 @@ public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 			 */
 			
 			int seatCount = 37;
+			BigDecimal totalTicketPrice = new BigDecimal(0);
+			
 			Stop[] stops = (Stop[]) voyage.getRoute().getStops().toArray(new Stop[voyage.getRoute().getStops().size()]);
 			
 			GregorianCalendar today = new GregorianCalendar();
@@ -387,9 +379,18 @@ public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 						
 						// Ticket details
 						boolean isReservation = new  Random().nextBoolean();
+						String pricePerDistance = "0.15";
+						CityDistance distance = cityDistanceService.findByDepartureAndArrival(ticket.getDeparture(), ticket.getArrival());
+						BigDecimal ticketPrice = new BigDecimal(pricePerDistance).multiply(new BigDecimal(distance.getDistance()));
+						if(!isReservation) {
+							ticket.setPrice(ticketPrice);							
+						} else {
+							ticket.setPrice(new BigDecimal(0));
+						}
 						Integer[] seatIndex = findIndexOfSeat(seatNumbers, seatNumber.intValue());
 						Gender gender = generateGenderForSeat(seats, seatIndex);
 						int dayOfYearForDepartureTime = departureTime.get(Calendar.DAY_OF_YEAR);
+						Date ticketRegisterTime = new Date();
 						int randomNumber = randBetween(0, 150);
 						if (randomNumber <= 100) { 
 							// Customer or By Customer
@@ -418,21 +419,23 @@ public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 								GregorianCalendar gc = new GregorianCalendar();
 								gc.setTime(customer.getTimeOfLastOnline());
 								gc.add(Calendar.MINUTE, randBetween(5, 20));
-								ticket.setRegisterTime(gc.getTime());
+								ticketRegisterTime = gc.getTime();
+								ticket.setRegisterTime(ticketRegisterTime);
 								ticket.setCustomer(customer);
 								ticket.setPassangerTcNumber(customer.getTcNumber());
 								ticket.setPassangerName(customer.getName());
 								ticket.setPassangerSurname(customer.getSurname());
 								ticket.setPassangerGender(customer.getGender());
 								Long ticketId = ticketService.create(ticket);
-							} else if(randomNumber > 50 & randomNumber <= 100) {
+							} else if(randomNumber >= 50 & randomNumber <= 100) {
 								// By Customer
 								ticket.setIsReservation(isReservation);
 								ticket.setVoyage(voyage);
 								GregorianCalendar gc = new GregorianCalendar();
 								gc.setTime(customer.getTimeOfLastOnline());
 								gc.add(Calendar.MINUTE, randBetween(5, 20));
-								ticket.setRegisterTime(gc.getTime());
+								ticketRegisterTime = gc.getTime();
+								ticket.setRegisterTime(ticketRegisterTime);
 								ticket.setCustomer(customer);
 								ticket.setPassangerTcNumber(generateRandomTcNumber());
 								String[] passangerName = generateName(gender);
@@ -445,7 +448,8 @@ public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 							// Not customer
 							ticket.setIsReservation(isReservation);
 							ticket.setVoyage(voyage);
-							ticket.setRegisterTime(generateTicketRegisteredTimeForNotCustomer(departureTime.getTime()));
+							ticketRegisterTime = generateTicketRegisteredTimeForNotCustomer(departureTime.getTime());
+							ticket.setRegisterTime(ticketRegisterTime);
 							ticket.setPassangerTcNumber(generateRandomTcNumber());
 							String[] passangerName = generateName(gender);
 							ticket.setPassangerName(passangerName[0]);
@@ -454,29 +458,39 @@ public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 							Long ticketId = ticketService.create(ticket);
 						}
 						ticketList.add(ticket);
+						totalTicketPrice = totalTicketPrice.add(ticket.getPrice());
+						Income incomeFromDb = incomeService.findByVoyage(voyage);
+						if(incomeFromDb == null) {
+							Income income = new Income(voyage, ticketRegisterTime, totalTicketPrice);							
+							incomeService.create(income);
+						} else {
+							incomeFromDb.setPrice(totalTicketPrice);
+							incomeFromDb.setRegisteredTime(ticketRegisterTime);
+							incomeService.update(incomeFromDb);
+						}
 						passengerCount--;
 					}
 				}
 			}
 			
-			GregorianCalendar gc = new GregorianCalendar();
-			gc.setTime(voyage.getDepartureTime());
-			Set<Stop> stopList = voyage.getRoute().getStops();
-			Stop lastStop = (Stop) stopList.toArray()[stopList.size()-1];
-			gc.add(Calendar.MINUTE, lastStop.getDuration());
-			gc.add(Calendar.HOUR_OF_DAY, 6);
-			gc.add(Calendar.MINUTE, 15);
-			
-			GregorianCalendar now = new GregorianCalendar();
-			now.setTime(new Date());
-			if(gc.before(now)) {				
-				Integer ticketCount = ticketService.countTicketByVoyage(voyage);
-				// TODO: create method for calculate ticket price based on departure and arrival
-				BigDecimal totalPrice = new BigDecimal("1").multiply(new BigDecimal(ticketCount.intValue()));
-				Date incomeRegisterTime = gc.getTime();
-				Income income = new Income(voyage, incomeRegisterTime, totalPrice);
-				incomeService.create(income);
-			}
+//			GregorianCalendar gc = new GregorianCalendar();
+//			gc.setTime(voyage.getDepartureTime());
+//			Set<Stop> stopList = voyage.getRoute().getStops();
+//			Stop lastStop = (Stop) stopList.toArray()[stopList.size()-1];
+//			gc.add(Calendar.MINUTE, lastStop.getDuration());
+//			gc.add(Calendar.HOUR_OF_DAY, 6);
+//			gc.add(Calendar.MINUTE, 15);
+//			
+//			GregorianCalendar now = new GregorianCalendar();
+//			now.setTime(new Date());
+//			if(gc.before(now)) {				
+//				Integer ticketCount = ticketService.countTicketByVoyage(voyage);
+//				// TODO: create method for calculate ticket price based on departure and arrival
+//				BigDecimal totalPrice = new BigDecimal("1").multiply(new BigDecimal(ticketCount.intValue()));
+//				Date incomeRegisterTime = gc.getTime();
+//				Income income = new Income(voyage, incomeRegisterTime, totalPrice);
+//				incomeService.create(income);
+//			}
 		}
 		
 			
