@@ -29,7 +29,7 @@ public class Income {
 	@Column(name = "ID")
 	private Long id;
 	
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="SEFER_ID")
 	private Voyage voyage;
 	
