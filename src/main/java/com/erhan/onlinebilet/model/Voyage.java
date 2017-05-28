@@ -67,7 +67,7 @@ public class Voyage implements Comparable<Voyage> {
 	
 	@OneToMany(fetch=FetchType.EAGER)
 	@Cascade(CascadeType.ALL)
-	@JoinColumn(name = "SEFER_ID")
+//	@JoinColumn(name = "SEFER_ID")
 	@Column(nullable = true)
 	@JsonBackReference
 	private List<Expense> expenseList = new ArrayList<Expense>(0);

@@ -494,148 +494,6 @@ public class SampleDataServiceImpl implements SampleDataService {
 //			}
 		}
 		
-		// Backup start
-//		for(Voyage voyage : voyages) {
-//			
-//			/*
-//			 * Güne göre her durakta olması gereken en az ve en çok yolcu sayısını belirle
-//			 * Kalkış ve varış duraklarına göre olan tüm kombinasyonlar için rastgele yolcu 
-//			   sayısı atayarak matris oluştur.
-//			 * Yolcu sayısı kadar kalkış ve varış noktalarına göre koltuk numaralarını belirle.
-//			 * - Rastgele Kalkış ve varış şehirlerini seç. (Rotaya uyumlu olarak)
-//			 * - Seçilen rotada boş koltukları bul
-//			 * - Boş koltuklardan birini seçip yolcu listesine ekle
-//			 */
-//			
-//			GregorianCalendar today = new GregorianCalendar();
-//			today.setTime(new Date());
-//			int dayOfYearForToday = today.get(Calendar.DAY_OF_YEAR);
-//			
-//			GregorianCalendar departureTime = new GregorianCalendar();
-//			departureTime.setTime(voyage.getDepartureTime());
-//			
-//			int passengerCount = 0;
-//			Integer[][] seatNumbers = generateSeatArray();
-//			String[][] seats = new String[13][3];
-//			
-//			if(departureTime.get(Calendar.DAY_OF_YEAR) == dayOfYearForToday-2) {
-//				passengerCount = randBetween(20, 37);
-//			} else if (departureTime.get(Calendar.DAY_OF_YEAR) == dayOfYearForToday-1) {
-//				passengerCount = randBetween(20, 37);
-//			} else if(departureTime.get(Calendar.DAY_OF_YEAR) == dayOfYearForToday) {
-//				passengerCount = randBetween(5, 30);
-//			} else if(departureTime.get(Calendar.DAY_OF_YEAR) == dayOfYearForToday+1) {
-//				passengerCount = randBetween(0, 20);
-//			} else if(departureTime.get(Calendar.DAY_OF_YEAR) == dayOfYearForToday+2) {
-//				passengerCount = randBetween(0, 10);
-//			}
-//			
-//			Set<Byte> seatNumberSet = new LinkedHashSet<Byte>();
-//			for(int i=1; i<=passengerCount; i++) {
-//				Byte seatNumber = new Byte(String.valueOf(randBetween(1, 37)));
-//				seatNumberSet.add(seatNumber);
-//			}
-//			
-//			for(Byte seatNumber : seatNumberSet) {
-//				boolean isReservation = new  Random().nextBoolean();
-//				Integer[] seatIndex = findIndexOfSeat(seatNumbers, seatNumber);
-//				Gender gender = generateGenderForSeat(seats, seatIndex);
-//				int dayOfYearForDepartureTime = departureTime.get(Calendar.DAY_OF_YEAR);
-//				
-//				Ticket ticket = new Ticket();
-//				
-//				int randomNumber = randBetween(0, 150);
-//				if (randomNumber <= 100) {
-//					
-//					String[] name = generateName(gender);
-//					
-//					UserRole userRole = new UserRole("ROLE_USER");
-//					Customer customer = new Customer();
-//					customer.setTcNumber(generateRandomTcNumber());
-//					customer.setName(name[0]);
-//					customer.setSurname(name[1]);
-//					customer.setGender(gender);
-//					customer.setDateOfBirth(generateRandomDateMaximum18Year());
-//					customer.setMobileNumber(generateRandomGsmNumber());
-//					customer.seteMail(generateNameForEmail(name[0])+"@abc.com");
-////					customer.setPassword(passwordEncoder.encode(generateRandomPassword()));
-//					customer.setPassword(passwordList.removeFirst());
-//					customer.setDateOfRegister(generateCustomerRegisteredTime(150, dayOfYearForToday-dayOfYearForDepartureTime));
-//					customer.setTimeOfLastOnline(generateCustomerLastOnlineTimeForTicket(departureTime.getTime()));
-//					customer.setEnabled(true);
-//					userRole.setUser(customer);
-//					userRoleService.create(userRole);
-//					
-//					if(randomNumber <50) {
-//						// Customer
-//						ticket.setIsReservation(isReservation);
-//						ticket.setVoyage(voyage);
-//						ticket.setSeatNumber(seatNumber);
-//						GregorianCalendar gc = new GregorianCalendar();
-//						gc.setTime(customer.getTimeOfLastOnline());
-//						gc.add(Calendar.MINUTE, randBetween(5, 20));
-//						ticket.setRegisterTime(gc.getTime());
-//						ticket.setCustomer(customer);
-//						ticket.setPassangerTcNumber(customer.getTcNumber());
-//						ticket.setPassangerName(customer.getName());
-//						ticket.setPassangerSurname(customer.getSurname());
-//						ticket.setPassangerGender(customer.getGender());
-//						Long ticketId = ticketService.create(ticket);
-//					} else if(randomNumber > 50 & randomNumber <= 100) {						
-//						// By Customer
-//						ticket.setIsReservation(isReservation);
-//						ticket.setVoyage(voyage);
-//						ticket.setSeatNumber(seatNumber);
-//						GregorianCalendar gc = new GregorianCalendar();
-//						gc.setTime(customer.getTimeOfLastOnline());
-//						gc.add(Calendar.MINUTE, randBetween(5, 20));
-//						ticket.setRegisterTime(gc.getTime());
-//						ticket.setCustomer(customer);
-//						ticket.setPassangerTcNumber(generateRandomTcNumber());
-//						String[] passangerName = generateName(gender);
-//						ticket.setPassangerName(passangerName[0]);
-//						ticket.setPassangerSurname(passangerName[1]);
-//						ticket.setPassangerGender(gender);
-//						Long ticketId = ticketService.create(ticket);
-//					}
-//				} else {
-//					// Not Customer
-//					ticket.setIsReservation(isReservation);
-//					ticket.setVoyage(voyage);
-//					ticket.setSeatNumber(seatNumber);
-//					ticket.setRegisterTime(generateTicketRegisteredTimeForNotCustomer(departureTime.getTime()));
-//					ticket.setPassangerTcNumber(generateRandomTcNumber());
-//					String[] passangerName = generateName(gender);
-//					ticket.setPassangerName(passangerName[0]);
-//					ticket.setPassangerSurname(passangerName[1]);
-//					ticket.setPassangerGender(gender);
-//					Long ticketId = ticketService.create(ticket);
-//				}	
-//			}
-//			
-//			GregorianCalendar gc = new GregorianCalendar();
-//			gc.setTime(voyage.getDepartureTime());
-//			Set<Stop> stopList = voyage.getRoute().getStops();
-////			System.out.println("Route : " + voyage.getRoute().getRouteName());
-////			System.out.println("Stop List Size :" + stopList.size());
-//			Stop lastStop = (Stop) stopList.toArray()[stopList.size()-1];
-//			gc.add(Calendar.MINUTE, lastStop.getDuration());
-//			gc.add(Calendar.HOUR_OF_DAY, 6);
-//			gc.add(Calendar.MINUTE, 15);
-//			
-//			GregorianCalendar now = new GregorianCalendar();
-//			now.setTime(new Date());
-//			if(gc.before(now)) {				
-//				Integer ticketCount = ticketService.countTicketByVoyage(voyage);
-//				BigDecimal totalPrice = new BigDecimal(0.0);
-//				Date incomeRegisterTime = gc.getTime();
-//				Income income = new Income(voyage, incomeRegisterTime, totalPrice);
-//				incomeService.create(income);
-//			}
-//		}
-		
-		// Backup End
-		
 		// Expenses
 		ExpenseType fuelExpenseType = expenseTypeService.findById(1L);
 		ExpenseType maintenanceExpenseType = expenseTypeService.findById(2L);
@@ -680,19 +538,19 @@ public class SampleDataServiceImpl implements SampleDataService {
 			GregorianCalendar expenseTime = new GregorianCalendar();
 			expenseTime.setTime(voyage.getDepartureTime());
 			expenseTime.set(Calendar.HOUR_OF_DAY, 18);
-			Expense fuelExpense = new Expense(new BigDecimal(fuelPrice), fuelExpenseType, expenseTime.getTime()); 
-			Expense terminalExpense = new Expense(new BigDecimal(terminalPrice), terminalExpenseType, expenseTime.getTime());
-			Expense snackExpense = new Expense(new BigDecimal(snackPrice), snackExpenseType, expenseTime.getTime());
+			Expense fuelExpense = new Expense(new BigDecimal(fuelPrice), fuelExpenseType, expenseTime.getTime(), voyage); 
+			Expense terminalExpense = new Expense(new BigDecimal(terminalPrice), terminalExpenseType, expenseTime.getTime(), voyage);
+			Expense snackExpense = new Expense(new BigDecimal(snackPrice), snackExpenseType, expenseTime.getTime(), voyage);
 			voyage.getExpenseList().add(fuelExpense);
 			voyage.getExpenseList().add(terminalExpense);
 			voyage.getExpenseList().add(snackExpense);
 			
 			int rnd = randBetween(0, 15);
 			if(rnd > 5 & rnd <= 10) {
-				Expense penaltyExpense = new Expense(new BigDecimal(penaltyPrice), penaltyExpenseType, expenseTime.getTime());
+				Expense penaltyExpense = new Expense(new BigDecimal(penaltyPrice), penaltyExpenseType, expenseTime.getTime(), voyage);
 				voyage.getExpenseList().add(penaltyExpense);
 			} else if (rnd > 10) {
-				Expense maintenanceExpense = new Expense(new BigDecimal(maintenancePrice), maintenanceExpenseType, expenseTime.getTime());
+				Expense maintenanceExpense = new Expense(new BigDecimal(maintenancePrice), maintenanceExpenseType, expenseTime.getTime(), voyage);
 				voyage.getExpenseList().add(maintenanceExpense);
 			}
 			voyageService.update(voyage);

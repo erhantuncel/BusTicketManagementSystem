@@ -640,19 +640,19 @@ public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 			GregorianCalendar expenseTime = new GregorianCalendar();
 			expenseTime.setTime(voyage.getDepartureTime());
 			expenseTime.set(Calendar.HOUR_OF_DAY, 18);
-			Expense fuelExpense = new Expense(new BigDecimal(fuelPrice), fuelExpenseType, expenseTime.getTime()); 
-			Expense terminalExpense = new Expense(new BigDecimal(terminalPrice), terminalExpenseType, expenseTime.getTime());
-			Expense snackExpense = new Expense(new BigDecimal(snackPrice), snackExpenseType, expenseTime.getTime());
+			Expense fuelExpense = new Expense(new BigDecimal(fuelPrice), fuelExpenseType, expenseTime.getTime(), voyage); 
+			Expense terminalExpense = new Expense(new BigDecimal(terminalPrice), terminalExpenseType, expenseTime.getTime(), voyage);
+			Expense snackExpense = new Expense(new BigDecimal(snackPrice), snackExpenseType, expenseTime.getTime(), voyage);
 			voyage.getExpenseList().add(fuelExpense);
 			voyage.getExpenseList().add(terminalExpense);
 			voyage.getExpenseList().add(snackExpense);
 			
 			int rnd = randBetween(0, 15);
 			if(rnd > 5 & rnd <= 10) {
-				Expense penaltyExpense = new Expense(new BigDecimal(penaltyPrice), penaltyExpenseType, expenseTime.getTime());
+				Expense penaltyExpense = new Expense(new BigDecimal(penaltyPrice), penaltyExpenseType, expenseTime.getTime(), voyage);
 				voyage.getExpenseList().add(penaltyExpense);
 			} else if (rnd > 10) {
-				Expense maintenanceExpense = new Expense(new BigDecimal(maintenancePrice), maintenanceExpenseType, expenseTime.getTime());
+				Expense maintenanceExpense = new Expense(new BigDecimal(maintenancePrice), maintenanceExpenseType, expenseTime.getTime(), voyage);
 				voyage.getExpenseList().add(maintenanceExpense);
 			}
 			voyageService.update(voyage);

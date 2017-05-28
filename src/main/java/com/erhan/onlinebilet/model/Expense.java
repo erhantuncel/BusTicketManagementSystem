@@ -47,17 +47,19 @@ public class Expense {
 	
 	@ManyToOne()
 	@Cascade(CascadeType.SAVE_UPDATE)
+	@JoinColumn(name = "SEFER_ID")
 	@JsonManagedReference
 	private Voyage voyage;
 	
 	public Expense() {
 	
 	}
-
-	public Expense(BigDecimal price, ExpenseType type, Date registerTime) {
+	
+	public Expense(BigDecimal price, ExpenseType type, Date registeredTime, Voyage voyage) {
 		this.price = price;
 		this.type = type;
-		this.registeredTime = registerTime;
+		this.registeredTime = registeredTime;
+		this.voyage = voyage;
 	}
 
 	public Long getId() {
