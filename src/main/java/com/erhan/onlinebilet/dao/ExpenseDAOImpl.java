@@ -4,8 +4,10 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -13,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.erhan.onlinebilet.model.Expense;
-import com.erhan.onlinebilet.model.Voyage;
 
 @Repository("expenseDAO")
 public class ExpenseDAOImpl implements ExpenseDAO {
@@ -31,6 +32,18 @@ public class ExpenseDAOImpl implements ExpenseDAO {
 	public Expense findById(Long id) {
 		Expense expense = sessionFactory.getCurrentSession().get(Expense.class, id);
 		return expense;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Expense> findAllOrderedByRegisterDate(Integer limit) {
+		String hql = "from Expense order by registeredTime desc";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		if(limit != 0) {
+			query.setMaxResults(limit);
+		}
+		List<Expense> expenseList = query.list();
+		return expenseList;
 	}
 
 	@Override
