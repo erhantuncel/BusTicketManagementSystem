@@ -69,6 +69,7 @@ public class IncomeTest extends BaseTest {
 		for(Income i : incomeList) {
 			System.out.println("Id : " + i.getId());
 			System.out.println("Voyage Id " + i.getVoyage().getId());
+			System.out.println("Voyage Departure Time " + i.getVoyage().getDepartureTime());
 			System.out.println("Route : " + i.getVoyage().getRoute().getRouteName());
 			System.out.println("Total Price : " + i.getPrice());
 			System.out.println("Register Time : " + df.format(i.getRegisteredTime()));
@@ -79,8 +80,12 @@ public class IncomeTest extends BaseTest {
 	public void testFindAllOrderedByDate() {
 		renewTransaction();
 		
-		List<Income> incomeList = incomeService.findAllOrderByDate();
+		Integer limit = 30;
+		List<Income> incomeList = incomeService.findAllOrderByDate(limit);
 		assertNotNull(incomeList);
+		if(limit != 0) {
+			assertEquals(incomeList.size(), limit.intValue());
+		}
 		int size = incomeList.size();
 		System.out.println("Size : " + size);
 		int index = 1;

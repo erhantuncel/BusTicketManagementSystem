@@ -13,7 +13,7 @@ public interface IncomeDAO {
 	public List<Income> findAll();
 	public BigDecimal getTotalForCurrentYear();
 	public List<Income> findAllByDate(Date date);
-	public List<Income> findAllOrderByDate();
+	public List<Income> findAllOrderByDate(Integer limit);
 	public Income findByVoyage(Voyage voyage);
 	public void update(Income income);
 }

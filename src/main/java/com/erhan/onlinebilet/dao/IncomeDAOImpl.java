@@ -7,7 +7,9 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -71,6 +73,7 @@ public class IncomeDAOImpl implements IncomeDAO {
 		int day = gc.get(Calendar.DAY_OF_YEAR);
 		Criteria crt = sessionFactory.getCurrentSession().createCriteria(Income.class);
 		crt.add(Restrictions.sqlRestriction("dayofyear({alias}.KAYIT_ZAMANI) = ?", day, IntegerType.INSTANCE));
+		crt.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		crt.addOrder(Order.asc("registeredTime"));
 		List<Income> incomeList = crt.list();
 		return incomeList;
@@ -78,10 +81,13 @@ public class IncomeDAOImpl implements IncomeDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Income> findAllOrderByDate() {
-		Criteria crt = sessionFactory.getCurrentSession().createCriteria(Income.class);
-		crt.addOrder(Order.desc("registeredTime"));
-		List<Income> incomeList = crt.list();
+	public List<Income> findAllOrderByDate(Integer limit) {
+		String hql = "from Income order by registeredTime desc";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		if(limit != 0) {
+			query.setMaxResults(limit);
+		}
+		List<Income> incomeList = query.list(); 
 		return incomeList;
 	}
 

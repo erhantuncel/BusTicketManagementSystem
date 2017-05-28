@@ -55,8 +55,8 @@ public class IncomeServiceImpl implements IncomeService {
 
 	@Override
 	@Transactional
-	public List<Income> findAllOrderByDate() {
-		List<Income> incomeList = incomeDAO.findAllOrderByDate();
+	public List<Income> findAllOrderByDate(Integer limit) {
+		List<Income> incomeList = incomeDAO.findAllOrderByDate(limit);
 		return incomeList;
 	}
 
