@@ -9,8 +9,11 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.type.IntegerType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -43,6 +46,20 @@ public class ExpenseDAOImpl implements ExpenseDAO {
 			query.setMaxResults(limit);
 		}
 		List<Expense> expenseList = query.list();
+		return expenseList;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Expense> findAllByDate(Date date) {
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.setTime(date);
+		int day = gc.get(Calendar.DAY_OF_YEAR);
+		Criteria crt = sessionFactory.getCurrentSession().createCriteria(Expense.class);
+		crt.add(Restrictions.sqlRestriction("dayofyear({alias}.KAYIT_ZAMANI) = ?", day, IntegerType.INSTANCE));
+		crt.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+		crt.addOrder(Order.asc("registeredTime"));
+		List<Expense> expenseList = crt.list();
 		return expenseList;
 	}
 

@@ -1,6 +1,7 @@
 package com.erhan.onlinebilet.service;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,13 @@ public class ExpenseServiceImpl implements ExpenseService {
 	@Transactional
 	public List<Expense> findAllOrderedByRegisterDate(Integer limit) {
 		List<Expense> expenseList = expenseDAO.findAllOrderedByRegisterDate(limit);
+		return expenseList;
+	}
+
+	@Override
+	@Transactional
+	public List<Expense> findAllByDate(Date date) {
+		List<Expense> expenseList = expenseDAO.findAllByDate(date);
 		return expenseList;
 	}
 
