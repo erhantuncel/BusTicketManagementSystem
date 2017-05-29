@@ -65,9 +65,8 @@ public class Voyage implements Comparable<Voyage> {
 	@JsonFormat(shape=Shape.STRING, pattern="dd.MM.yyyy HH:mm:ss")
  	private Date registerTime;
 	
-	@OneToMany(fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="voyage", fetch=FetchType.EAGER, orphanRemoval=true)
 	@Cascade(CascadeType.ALL)
-//	@JoinColumn(name = "SEFER_ID")
 	@Column(nullable = true)
 	@JsonBackReference
 	private List<Expense> expenseList = new ArrayList<Expense>(0);

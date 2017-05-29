@@ -47,6 +47,19 @@ public class ExpenseServiceImpl implements ExpenseService {
 
 	@Override
 	@Transactional
+	public void update(Expense expense) {
+		expenseDAO.update(expense);
+	}
+
+	@Override
+	@Transactional
+	public int delete(Long id) {
+		int result = expenseDAO.delete(id);
+		return result;
+	}
+
+	@Override
+	@Transactional
 	public BigDecimal getTotalForCurrentYear() {
 		BigDecimal total = expenseDAO.getTotalForCurrentYear();
 		return total;

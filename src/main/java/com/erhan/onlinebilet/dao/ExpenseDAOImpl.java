@@ -64,6 +64,20 @@ public class ExpenseDAOImpl implements ExpenseDAO {
 	}
 
 	@Override
+	public void update(Expense expense) {
+		sessionFactory.getCurrentSession().update(expense);
+	}
+
+	@Override
+	public int delete(Long id) {
+		String hql = "delete Expense where id = :expenseId";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setParameter("expenseId", id);
+		int result = query.executeUpdate();
+		return result;
+	}
+
+	@Override
 	public BigDecimal getTotalForCurrentYear() {
 		GregorianCalendar firstDayOfCurrentYear = new GregorianCalendar();
 		firstDayOfCurrentYear.setTime(new Date());

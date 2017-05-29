@@ -11,5 +11,7 @@ public interface ExpenseService {
 	public Expense findById(Long id);
 	public List<Expense> findAllOrderedByRegisterDate(Integer limit);
 	public List<Expense> findAllByDate(Date date);
+	public void update(Expense expense);
+	public int delete(Long id);
 	public BigDecimal getTotalForCurrentYear();
 }

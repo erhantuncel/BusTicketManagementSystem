@@ -49,8 +49,6 @@ public class SampleDataServiceImpl implements SampleDataService {
 	
 	BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 	
-	
-	
 	@Autowired
 	UserRoleService userRoleService;
 	
@@ -80,6 +78,9 @@ public class SampleDataServiceImpl implements SampleDataService {
 	
 	@Autowired
 	IncomeService incomeService;
+	
+	@Autowired
+	ExpenseService expenseService;
 	
 	@Autowired
 	ExpenseTypeService expenseTypeService;
@@ -538,22 +539,21 @@ public class SampleDataServiceImpl implements SampleDataService {
 			GregorianCalendar expenseTime = new GregorianCalendar();
 			expenseTime.setTime(voyage.getDepartureTime());
 			expenseTime.set(Calendar.HOUR_OF_DAY, 18);
-			Expense fuelExpense = new Expense(new BigDecimal(fuelPrice), fuelExpenseType, expenseTime.getTime(), voyage); 
+			Expense fuelExpense = new Expense(new BigDecimal(fuelPrice), fuelExpenseType, expenseTime.getTime(), voyage);
+			expenseService.create(fuelExpense);
 			Expense terminalExpense = new Expense(new BigDecimal(terminalPrice), terminalExpenseType, expenseTime.getTime(), voyage);
+			expenseService.create(terminalExpense);
 			Expense snackExpense = new Expense(new BigDecimal(snackPrice), snackExpenseType, expenseTime.getTime(), voyage);
-			voyage.getExpenseList().add(fuelExpense);
-			voyage.getExpenseList().add(terminalExpense);
-			voyage.getExpenseList().add(snackExpense);
+			expenseService.create(snackExpense);
 			
 			int rnd = randBetween(0, 15);
 			if(rnd > 5 & rnd <= 10) {
 				Expense penaltyExpense = new Expense(new BigDecimal(penaltyPrice), penaltyExpenseType, expenseTime.getTime(), voyage);
-				voyage.getExpenseList().add(penaltyExpense);
+				expenseService.create(penaltyExpense);
 			} else if (rnd > 10) {
 				Expense maintenanceExpense = new Expense(new BigDecimal(maintenancePrice), maintenanceExpenseType, expenseTime.getTime(), voyage);
-				voyage.getExpenseList().add(maintenanceExpense);
+				expenseService.create(maintenanceExpense);
 			}
-			voyageService.update(voyage);
 		}
 	}
 	

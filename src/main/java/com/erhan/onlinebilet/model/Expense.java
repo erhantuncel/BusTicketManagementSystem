@@ -13,9 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -35,9 +34,9 @@ public class Expense {
 	private BigDecimal price;
 	
 	@ManyToOne()
-	@Cascade(CascadeType.SAVE_UPDATE)
 	@JoinColumn(name = "GIDER_TIPI_ID")
 	@JsonBackReference
+	@NotNull
 	private ExpenseType type;
 	
 	@Column(name = "KAYIT_ZAMANI")
@@ -46,9 +45,9 @@ public class Expense {
 	private Date registeredTime;
 	
 	@ManyToOne()
-	@Cascade(CascadeType.SAVE_UPDATE)
 	@JoinColumn(name = "SEFER_ID")
 	@JsonManagedReference
+	@NotNull
 	private Voyage voyage;
 	
 	public Expense() {
