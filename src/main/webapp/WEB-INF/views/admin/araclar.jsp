@@ -64,7 +64,7 @@
 										<td>${vehicle.milage}</td>
 										<td>
 											<a class="btn btn-xs btn-success btn-flat updateVehicle" title="Güncelle" data-id="${vehicle.id}">
-												<i class="fa fa-refresh"></i>
+												<i class="glyphicon glyphicon-refresh"></i>
 											</a>
 										</td>
 									</tr>
