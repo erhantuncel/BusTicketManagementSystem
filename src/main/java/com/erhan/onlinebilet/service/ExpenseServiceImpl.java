@@ -2,6 +2,7 @@ package com.erhan.onlinebilet.service;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,9 @@ public class ExpenseServiceImpl implements ExpenseService {
 	@Override
 	@Transactional
 	public void update(Expense expense) {
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.setTime(new Date());
+		expense.setRegisteredTime(gc.getTime());
 		expenseDAO.update(expense);
 	}
 
