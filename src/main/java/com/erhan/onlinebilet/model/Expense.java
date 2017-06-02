@@ -31,6 +31,7 @@ public class Expense {
 	private Long id;
 	
 	@Column(name = "TUTAR")
+	@NotNull
 	private BigDecimal price;
 	
 	@ManyToOne()
