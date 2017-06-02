@@ -23,7 +23,11 @@
 				<div class="box box-success">
 					<div class="box-header">
 						<h3 class="box-title">Bilgiler</h3>
-						<div class="box-tools" style="font-size: medium;"></div>
+						<div class="box-tools" style="font-size: medium;">
+							<a class="btn btn-xs btn-success btn-flat" title="Gider Ekle" href="<c:url value="/admin/giderEkle/sefer/${voyage.id}"/>">
+								<i class="fa fa-plus"></i>&nbsp;&nbsp;Gider Ekle
+							</a>					
+						</div>
 					</div>
 					<!-- /.box-header -->
 					<div class="box-body table-responsive" style="height: 67vh;">
