@@ -22,6 +22,18 @@ public class ExpenseTest extends BaseTest{
 	ExpenseService expenseService;
 	
 	@Test
+	public void testFindById() {
+		renewTransaction();
+		
+		Expense expense10 = expenseService.findById(10L);
+		assertNotNull(expense10);
+		System.out.println("Id = " + expense10.getId());
+		System.out.println("Type = " + expense10.getType().getName());
+		System.out.println("Voyage route name = " + expense10.getVoyage().getRoute().getRouteName());
+		System.out.println("Price = " + expense10.getPrice());
+	}
+	
+	@Test
 	public void testGetTotalForCurrentYear() {
 		renewTransaction();
 		
