@@ -83,7 +83,7 @@ public class CustomerTest extends BaseTest {
 	public void testCountMonthly() {
 		renewTransaction();
 		
-		List<String[]> countList = customerService.countMonthly(2016);
+		List<String[]> countList = customerService.countMonthly(2017);
 		assertEquals(countList.size(), 12);
 		for(String[] o : countList) {
 			System.out.println(o[0] + "\t" + o[1]);

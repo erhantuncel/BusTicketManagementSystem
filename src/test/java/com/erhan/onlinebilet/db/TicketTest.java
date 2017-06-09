@@ -99,7 +99,7 @@ public class TicketTest extends BaseTest {
 	public void testCountMonthly() {
 		renewTransaction();
 		
-		List<String[]> countList = ticketService.countMonthly(2016);
+		List<String[]> countList = ticketService.countMonthly(2017);
 		assertEquals(countList.size(), 12);
 		for(String[] o : countList) {
 			System.out.println(o[0] + "\t" + o[1]);
