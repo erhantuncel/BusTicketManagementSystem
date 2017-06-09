@@ -189,107 +189,100 @@
 <jsp:include page="fragments/requiredScripts.jsp" />
 
 <script>
-	$(function() {
-
-		/* ChartJS
-		 * -------
-		 * Here we will create a few charts using ChartJS
-		 */
+	$(document).ready(function() {
+		var year = new Date().getFullYear();
+		var ticketPointsUrl = "${home}admin/biletSayisi/yil/"+ year;
+		drawLineChart(ticketPointsUrl, "#lineChartTicket");
 		
-		 /* Mavi Renk
-		  * fillColor : "rgba(60,141,188,0.9)",
-			strokeColor : "rgba(60,141,188,0.8)",
-			pointColor : "#3b8bba",
-			pointStrokeColor : "rgba(60,141,188,1)",
-			pointHighlightFill : "#fff",
-			pointHighlightStroke : "rgba(60,141,188,1)",
-		  */
-		
-			
-		var lineChartDataTicket = {
-			labels : [ "Ocak", "Þubat", "Mart", "Nisan", "Mayýs", "Haziran",
-					"Temmuz" ],
-			datasets : [ {
-				label : "Satýlan Bilet",
-				fillColor : "rgba(0,166,90, 0.9)",
-				strokeColor : "rgba(0,166,90, 0.8)",
-				pointColor : "#00a65a",
-				pointStrokeColor : "rgba(0,166,90, 1)",
-				pointHighlightFill : "#fff",
-				pointHighlightStroke : "rgba(0,166,90, 1)",
-				data : [ 28, 48, 40, 45, 86, 67, 90 ]
-			} ]
-		};
-
-		var lineChartDataUser = {
-			labels : [ "Ocak", "Þubat", "Mart", "Nisan", "Mayýs", "Haziran",
-					"Temmuz" ],
-			datasets : [ {
-				label : "Satýlan Bilet",
-				fillColor : "rgba(0,166,90,0.9)",
-				strokeColor : "rgba(0,166,90,0.8)",
-				pointColor : "#00a65a",
-				pointStrokeColor : "rgba(0,166,90,1)",
-				pointHighlightFill : "#fff",
-				pointHighlightStroke : "rgba(0,166,90,1)",
-				data : [ 228, 148, 155, 268, 275, 286, 390 ]
-			} ]
-		};
-
-		var lineChartOptions = {
-			//Boolean - If we should show the scale at all
-			showScale : true,
-			//Boolean - Whether grid lines are shown across the chart
-			scaleShowGridLines : false,
-			//String - Colour of the grid lines
-			scaleGridLineColor : "rgba(0,0,0,.05)",
-			//Number - Width of the grid lines
-			scaleGridLineWidth : 1,
-			//Boolean - Whether to show horizontal lines (except X axis)
-			scaleShowHorizontalLines : true,
-			//Boolean - Whether to show vertical lines (except Y axis)
-			scaleShowVerticalLines : true,
-			//Boolean - Whether the line is curved between points
-			bezierCurve : true,
-			//Number - Tension of the bezier curve between points
-			bezierCurveTension : 0.3,
-			//Boolean - Whether to show a dot for each point
-			pointDot : true,
-			//Number - Radius of each point dot in pixels
-			pointDotRadius : 4,
-			//Number - Pixel width of point dot stroke
-			pointDotStrokeWidth : 1,
-			//Number - amount extra to add to the radius to cater for hit detection outside the drawn point
-			pointHitDetectionRadius : 20,
-			//Boolean - Whether to show a stroke for datasets
-			datasetStroke : true,
-			//Number - Pixel width of dataset stroke
-			datasetStrokeWidth : 2,
-			//Boolean - Whether to fill the dataset with a color
-			datasetFill : true,
-			//String - A legend template
-			legendTemplate : "",
-			//Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container
-			maintainAspectRatio : true,
-			//Boolean - whether to make the chart responsive to window resizing
-			responsive : true
-		};
-
-		//-------------
-		//- LINE CHART -
-		//--------------
-		var lineChartCanvasTicket = $("#lineChartTicket").get(0).getContext(
-				"2d");
-		var lineChart = new Chart(lineChartCanvasTicket);
-		lineChartOptions.datasetFill = false;
-		lineChart.Line(lineChartDataTicket, lineChartOptions);
-
-		var lineChartCanvasUser = $("#lineChartUser").get(0).getContext("2d");
-		var lineChart = new Chart(lineChartCanvasUser);
-		lineChartOptions.datasetFill = false;
-		lineChart.Line(lineChartDataUser, lineChartOptions);
-
+		var customerPoitsUrl = "${home}admin/musteriSayisi/yil/"+ year;
+		drawLineChart(customerPoitsUrl, "#lineChartUser");
 	});
+	
+
+	function drawLineChart(jsonURL, canvasId) {	
+		var jsonData = $.ajax({
+			type : "GET",
+			contentType : "application/json",
+			url : jsonURL,
+			dataType : 'json',
+			success : function(results) {
+				// console.log("SUCCESS: ", results);
+				var linePoints = [];
+				results.data.forEach(function(ticketCount) {
+					linePoints.push(parseInt(ticketCount));
+				});
+				
+				var lineData = {
+						labels : [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+						datasets : [ {
+							label : "Satýlan Bilet",
+							fillColor : "rgba(0,166,90, 0.9)",
+							strokeColor : "rgba(0,166,90, 0.8)",
+							pointColor : "#00a65a",
+							pointStrokeColor : "rgba(0,166,90, 1)",
+							pointHighlightFill : "#fff",
+							pointHighlightStroke : "rgba(0,166,90, 1)",
+							// data : [ "28", "48", "40", "45", "86", "67", "90" ]
+							data : linePoints
+						} ]
+				};
+				
+				var lineChartOptions = {
+						//Boolean - If we should show the scale at all
+						showScale : true,
+						//Boolean - Whether grid lines are shown across the chart
+						scaleShowGridLines : true,
+						//String - Colour of the grid lines
+						scaleGridLineColor : "rgba(0,0,0,.05)",
+						//Number - Width of the grid lines
+						scaleGridLineWidth : 1,
+						//Boolean - Whether to show horizontal lines (except X axis)
+						scaleShowHorizontalLines : true,
+						//Boolean - Whether to show vertical lines (except Y axis)
+						scaleShowVerticalLines : true,
+						//Boolean - Whether the line is curved between points
+						bezierCurve : true,
+						//Number - Tension of the bezier curve between points
+						bezierCurveTension : 0.3,
+						//Boolean - Whether to show a dot for each point
+						pointDot : true,
+						//Number - Radius of each point dot in pixels
+						pointDotRadius : 4,
+						//Number - Pixel width of point dot stroke
+						pointDotStrokeWidth : 1,
+						//Number - amount extra to add to the radius to cater for hit detection outside the drawn point
+						pointHitDetectionRadius : 20,
+						//Boolean - Whether to show a stroke for datasets
+						datasetStroke : true,
+						//Number - Pixel width of dataset stroke
+						datasetStrokeWidth : 2,
+						//Boolean - Whether to fill the dataset with a color
+						datasetFill : true,
+						//String - A legend template
+						legendTemplate : "",
+						//Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container
+						maintainAspectRatio : true,
+						//Boolean - whether to make the chart responsive to window resizing
+						responsive : true
+					};
+				
+				//-------------
+				//- LINE CHART -
+				//--------------
+				var lineChartCanvasTicket = $(canvasId).get(0).getContext(
+						"2d");
+				var lineChart = new Chart(lineChartCanvasTicket);
+				lineChartOptions.datasetFill = false;
+				lineChart.Line(lineData, lineChartOptions);
+			},
+			error : function(e) {
+				console.log("ERROR: ", e);
+			},
+			done : function(e) {
+				console.log("DONE");
+			}
+		});	
+	}
 </script>
 
 </body>

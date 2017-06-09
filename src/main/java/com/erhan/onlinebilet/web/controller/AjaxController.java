@@ -2,6 +2,7 @@ package com.erhan.onlinebilet.web.controller;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -21,10 +22,12 @@ import com.erhan.onlinebilet.model.VehicleBrand;
 import com.erhan.onlinebilet.model.VehicleModel;
 import com.erhan.onlinebilet.service.CityDistanceService;
 import com.erhan.onlinebilet.service.CityService;
+import com.erhan.onlinebilet.service.CustomerService;
 import com.erhan.onlinebilet.service.RouteService;
 import com.erhan.onlinebilet.service.TicketService;
 import com.erhan.onlinebilet.service.VehicleBrandService;
 import com.erhan.onlinebilet.service.VehicleService;
+import com.erhan.onlinebilet.web.model.AjaxResponseBodyForMonthlyDataCount;
 import com.erhan.onlinebilet.web.model.AjaxResponseBodyForRouteDistance;
 import com.erhan.onlinebilet.web.model.AjaxResponseBodyForTicket;
 import com.erhan.onlinebilet.web.model.AjaxResponseBodyForVehicle;
@@ -51,6 +54,9 @@ public class AjaxController {
 	
 	@Autowired
 	VehicleBrandService vehicleBrandService;
+	
+	@Autowired
+	CustomerService customerService;
 	
 	@RequestMapping(value = "/admin/biletDetay/{id}")
 	public AjaxResponseBodyForTicket getTicketSearchResultById2(@PathVariable(value="id") String id) {
@@ -107,6 +113,36 @@ public class AjaxController {
 		result.setMessage("");
 		result.setCode("200");
 		result.setModelMap(modelMap);
+		return result;
+	}
+	
+	@RequestMapping(value="/admin/biletSayisi/yil/{year}", method=RequestMethod.GET)
+	public AjaxResponseBodyForMonthlyDataCount getMontlyTicketCount(@PathVariable(value="year") String year) {
+		
+		AjaxResponseBodyForMonthlyDataCount result = new AjaxResponseBodyForMonthlyDataCount();
+		List<String[]> monthlyTicketCountList = ticketService.countMonthly(new Integer(year));
+		String[] data = new String[12];
+		for(int i=0; i<monthlyTicketCountList.size(); i++) {
+			data[i] = monthlyTicketCountList.get(i)[1];
+		}
+		result.setMessage("");
+		result.setCode("200");
+		result.setData(data);
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/admin/musteriSayisi/yil/{year}", method=RequestMethod.GET)
+	public AjaxResponseBodyForMonthlyDataCount getMonthlyCustomerCount(@PathVariable(value="year") String year) {
+		AjaxResponseBodyForMonthlyDataCount result = new AjaxResponseBodyForMonthlyDataCount();
+		List<String[]> mothlyCustomerCountList = customerService.countMonthly(new Integer(year));
+		String[] data = new String[12];
+		for(int i=0; i<mothlyCustomerCountList.size(); i++) {
+			data[i] = mothlyCustomerCountList.get(i)[1];
+		}
+		result.setMessage("");
+		result.setCode("200");
+		result.setData(data);
 		return result;
 	}
 	
