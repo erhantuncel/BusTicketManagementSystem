@@ -73,8 +73,6 @@ public class AdminController {
 		
 		model.setViewName("admin/index");
 		return model;
-		
-		
 	}
 	
 	private Customer getCustomer() {
