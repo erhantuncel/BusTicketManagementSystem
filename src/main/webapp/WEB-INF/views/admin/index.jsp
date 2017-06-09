@@ -47,7 +47,10 @@
 	                <span class="info-box-icon bg-green"><i class="fa fa-download"></i></span>
 	                <div class="info-box-content">
 	                  <span class="info-box-text">YILLIK GELÝR</span>
-	                  <span class="info-box-number">&#8378;${incomeAnnual }</span>
+	                  <span class="info-box-number">&#8378; 
+	                  	<fmt:setLocale value="tr_TR"/>
+	                  	<fmt:formatNumber type="currency" currencySymbol="" maxFractionDigits="2" groupingUsed="true" value="${incomeAnnual}" />
+	                  </span>
 	                </div><!-- /.info-box-content -->
 				</div><!-- /.info-box -->
 			</div>
@@ -58,7 +61,10 @@
 	                <span class="info-box-icon bg-green"><i class="fa fa-upload"></i></span>
 	                <div class="info-box-content">
 	                  <span class="info-box-text">YILLIK GÝDER</span>
-	                  <span class="info-box-number">&#8378;${expenseAnnual }</span>
+	                  <span class="info-box-number">&#8378; 
+	                  	<fmt:setLocale value="tr_TR"/>
+	                  	<fmt:formatNumber type="currency" currencySymbol="" maxFractionDigits="2" groupingUsed="true" value="${expenseAnnual}" />
+	                  	</span>
 	                </div><!-- /.info-box-content -->
 				</div><!-- /.info-box -->
 			</div>
