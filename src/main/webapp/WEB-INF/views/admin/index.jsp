@@ -7,15 +7,20 @@
 
 <jsp:include page="fragments/mainSideBar.jsp" />
 
+<jsp:useBean id="now" class="java.util.Date" />
+<fmt:formatDate value="${now}" pattern="yyyy" var="year"/>
+
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
 	<!-- Content Header (Page header) -->
+	<!-- 
 	<section class="content-header">
 		<h1></h1>
 	</section>
-
+	 -->
+	 
 	<!-- Main content -->
-	<section class="content">
+	<section class="content" style="padding-bottom: 0px;">
 
 		<!-- Your Page Content Here -->
 		<div class="row">
@@ -46,7 +51,7 @@
 				<div class="info-box">
 	                <span class="info-box-icon bg-green"><i class="fa fa-download"></i></span>
 	                <div class="info-box-content">
-	                  <span class="info-box-text">YILLIK GELÝR</span>
+	                  <span class="info-box-text">YILLIK GELÝR - ${year}</span>
 	                  <span class="info-box-number">&#8378; 
 	                  	<fmt:setLocale value="tr_TR"/>
 	                  	<fmt:formatNumber type="currency" currencySymbol="" maxFractionDigits="2" groupingUsed="true" value="${incomeAnnual}" />
@@ -60,7 +65,7 @@
 				<div class="info-box">
 	                <span class="info-box-icon bg-green"><i class="fa fa-upload"></i></span>
 	                <div class="info-box-content">
-	                  <span class="info-box-text">YILLIK GÝDER</span>
+	                  <span class="info-box-text">YILLIK GÝDER - ${year}</span>
 	                  <span class="info-box-number">&#8378; 
 	                  	<fmt:setLocale value="tr_TR"/>
 	                  	<fmt:formatNumber type="currency" currencySymbol="" maxFractionDigits="2" groupingUsed="true" value="${expenseAnnual}" />
@@ -154,7 +159,7 @@
 			<div class="col-xs-6">
 				<div class="box box-success">
 					<div class="box-header with-border">
-						<h3 class="box-title">Aylýk Satýlan Bilet Sayýlarý</h3>
+						<h3 class="box-title">Aylara Göre Satýlan Bilet Sayýlarý - ${year}</h3>
 						<div class="box-tools pull-right"></div>
 						<!-- /.box-tools -->
 					</div>
@@ -169,7 +174,7 @@
 				<!-- /.box -->
 				<div class="box box-success">
 					<div class="box-header with-border">
-						<h3 class="box-title">Aylýk Kullanýcý Kayýtlarý</h3>
+						<h3 class="box-title">Aylara Göre Kullanýcý Kayýtlarý - ${year}</h3>
 						<div class="box-tools pull-right"></div>
 						<!-- /.box-tools -->
 					</div>
