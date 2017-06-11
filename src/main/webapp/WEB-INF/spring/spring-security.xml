@@ -18,7 +18,7 @@
 	
 	<http>
 		<intercept-url pattern="/admin/**" access="hasRole('ADMIN')" />
-		<intercept-url pattern="/customer/**" access="hasAnyRole('USER', 'ADMIN')" />
+		<intercept-url pattern="/musteri/**" access="hasAnyRole('USER', 'ADMIN')" />
 		<form-login
 			login-page="/login"
 			default-target-url="/common"
