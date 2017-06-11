@@ -4,9 +4,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
-<jsp:include page="fragments/header.jsp" />
+<jsp:include page="../fragments/header.jsp" />
 
-<jsp:include page="fragments/mainSideBar.jsp" />
+<jsp:include page="../fragments/mainSideBar.jsp" />
 
 <c:url var="home" value="/" scope="request" />
 
@@ -101,9 +101,9 @@
 <!-- /.content-wrapper -->
 
 
-<jsp:include page="fragments/mainFooter.jsp" />
+<jsp:include page="../fragments/mainFooter.jsp" />
 
-<jsp:include page="fragments/requiredScripts.jsp" />
+<jsp:include page="../fragments/requiredScripts.jsp" />
 
 <script>
 	var BrandSelect = $("#vehicleBrandSelect");

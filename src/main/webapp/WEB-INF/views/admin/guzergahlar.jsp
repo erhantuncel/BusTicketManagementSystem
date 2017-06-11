@@ -3,9 +3,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
-<jsp:include page="fragments/header.jsp" />
+<jsp:include page="../fragments/header.jsp" />
 
-<jsp:include page="fragments/mainSideBar.jsp" />
+<jsp:include page="../fragments/mainSideBar.jsp" />
 
 <c:url var="home" value="/" scope="request" />
 
@@ -139,9 +139,9 @@
 </div>
 <!-- /.modal -->
 
-<jsp:include page="fragments/mainFooter.jsp" />
+<jsp:include page="../fragments/mainFooter.jsp" />
 
-<jsp:include page="fragments/requiredScripts.jsp" />
+<jsp:include page="../fragments/requiredScripts.jsp" />
 
 <c:if test="${not empty msg }">
 	<script>

@@ -3,9 +3,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<jsp:include page="fragments/header.jsp" />
+<jsp:include page="../fragments/header.jsp" />
 
-<jsp:include page="fragments/mainSideBar.jsp" />
+<jsp:include page="../fragments/mainSideBar.jsp" />
 
 <jsp:useBean id="now" class="java.util.Date" />
 <fmt:formatDate value="${now}" pattern="yyyy" var="year"/>
@@ -195,9 +195,9 @@
 <!-- /.content-wrapper -->
 
 
-<jsp:include page="fragments/mainFooter.jsp" />
+<jsp:include page="../fragments/mainFooter.jsp" />
 
-<jsp:include page="fragments/requiredScripts.jsp" />
+<jsp:include page="../fragments/requiredScripts.jsp" />
 
 <script>
 	$(document).ready(function() {

@@ -2,9 +2,9 @@
     pageEncoding="ISO-8859-9"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 
-<jsp:include page="fragments/header.jsp" />
+<jsp:include page="../fragments/header.jsp" />
 
-<jsp:include page="fragments/mainSideBar.jsp" />
+<jsp:include page="../fragments/mainSideBar.jsp" />
 
 <!-- Content Wrapper. Contains page content -->
       <div class="content-wrapper">
@@ -112,9 +112,9 @@
       </div><!-- /.content-wrapper -->
 
 
-<jsp:include page="fragments/mainFooter.jsp" />
+<jsp:include page="../fragments/mainFooter.jsp" />
 
-<jsp:include page="fragments/requiredScripts.jsp" />
+<jsp:include page="../fragments/requiredScripts.jsp" />
 
   </body>
 </html>

@@ -2,7 +2,7 @@
 	pageEncoding="ISO-8859-9" isELIgnored="false"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<jsp:include page="fragments/publicHeader.jsp" />
+<jsp:include page="../fragments/publicIndexHeader.jsp" />
 
 		<!-- Content Wrapper. Contains page content -->
 		<div class="content-wrapper">
@@ -111,7 +111,7 @@
 		<!-- /.content-wrapper -->
 	</div>
 	<!-- ./wrapper -->
-	<jsp:include page="fragments/requiredScripts.jsp" />
+	<jsp:include page="../fragments/requiredScripts.jsp" />
 	
 	<script>
 		$(function() {

@@ -3,9 +3,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
-<jsp:include page="fragments/header.jsp" />
+<jsp:include page="../fragments/header.jsp" />
 
-<jsp:include page="fragments/mainSideBar.jsp" />
+<jsp:include page="../fragments/mainSideBar.jsp" />
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -296,9 +296,9 @@
 <div style="height: 15px;"></div>
  -->
 
-<jsp:include page="fragments/mainFooter.jsp" />
+<jsp:include page="../fragments/mainFooter.jsp" />
 
-<jsp:include page="fragments/requiredScripts.jsp" />
+<jsp:include page="../fragments/requiredScripts.jsp" />
 
 <c:url var="home" value="/" scope="request" />
 
