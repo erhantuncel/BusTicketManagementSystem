@@ -40,7 +40,7 @@ public class HomeController {
 		return model;
 	}
 	
-	@RequestMapping(value = "/user/{page}", method = RequestMethod.GET)
+	@RequestMapping(value = "/customer/{page}", method = RequestMethod.GET)
 	public ModelAndView customer(@PathVariable(value="page") String page) {
 		ModelAndView model = new ModelAndView();
 		model.addObject("title", "Online Bilet Sistemi");

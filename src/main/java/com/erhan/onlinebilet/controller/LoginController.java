@@ -28,7 +28,7 @@ public class LoginController {
 		if(roles.contains("ROLE_ADMIN")) {
 			return new RedirectView("admin");
 		} else {
-			return new RedirectView("user/biletlerim");
+			return new RedirectView("customer/biletlerim");
 		}
 	}
 }
