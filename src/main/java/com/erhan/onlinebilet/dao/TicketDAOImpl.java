@@ -1,5 +1,7 @@
 package com.erhan.onlinebilet.dao;
 
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -48,6 +50,20 @@ public class TicketDAOImpl implements TicketDAO {
 	@Override
 	public List<Ticket> findByCustomer(Customer customer) {
 		Criteria crt = sessionFactory.getCurrentSession().createCriteria(Ticket.class);
+		crt.add(Restrictions.eq("customer", customer));
+		crt.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		List<Ticket> tickets = (List<Ticket>) crt.list();
+		return tickets;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Ticket> findForFutureByCustomer(Customer customer) {
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.setTime(new Date());
+		Criteria crt = sessionFactory.getCurrentSession().createCriteria(Ticket.class);
+		crt.createAlias("voyage", "voyage");
+		crt.add(Restrictions.ge("voyage.departureTime", gc.getTime()));
 		crt.add(Restrictions.eq("customer", customer));
 		crt.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		List<Ticket> tickets = (List<Ticket>) crt.list();

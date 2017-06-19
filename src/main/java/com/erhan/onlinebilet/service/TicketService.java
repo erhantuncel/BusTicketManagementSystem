@@ -14,6 +14,7 @@ public interface TicketService {
 	public Ticket findById(Long id);
 	public List<Ticket> findAll();
 	public List<Ticket> findByCustomer(Customer customer);
+	public List<Ticket> findForFutureByCustomer(Customer customer);
 	public int delete(Long id);
 	public Integer countAll();
 	public List<String[]> countMonthly(Integer year);

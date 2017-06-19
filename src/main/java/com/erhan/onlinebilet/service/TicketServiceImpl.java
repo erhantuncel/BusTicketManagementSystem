@@ -61,6 +61,13 @@ public class TicketServiceImpl implements TicketService {
 
 	@Override
 	@Transactional
+	public List<Ticket> findForFutureByCustomer(Customer customer) {
+		List<Ticket> ticketList = ticketDAO.findForFutureByCustomer(customer);
+		return ticketList;
+	}
+
+	@Override
+	@Transactional
 	public int delete(Long id) {
 		int result = ticketDAO.delete(id);
 		return result;

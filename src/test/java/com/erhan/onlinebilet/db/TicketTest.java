@@ -75,6 +75,19 @@ public class TicketTest extends BaseTest {
 	}
 	
 	@Test
+	public void testFindFutureByCustomer() {
+		renewTransaction();
+		
+		Customer customer2 = customerService.findById(2L);
+		List<Ticket> ticketList = ticketService.findForFutureByCustomer(customer2);
+		assertNotNull(ticketList);
+		System.out.println("Ticket counts : " + ticketList.size());
+		for(Ticket ticket : ticketList) {
+			System.out.println("Id = " + ticket.getId().toString() + " time = " + ticket.getVoyage().getDepartureTime());
+		}
+	}
+	
+	@Test
 	public void testDelete() {
 		renewTransaction();
 		

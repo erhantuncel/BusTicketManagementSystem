@@ -22,7 +22,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.BeforeTransaction;
 
 import com.erhan.onlinebilet.model.City;
-import com.erhan.onlinebilet.model.CityDistance;
 import com.erhan.onlinebilet.model.Customer;
 import com.erhan.onlinebilet.model.Expense;
 import com.erhan.onlinebilet.model.ExpenseType;
@@ -142,6 +141,23 @@ public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 		roleAdmin.setUser(adminErhan);
 		userRoleService.create(roleAdmin);
 
+		// Creating User account (Serhan)
+		UserRole userRoleSerhan = new UserRole("ROLE_USER");
+		Customer userSerhan = new Customer();
+		userSerhan.setTcNumber("12345678910");
+		userSerhan.setName("Serhan");
+		userSerhan.setSurname("TUNÇEL");
+		userSerhan.setGender(Gender.ERKEK);
+		userSerhan.setDateOfBirth(generateRandomDateMaximum18Year());
+		userSerhan.setMobileNumber(generateRandomGsmNumber());
+		userSerhan.seteMail(generateNameForEmail("serhan")+"@abc.com");
+		userSerhan.setPassword(passwordEncoder.encode("user"));
+		userSerhan.setDateOfRegister(generateCustomerRegisteredTime(180, 150));
+		userSerhan.setTimeOfLastOnline(generateCustomerLastOnlineTime(16, 0));
+		userSerhan.setEnabled(true);
+		userRoleSerhan.setUser(userSerhan);
+		userRoleService.create(userRoleSerhan);
+		
 		// Customers 
 		int customerCount = 0;
 		while (customerCount < 24) {
@@ -279,6 +295,7 @@ public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 		}
 		
 		// Tickets
+		int voyageNumber = 0;
 		for(Voyage voyage : voyages) {
 			
 			/*
@@ -342,6 +359,7 @@ public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 			populateTicketCountMatrix(stops, ticketCountMatrix, minPassengerCount, maxPassengerCount);
 			
 			List<Ticket> ticketList = new ArrayList<Ticket>();
+			boolean ticketForTestCustomer = true;
 			for(int i=0; i<stops.length; i++) {
 				for(int j=i+1; j<stops.length; j++) {
 					passengerCount = ticketCountMatrix[i][j];
@@ -381,7 +399,7 @@ public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 						boolean isReservation = new  Random().nextBoolean();
 //						String pricePerDistance = "0.15";
 //						CityDistance distance = cityDistanceService.findByDepartureAndArrival(ticket.getDeparture(), ticket.getArrival());
-						BigDecimal ticketPrice = calculateTicketPriceForDistance(ticket.getDeparture(), ticket.getArrival());
+						BigDecimal ticketPrice = ticketService.calculateTicketPriceForDistance(ticket);
 						if(!isReservation) {
 							ticket.setPrice(ticketPrice);							
 						} else {
@@ -394,24 +412,32 @@ public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 						int randomNumber = randBetween(0, 150);
 						if (randomNumber <= 100) { 
 							// Customer or By Customer
-							UserRole userRoleForCustomer = new UserRole("ROLE_USER");
-							Customer customer = new Customer();
-							customer.setGender(gender);
-							String[] name = generateName(customer.getGender());
-							customer.setTcNumber(generateRandomTcNumber());
-							customer.setName(name[0]);
-							customer.setSurname(name[1]); 
-							customer.setDateOfBirth(generateRandomDateMaximum18Year());
-							customer.setMobileNumber(generateRandomGsmNumber());
-							customer.seteMail(generateNameForEmail(name[0]) + "@abc.com");
+							Customer customer = null;
+							if(voyageNumber%10 == 0 && ticketForTestCustomer) {
+								customer = customerService.findByTcNumber("12345678910");
+								customer.setTimeOfLastOnline(generateCustomerLastOnlineTimeForTicket(departureTime.getTime()));
+								customerService.update(customer);
+								ticketForTestCustomer = false;
+							} else {
+								UserRole userRoleForCustomer = new UserRole("ROLE_USER");
+								customer = new Customer();
+								customer.setGender(gender);
+								String[] name = generateName(customer.getGender());
+								customer.setTcNumber(generateRandomTcNumber());
+								customer.setName(name[0]);
+								customer.setSurname(name[1]); 
+								customer.setDateOfBirth(generateRandomDateMaximum18Year());
+								customer.setMobileNumber(generateRandomGsmNumber());
+								customer.seteMail(generateNameForEmail(name[0]) + "@abc.com");
 //							customer.setPassword(passwordEncoder.encode(generateRandomPassword()));
-							Collections.shuffle(passwordList);
-							customer.setPassword(passwordList.getFirst());
-							customer.setDateOfRegister(generateCustomerRegisteredTime(150, dayOfYearForToday-dayOfYearForDepartureTime));
-							customer.setTimeOfLastOnline(generateCustomerLastOnlineTimeForTicket(departureTime.getTime()));
-							customer.setEnabled(true);
-							userRoleForCustomer.setUser(customer);
-							userRoleService.create(userRoleForCustomer);
+								Collections.shuffle(passwordList);
+								customer.setPassword(passwordList.getFirst());
+								customer.setDateOfRegister(generateCustomerRegisteredTime(150, dayOfYearForToday-dayOfYearForDepartureTime));
+								customer.setTimeOfLastOnline(generateCustomerLastOnlineTimeForTicket(departureTime.getTime()));
+								customer.setEnabled(true);
+								userRoleForCustomer.setUser(customer);
+								userRoleService.create(userRoleForCustomer);	
+							}
 							if(randomNumber <50) {
 								// Customer
 								ticket.setIsReservation(isReservation);
@@ -491,6 +517,7 @@ public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 //				Income income = new Income(voyage, incomeRegisterTime, totalPrice);
 //				incomeService.create(income);
 //			}
+			voyageNumber++;
 		}
 		
 			
