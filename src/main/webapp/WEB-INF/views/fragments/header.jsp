@@ -160,13 +160,23 @@ scratch. This page gets rid of all links and provides the needed markup only.
 								<div class="collapse navbar-collapse pull-left"
 									id="navbar-collapse">
 									<ul class="nav navbar-nav">
-										<li class="active"><a href="<c:url value="/seferler"/>">Bilet Al <span class="sr-only">(current)</span>
+										<li><a href="<c:url value="/seferler"/>">Bilet Al / Rezervasyon Yap<span class="sr-only">(current)</span>
 										</a></li>
-										<li><a href="<c:url value="/seferler"/>">Rezervasyon Yap</a></li>
 										<li><a href="<c:url value="/biletlerim"/>">Biletlerim</a></li>
+										<li><a href="<c:url value="/biletlerim"/>">Bilgilerimi Güncelle</a></li>
+										<li>
+											<form action="<c:url value="/logout" />" method="POST" id="logoutForm">
+												<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+											</form> 
+											<script>
+												function logout() {
+													document.getElementById("logoutForm").submit();
+												}
+											</script> <a href="javascript:logout()">Çıkış</a>
+										</li>
 									</ul>
 								</div>
-
+								
 								<div class="navbar-custom-menu">
 									<ul class="nav navbar-nav">
 										<li>
@@ -175,23 +185,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 												<!-- The user image in the navbar-->
 												<span>${customer.name}&nbsp;${customer.surname } </span>
 											</a>
-											<ul class="dropdown-menu">
-												<li><a href="#">Bilgilerimi Güncelle</a></li>
-												<li role="separator" class="divider"></li>
-												<li>
-													<form action="<c:url value="/logout" />" method="POST" id="logoutForm">
-														<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-													</form> 
-													<script>
-														function logout() {
-															document.getElementById("logoutForm").submit();
-														}
-													</script> <a href="javascript:logout()">Çıkış</a>
-												</li>
-											</ul>
 										</li>
 									</ul>
-								</div>
+								</div>								
 							</sec:authorize>
 						</div>
 						<!-- /.container-fluid -->
