@@ -1,5 +1,7 @@
 package com.erhan.onlinebilet.service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -19,6 +21,9 @@ public class TicketServiceImpl implements TicketService {
 
 	@Autowired
 	TicketDAO ticketDAO;
+	
+	@Autowired
+	CityDistanceService cityDistanceService;
 	
 	@Override
 	@Transactional
@@ -148,5 +153,39 @@ public class TicketServiceImpl implements TicketService {
 			}
 		}
 		return ticketArray;
+	}
+
+	@Override
+	@Transactional
+	public void update(Ticket ticket) {
+		ticketDAO.update(ticket);
+	}
+
+	@Override
+	public BigDecimal calculateTicketPriceForDistance(Ticket ticket) {
+		BigDecimal price = new BigDecimal(0);
+		Integer distance = cityDistanceService.findByDepartureAndArrival(ticket.getDeparture(), ticket.getArrival()).getDistance();
+		double pricePerDistance = 0.0;
+		if(distance <= 200) {
+			pricePerDistance = 0.20;
+		} else if(distance > 200 && distance <= 400) {
+			pricePerDistance = 0.17;
+		} else if(distance > 400 && distance <= 600) {
+			pricePerDistance = 0.15;
+		} else if(distance > 600 && distance <= 800) {
+			pricePerDistance = 0.14;
+		} else if(distance > 800 && distance <= 1000) {
+			pricePerDistance = 0.12;
+		} else if(distance > 1000 && distance <= 1200) {
+			pricePerDistance = 0.11;
+		} else if(distance > 1200 && distance <= 1600) {
+			pricePerDistance = 0.10;
+		} else if(distance > 1600) {
+			pricePerDistance = 0.09;
+		}
+ 		
+		price = new BigDecimal(pricePerDistance).multiply(new BigDecimal(distance));
+		price = price.setScale(0, RoundingMode.UP);
+		return price;
 	}
 }

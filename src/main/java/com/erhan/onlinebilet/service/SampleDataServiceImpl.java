@@ -3,7 +3,6 @@ package com.erhan.onlinebilet.service;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -51,6 +50,9 @@ public class SampleDataServiceImpl implements SampleDataService {
 	
 	@Autowired
 	UserRoleService userRoleService;
+	
+	@Autowired
+	CustomerService customerService;
 	
 	@Autowired
 	RouteService routeService;
@@ -279,7 +281,7 @@ public class SampleDataServiceImpl implements SampleDataService {
 		}
 		
 		// Tickets
-		
+		int voyageNumber = 0;
 		for(Voyage voyage : voyages) {
 			
 			/*
@@ -343,6 +345,7 @@ public class SampleDataServiceImpl implements SampleDataService {
 			populateTicketCountMatrix(stops, ticketCountMatrix, minPassengerCount, maxPassengerCount);
 			
 			List<Ticket> ticketList = new ArrayList<Ticket>();
+			boolean ticketForTestCustomer = true;
 			for(int i=0; i<stops.length; i++) {
 				for(int j=i+1; j<stops.length; j++) {
 					passengerCount = ticketCountMatrix[i][j];
@@ -382,7 +385,7 @@ public class SampleDataServiceImpl implements SampleDataService {
 						boolean isReservation = new  Random().nextBoolean();
 //						String pricePerDistance = servletContext.getInitParameter("pricePerDistance");
 //						CityDistance distance = cityDistanceService.findByDepartureAndArrival(ticket.getDeparture(), ticket.getArrival());
-						BigDecimal ticketPrice = calculateTicketPriceForDistance(ticket.getDeparture(), ticket.getArrival());
+						BigDecimal ticketPrice = ticketService.calculateTicketPriceForDistance(ticket);
 						if(!isReservation) {
 							ticket.setPrice(ticketPrice);							
 						} else {
@@ -395,24 +398,32 @@ public class SampleDataServiceImpl implements SampleDataService {
 						int randomNumber = randBetween(0, 150);
 						if (randomNumber <= 100) { 
 							// Customer or By Customer
-							UserRole userRoleForCustomer = new UserRole("ROLE_USER");
-							Customer customer = new Customer();
-							customer.setGender(gender);
-							String[] name = generateName(customer.getGender());
-							customer.setTcNumber(generateRandomTcNumber());
-							customer.setName(name[0]);
-							customer.setSurname(name[1]); 
-							customer.setDateOfBirth(generateRandomDateMaximum18Year());
-							customer.setMobileNumber(generateRandomGsmNumber());
-							customer.seteMail(generateNameForEmail(name[0]) + "@abc.com");
+							Customer customer = null;
+							if(voyageNumber%10 == 0 && ticketForTestCustomer) {
+								customer = customerService.findByTcNumber("12345678910");
+								customer.setTimeOfLastOnline(generateCustomerLastOnlineTimeForTicket(departureTime.getTime()));
+								customerService.update(customer);
+								ticketForTestCustomer = false;
+							} else {
+								UserRole userRoleForCustomer = new UserRole("ROLE_USER");
+								customer = new Customer();
+								customer.setGender(gender);
+								String[] name = generateName(customer.getGender());
+								customer.setTcNumber(generateRandomTcNumber());
+								customer.setName(name[0]);
+								customer.setSurname(name[1]); 
+								customer.setDateOfBirth(generateRandomDateMaximum18Year());
+								customer.setMobileNumber(generateRandomGsmNumber());
+								customer.seteMail(generateNameForEmail(name[0]) + "@abc.com");
 //							customer.setPassword(passwordEncoder.encode(generateRandomPassword()));
 //							customer.setPassword(passwordList.removeFirst());
-							customer.setPassword("$2a$10$oZWHYFiGSZo/EtUL1S6MzuCRgb9CWDWyXBQZZdvzOBEyjAmzqhDou"); // obsProject
-							customer.setDateOfRegister(generateCustomerRegisteredTime(150, dayOfYearForToday-dayOfYearForDepartureTime));
-							customer.setTimeOfLastOnline(generateCustomerLastOnlineTimeForTicket(departureTime.getTime()));
-							customer.setEnabled(true);
-							userRoleForCustomer.setUser(customer);
-							userRoleService.create(userRoleForCustomer);
+								customer.setPassword("$2a$10$oZWHYFiGSZo/EtUL1S6MzuCRgb9CWDWyXBQZZdvzOBEyjAmzqhDou"); // obsProject
+								customer.setDateOfRegister(generateCustomerRegisteredTime(150, dayOfYearForToday-dayOfYearForDepartureTime));
+								customer.setTimeOfLastOnline(generateCustomerLastOnlineTimeForTicket(departureTime.getTime()));
+								customer.setEnabled(true);
+								userRoleForCustomer.setUser(customer);
+								userRoleService.create(userRoleForCustomer);
+							}
 							if(randomNumber <50) {
 								// Customer
 								ticket.setIsReservation(isReservation);
@@ -493,6 +504,7 @@ public class SampleDataServiceImpl implements SampleDataService {
 //				Income income = new Income(voyage, incomeRegisterTime, totalPrice);
 //				incomeService.create(income);
 //			}
+			voyageNumber++;
 		}
 		
 		// Expenses
@@ -868,32 +880,5 @@ public class SampleDataServiceImpl implements SampleDataService {
 		
 		long diffInMilliSeconds = endDate.getTimeInMillis() - startDate.getTimeInMillis(); 
 		return diffInMilliSeconds / (24 * 60 * 60 * 1000);
-	}
-	
-	private BigDecimal calculateTicketPriceForDistance(City departure, City arrival) {
-		BigDecimal price = new BigDecimal(0);
-		Integer distance = cityDistanceService.findByDepartureAndArrival(departure, arrival).getDistance();
-		double pricePerDistance = 0.0;
-		if(distance <= 200) {
-			pricePerDistance = 0.20;
-		} else if(distance > 200 && distance <= 400) {
-			pricePerDistance = 0.17;
-		} else if(distance > 400 && distance <= 600) {
-			pricePerDistance = 0.15;
-		} else if(distance > 600 && distance <= 800) {
-			pricePerDistance = 0.14;
-		} else if(distance > 800 && distance <= 1000) {
-			pricePerDistance = 0.12;
-		} else if(distance > 1000 && distance <= 1200) {
-			pricePerDistance = 0.11;
-		} else if(distance > 1200 && distance <= 1600) {
-			pricePerDistance = 0.10;
-		} else if(distance > 1600) {
-			pricePerDistance = 0.09;
-		}
- 		
-		price = new BigDecimal(pricePerDistance).multiply(new BigDecimal(distance));
-		price = price.setScale(0, RoundingMode.UP);
-		return price;
 	}
 }

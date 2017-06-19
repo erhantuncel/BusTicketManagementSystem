@@ -1,5 +1,6 @@
 package com.erhan.onlinebilet.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 
@@ -22,4 +23,6 @@ public interface TicketService {
 	public Ticket findByVoyageAndSeatNumber(Voyage voyage, Byte seatNumber);
 	public List<Byte> findSeatNumbersByVoyage(Voyage voyage);
 	public Ticket[][] getTicketArray(Set<Ticket> ticketList);
+	public void update(Ticket ticket);
+	public BigDecimal calculateTicketPriceForDistance(Ticket ticket);
 }

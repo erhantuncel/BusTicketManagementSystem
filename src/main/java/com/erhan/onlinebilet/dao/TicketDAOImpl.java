@@ -49,6 +49,7 @@ public class TicketDAOImpl implements TicketDAO {
 	public List<Ticket> findByCustomer(Customer customer) {
 		Criteria crt = sessionFactory.getCurrentSession().createCriteria(Ticket.class);
 		crt.add(Restrictions.eq("customer", customer));
+		crt.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		List<Ticket> tickets = (List<Ticket>) crt.list();
 		return tickets;
 	}
@@ -138,5 +139,10 @@ public class TicketDAOImpl implements TicketDAO {
 		crt.addOrder(Order.asc("seatNumber"));
 		List<Byte> seatNumbers = crt.list();
 		return seatNumbers;
+	}
+
+	@Override
+	public void update(Ticket ticket) {
+		sessionFactory.getCurrentSession().update(ticket);
 	}
 }

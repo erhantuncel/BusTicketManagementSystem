@@ -2,6 +2,7 @@ package com.erhan.onlinebilet.db;
 
 import static org.junit.Assert.*;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.LinkedHashSet;
@@ -221,9 +222,19 @@ public class TicketTest extends BaseTest {
 			}
 			System.out.print("\n");
 		}
+	}
+	
+	@Test
+	public void testUpdate() {
+		renewTransaction();
 		
+		Ticket ticket3 = ticketService.findById(3L);
+		ticket3.setPrice(new BigDecimal("100.00"));
+		ticketService.update(ticket3);
 		
-		
+		renewTransaction();
+		Ticket ticketTest = ticketService.findById(3L);
+		assertEquals(ticketTest.getPrice(), new BigDecimal("100.00"));
 	}
 	
 	private void renewTransaction() {

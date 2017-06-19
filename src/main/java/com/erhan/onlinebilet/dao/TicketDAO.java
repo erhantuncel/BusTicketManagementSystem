@@ -19,4 +19,5 @@ public interface TicketDAO {
 	public Integer countTicketByVoyage(Voyage voyage);
 	public Ticket findByVoyageAndSeatNumber(Voyage voyage, Byte seatNumber);
 	public List<Byte> findSeatNumbersByVoyage(Voyage voyage); 
+	public void update(Ticket ticket);
 }
