@@ -38,7 +38,7 @@
 <!-- 			</user-service> -->
 <!-- 		</authentication-provider> -->
 		<authentication-provider user-service-ref="myUserDetailsService">
-			<password-encoder hash="bcrypt" />
+			<password-encoder ref="myBcryptPasswordEncoder" />
 		</authentication-provider>
 	</authentication-manager>
 	
@@ -52,4 +52,6 @@
 	<context:component-scan base-package="com.erhan.onlinebilet.service" />
 
 	<beans:bean id="myUserDetailsService" class="com.erhan.onlinebilet.service.MyUserDetailsService" />
+	<beans:bean id="myBcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+	
 </beans:beans>
