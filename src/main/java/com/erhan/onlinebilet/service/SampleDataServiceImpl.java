@@ -114,10 +114,12 @@ public class SampleDataServiceImpl implements SampleDataService {
 		adminErhan.setDateOfBirth(generateRandomDateMaximum18Year());
 		adminErhan.setMobileNumber(generateRandomGsmNumber());
 		adminErhan.seteMail(generateNameForEmail("erhan")+"@abc.com");
-		adminErhan.setPassword(passwordEncoder.encode("admin"));
+		adminErhan.setPassword(passwordEncoder.encode("admiN123"));
+//		adminErhan.setPassword("admiN123");
 		adminErhan.setDateOfRegister(generateCustomerRegisteredTime(180, 150));
 		adminErhan.setTimeOfLastOnline(generateCustomerLastOnlineTime(16, 0));
 		adminErhan.setEnabled(true);
+//		customerService.create(adminErhan);
 		userRoleErhan.setUser(adminErhan);
 		userRoleService.create(userRoleErhan);
 		
@@ -131,10 +133,12 @@ public class SampleDataServiceImpl implements SampleDataService {
 		userSerhan.setDateOfBirth(generateRandomDateMaximum18Year());
 		userSerhan.setMobileNumber(generateRandomGsmNumber());
 		userSerhan.seteMail(generateNameForEmail("serhan")+"@abc.com");
-		userSerhan.setPassword(passwordEncoder.encode("user"));
+		userSerhan.setPassword(passwordEncoder.encode("useR1234"));
+//		userSerhan.setPassword("useR1234");
 		userSerhan.setDateOfRegister(generateCustomerRegisteredTime(180, 150));
 		userSerhan.setTimeOfLastOnline(generateCustomerLastOnlineTime(16, 0));
 		userSerhan.setEnabled(true);
+//		customerService.create(userSerhan);
 		userRoleSerhan.setUser(userSerhan);
 		userRoleService.create(userRoleSerhan);
 		
@@ -154,10 +158,12 @@ public class SampleDataServiceImpl implements SampleDataService {
 			customer.seteMail(generateNameForEmail(name[0])+"@abc.com");
 //			customer.setPassword(passwordEncoder.encode(generateRandomPassword()));
 //			customer.setPassword(passwordList.removeFirst());
-			customer.setPassword("$2a$10$oZWHYFiGSZo/EtUL1S6MzuCRgb9CWDWyXBQZZdvzOBEyjAmzqhDou");
+//			customer.setPassword("$2a$10$oZWHYFiGSZo/EtUL1S6MzuCRgb9CWDWyXBQZZdvzOBEyjAmzqhDou");
+			customer.setPassword("obsProject1");
 			customer.setDateOfRegister(generateCustomerRegisteredTime(150, 20));
 			customer.setTimeOfLastOnline(generateCustomerLastOnlineTime(16, 0));
 			customer.setEnabled(true);
+//			customerService.create(customer);
 			userRole.setUser(customer);
 			userRoleService.create(userRole);
 			customerCount++;
@@ -417,10 +423,12 @@ public class SampleDataServiceImpl implements SampleDataService {
 								customer.seteMail(generateNameForEmail(name[0]) + "@abc.com");
 //							customer.setPassword(passwordEncoder.encode(generateRandomPassword()));
 //							customer.setPassword(passwordList.removeFirst());
-								customer.setPassword("$2a$10$oZWHYFiGSZo/EtUL1S6MzuCRgb9CWDWyXBQZZdvzOBEyjAmzqhDou"); // obsProject
+//								customer.setPassword("$2a$10$oZWHYFiGSZo/EtUL1S6MzuCRgb9CWDWyXBQZZdvzOBEyjAmzqhDou"); // obsProject
+								customer.setPassword("obsProject1"); // obsProject1
 								customer.setDateOfRegister(generateCustomerRegisteredTime(150, dayOfYearForToday-dayOfYearForDepartureTime));
 								customer.setTimeOfLastOnline(generateCustomerLastOnlineTimeForTicket(departureTime.getTime()));
 								customer.setEnabled(true);
+//								customerService.create(customer);
 								userRoleForCustomer.setUser(customer);
 								userRoleService.create(userRoleForCustomer);
 							}

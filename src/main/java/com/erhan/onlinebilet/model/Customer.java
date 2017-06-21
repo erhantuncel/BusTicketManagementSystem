@@ -21,6 +21,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
@@ -87,7 +88,7 @@ public class Customer {
 	@Column(name = "SIFRE")
 	@NotEmpty
 //	@Size(min = 8, max = 15)
-	@Length(min = 60)
+	@Length(min = 8, max = 60)
 	@Pattern.List({
 		@Pattern(regexp = "(?=.*[0-9]).+$", message="Şifre en az bir adet nümerik karakter içermeli"),
 		@Pattern(regexp = "(?=.*[a-z]).+$", message = "Şifre en az bir küçük harf içermeli.")
@@ -96,21 +97,18 @@ public class Customer {
 	private String password;
 	
 	@Column(name = "KAYIT_ZAMANI")
-	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(pattern="dd.MM.yyyy HH:mm:ss")
 	@JsonFormat(shape=Shape.STRING, pattern="dd.MM.yyyy HH:mm:ss")
 	private Date dateOfRegister;
 	
 	@Column(name = "SON_GIRIS_ZAMANI")
-	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(pattern="dd.MM.yyyy HH:mm:ss")
 	@JsonFormat(shape=Shape.STRING, pattern="dd.MM.yyyy HH:mm:ss")
 	private Date timeOfLastOnline;
 	
 	@Column(name = "AKTIFMI")
-	@NotNull
 	private Boolean enabled;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade =CascadeType.ALL)

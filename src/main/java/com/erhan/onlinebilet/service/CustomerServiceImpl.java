@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.erhan.onlinebilet.dao.CustomerDAO;
 import com.erhan.onlinebilet.model.Customer;
+import com.erhan.onlinebilet.model.UserRole;
 
 @Service("customerService")
 public class CustomerServiceImpl implements CustomerService {
@@ -16,10 +18,20 @@ public class CustomerServiceImpl implements CustomerService {
 	@Autowired
 	CustomerDAO customerDAO;
 
+	@Autowired
+	UserRoleService userRoleService;
+	
+	@Autowired
+	BCryptPasswordEncoder bCryptPasswordEncoder;
+	
 	@Override
 	@Transactional
 	public Long create(Customer customer) {
+		customer.setPassword(bCryptPasswordEncoder.encode(customer.getPassword()));
 		Long id = customerDAO.create(customer);
+		UserRole userRole = new UserRole("ROLE_USER");
+		userRole.setUser(customer);
+		userRoleService.create(userRole);
 		return id;
 	}
 
