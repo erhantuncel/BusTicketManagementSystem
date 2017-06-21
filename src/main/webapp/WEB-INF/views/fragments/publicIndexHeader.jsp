@@ -25,6 +25,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <!-- Bootstrap 3.3.5 -->
 <link rel="stylesheet"
 	href="<c:url value="/resources/css/bootstrap.min.css"/>">
+<!-- Animate 3.5.1 -->
+<link rel="stylesheet"
+	href="<c:url value="/resources/css/animate.min.css"/>">
 <!-- Font Awesome -->
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
