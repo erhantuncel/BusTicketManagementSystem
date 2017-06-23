@@ -12,6 +12,8 @@
 	<c:set var="role" value="role_admin" />
 </sec:authorize>
 
+<sec:authentication var="loggedCustomer" property="principal"/>
+
 <c:set var="reqURL" value="${pageContext.request.requestURL}" />
 
 <!DOCTYPE html>
@@ -149,7 +151,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 					<nav class="navbar navbar-static-top">
 						<div class="container">
 							<div class="navbar-header">
-								<a href="<c:url value="/"/>" class="navbar-brand"><b>Online Bilet Sistemi</b></a>
+								<a href="<c:url value="/musteri"/>" class="navbar-brand"><b>Online Bilet Sistemi</b></a>
 								<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
 									<i class="fa fa-bars"></i>
 								</button>
@@ -162,8 +164,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 									<ul class="nav navbar-nav">
 										<li><a href="<c:url value="/seferler"/>">Bilet Al / Rezervasyon Yap<span class="sr-only">(current)</span>
 										</a></li>
-										<li><a href="<c:url value="/biletlerim"/>">Biletlerim</a></li>
-										<li><a href="<c:url value="/biletlerim"/>">Bilgilerimi Güncelle</a></li>
+										<li><a href="<c:url value="/musteri/biletlerim"/>">Biletlerim</a></li>
+										<li><a href="<c:url value="/musteri/bilgiGuncelle"/>">Bilgilerimi Güncelle</a></li>
 										<li>
 											<form action="<c:url value="/logout" />" method="POST" id="logoutForm">
 												<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
