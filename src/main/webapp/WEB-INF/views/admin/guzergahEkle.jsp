@@ -218,7 +218,7 @@
 				console.log("SUCCESS: ", data);
 				var distance = data.distance;
 				var duration = data.duration;
-				$("#totalDistance").text(distance);
+				$("#totalDistance").text(distance + " km");
 				/*
 				var durationMin = Math.floor((distance / 85)*60);
 				var hours = Math.floor(durationMin/60);

@@ -81,7 +81,7 @@ public class RouteServiceImpl implements RouteService {
 		Integer durationMin = totalDurationMin % 60;
 		String durationStr = durationHour + " sa. " + durationMin + " dk.";
 		String[] distanceAndDurationArray = new String[2];
-		distanceAndDurationArray[0] = totalDistance.toString() + " km";
+		distanceAndDurationArray[0] = totalDistance.toString();
 		distanceAndDurationArray[1] = durationStr;		
 		
 		return distanceAndDurationArray;
