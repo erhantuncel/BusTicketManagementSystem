@@ -53,7 +53,8 @@ import com.erhan.onlinebilet.service.VoyageService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "file:src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml",
-		"file:src/main/webapp/WEB-INF/spring/root-context.xml" })
+		"file:src/main/webapp/WEB-INF/spring/root-context.xml",
+		"file:src/main/webapp/WEB-INF/spring/spring-security.xml" })
 public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests { 
 	
 	@Autowired
@@ -132,7 +133,7 @@ public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 		adminErhan.setDateOfBirth(c.getTime());
 		adminErhan.setMobileNumber("5965534785");
 		adminErhan.seteMail("erhan@abc.com");
-		adminErhan.setPassword(passwordEncoder.encode("admin"));
+		adminErhan.setPassword(passwordEncoder.encode("admiN123"));
 		c.set(2016, 2, 21, 11, 45, 55);
 		adminErhan.setDateOfRegister(c.getTime());
 		c.setTime(new Date());
@@ -151,7 +152,7 @@ public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 		userSerhan.setDateOfBirth(generateRandomDateMaximum18Year());
 		userSerhan.setMobileNumber(generateRandomGsmNumber());
 		userSerhan.seteMail(generateNameForEmail("serhan")+"@abc.com");
-		userSerhan.setPassword(passwordEncoder.encode("user"));
+		userSerhan.setPassword(passwordEncoder.encode("useR1234"));
 		userSerhan.setDateOfRegister(generateCustomerRegisteredTime(180, 150));
 		userSerhan.setTimeOfLastOnline(generateCustomerLastOnlineTime(16, 0));
 		userSerhan.setEnabled(true);
