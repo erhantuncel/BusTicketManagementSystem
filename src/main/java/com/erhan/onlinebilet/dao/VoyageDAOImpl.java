@@ -88,6 +88,7 @@ public class VoyageDAOImpl implements VoyageDAO {
 		Criteria crt = sessionFactory.getCurrentSession().createCriteria(Voyage.class);
 		crt.add(Restrictions.eq("route", route));
 		crt.add(Restrictions.between("departureTime", startDate, endDate));
+		crt.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		crt.addOrder(Order.asc("departureTime"));
 		List<Voyage> voyageList = crt.list();
 		return voyageList;
