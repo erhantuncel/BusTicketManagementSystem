@@ -60,23 +60,25 @@ public class RouteDAOImpl implements RouteDAO {
 			boolean departureFind = false;
 			boolean arrivalFind = false;
 			for(Stop stop : stopSet) {
+				System.out.print("-" + stop.getCity().getCityName());
 				if(!departureFind) {
-					if(stop.getCity() != departure) {
+					if(stop.getCity().getCityName().equals(departure.getCityName())) {
+						departureFind = true;
 						continue;
 					} else {
-						departureFind = true;
 						continue;
 					}
 				} else {
-					if(stop.getCity() != arrival) {
-						continue;
-					} else {
+					if(stop.getCity().getCityName().equals(arrival.getCityName())) {
 						arrivalFind = true;
 						break;
+					} else {
+						continue;
 					}
 				}
 			}
-			if(departureFind & arrivalFind) {
+			System.out.println();
+			if(departureFind && arrivalFind) {
 				foundRoutes.add(route);
 			}
 		}

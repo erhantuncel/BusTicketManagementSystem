@@ -2,13 +2,11 @@ package com.erhan.onlinebilet.db;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.transaction.AfterTransaction;
 import org.springframework.test.context.transaction.TestTransaction;
 
 import com.erhan.onlinebilet.model.City;
@@ -76,11 +74,11 @@ public class RouteTest extends BaseTest {
 	public void testFindByDepartureAndArrival() {
 		renewTransaction();
 		
+		City ankara = cityService.findById(06L);
 		City bolu = cityService.findById(14L);
-		City duzce = cityService.findById(81L);
 		
-		List<Route> routeList = routeService.findAllByDepartureAndArrival(bolu, duzce);
-		assertEquals(routeList.size(), 1);
+		List<Route> routeList = routeService.findAllByDepartureAndArrival(ankara, bolu);
+		assertEquals(routeList.size(), 2);
 		for(Route route : routeList) {
 			System.out.println("Route name : " + route.getRouteName());
 			System.out.println("Stops");
@@ -89,6 +87,19 @@ public class RouteTest extends BaseTest {
 			}
 			System.out.println("===========================");
 		}
+	}
+	
+	@Test
+	public void testGetTotalDistanceAndDurationForRoute() {
+		renewTransaction();
+		
+		Route route1 = routeService.findById(1L);
+		System.out.println("Route Name = " + route1.getRouteName());
+		
+		String[] distanceAndDuration = routeService.getTotalDistanceAndDurationForRoute(route1, 90, 15, 15);
+		System.out.println("Distance = " + distanceAndDuration[0]);
+		System.out.println("Duration = " + distanceAndDuration[1]);
+		
 	}
 	
 	private void renewTransaction() {
