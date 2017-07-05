@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 
+import com.erhan.onlinebilet.model.City;
 import com.erhan.onlinebilet.model.Customer;
 import com.erhan.onlinebilet.model.Ticket;
 import com.erhan.onlinebilet.model.Voyage;
@@ -25,5 +26,5 @@ public interface TicketService {
 	public List<Byte> findSeatNumbersByVoyage(Voyage voyage);
 	public Ticket[][] getTicketArray(Set<Ticket> ticketList);
 	public void update(Ticket ticket);
-	public BigDecimal calculateTicketPriceForDistance(Ticket ticket);
+	public BigDecimal calculateTicketPriceByDepartureAndArrival(City departure, City arrival);
 }

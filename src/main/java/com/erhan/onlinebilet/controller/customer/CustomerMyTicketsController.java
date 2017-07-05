@@ -68,7 +68,7 @@ public class CustomerMyTicketsController {
 				ModelAndView model, HttpServletRequest request, RedirectAttributes redir) {
 		
 		Ticket ticket = ticketService.findById(new Long(id));
-		BigDecimal ticketPrice = ticketService.calculateTicketPriceForDistance(ticket);
+		BigDecimal ticketPrice = ticketService.calculateTicketPriceByDepartureAndArrival(ticket.getDeparture(), ticket.getArrival());
 		ticket.setPrice(ticketPrice);
 		ticket.setIsReservation(false);
 		String resultMessage = null;

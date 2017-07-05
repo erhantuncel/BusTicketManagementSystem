@@ -391,7 +391,7 @@ public class SampleDataServiceImpl implements SampleDataService {
 						boolean isReservation = new  Random().nextBoolean();
 //						String pricePerDistance = servletContext.getInitParameter("pricePerDistance");
 //						CityDistance distance = cityDistanceService.findByDepartureAndArrival(ticket.getDeparture(), ticket.getArrival());
-						BigDecimal ticketPrice = ticketService.calculateTicketPriceForDistance(ticket);
+						BigDecimal ticketPrice = ticketService.calculateTicketPriceByDepartureAndArrival(ticket.getDeparture(), ticket.getArrival());
 						if(!isReservation) {
 							ticket.setPrice(ticketPrice);							
 						} else {

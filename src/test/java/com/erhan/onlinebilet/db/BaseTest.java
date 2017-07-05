@@ -400,7 +400,7 @@ public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 						boolean isReservation = new  Random().nextBoolean();
 //						String pricePerDistance = "0.15";
 //						CityDistance distance = cityDistanceService.findByDepartureAndArrival(ticket.getDeparture(), ticket.getArrival());
-						BigDecimal ticketPrice = ticketService.calculateTicketPriceForDistance(ticket);
+						BigDecimal ticketPrice = ticketService.calculateTicketPriceByDepartureAndArrival(ticket.getDeparture(), ticket.getArrival());
 						if(!isReservation) {
 							ticket.setPrice(ticketPrice);							
 						} else {

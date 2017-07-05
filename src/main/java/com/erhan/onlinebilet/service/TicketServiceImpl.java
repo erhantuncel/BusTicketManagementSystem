@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.erhan.onlinebilet.dao.TicketDAO;
+import com.erhan.onlinebilet.model.City;
 import com.erhan.onlinebilet.model.Customer;
 import com.erhan.onlinebilet.model.Ticket;
 import com.erhan.onlinebilet.model.Voyage;
@@ -169,9 +170,9 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public BigDecimal calculateTicketPriceForDistance(Ticket ticket) {
+	public BigDecimal calculateTicketPriceByDepartureAndArrival(City departure, City arrival) {
 		BigDecimal price = new BigDecimal(0);
-		Integer distance = cityDistanceService.findByDepartureAndArrival(ticket.getDeparture(), ticket.getArrival()).getDistance();
+		Integer distance = cityDistanceService.findByDepartureAndArrival(departure, arrival).getDistance();
 		double pricePerDistance = 0.0;
 		if(distance <= 200) {
 			pricePerDistance = 0.20;
