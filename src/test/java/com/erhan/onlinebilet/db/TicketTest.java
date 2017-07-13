@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -12,7 +13,9 @@ import java.util.Set;
 import org.junit.Test;
 import org.springframework.test.context.transaction.TestTransaction;
 
+import com.erhan.onlinebilet.model.City;
 import com.erhan.onlinebilet.model.Customer;
+import com.erhan.onlinebilet.model.Stop;
 import com.erhan.onlinebilet.model.Ticket;
 import com.erhan.onlinebilet.model.Voyage;
 
@@ -211,6 +214,41 @@ public class TicketTest extends BaseTest {
 		for(Byte b : seatNumbers) {
 			System.out.print("Seat Number : " + b + "\n");
 		}
+	}
+	
+	@Test
+	public void testFindSeatNumbersByVoyageAndDeparture() {
+		renewTransaction();
+		
+		Voyage voyage14 = voyageService.findById(14L);
+		City arrival = null;
+		int stopCount = voyage14.getRoute().getStops().size();
+		int i = 0;
+		for(Stop stop : voyage14.getRoute().getStops()) {
+			if(i == stopCount-1) {
+				arrival = stop.getCity();
+			}
+			i++;
+		}
+		System.out.println("Arrival = " + arrival.getCityName());
+		
+		List<Byte> seatNumbersFromService = ticketService.findSeatNumbersByVoyageAndArrival(voyage14, arrival);
+		
+		List<Ticket> ticketListForVoyage14 = ticketService.findByVoyage(voyage14);
+		System.out.println("Ticket Size = " + ticketListForVoyage14.size());
+		List<Byte> seatNumbers = new ArrayList<Byte>();
+		for(Ticket ticket : ticketListForVoyage14) {
+//			System.out.println("Id = " + ticket.getId() + " SeatNumber = " + ticket.getSeatNumber() 
+//						+ "Departure = " + ticket.getDeparture().getCityName()
+//						+ " Arrival = " + ticket.getArrival().getCityName()); 
+			if(ticket.getArrival().getCityName().equals(arrival.getCityName())) {
+				seatNumbers.add(ticket.getSeatNumber());
+			}
+		}
+		System.out.println("Seat Numbers Count - Service = " + seatNumbersFromService.size());
+		System.out.println("Seat Numbers Count - Loop = " + seatNumbers.size()); 
+		assertEquals(seatNumbersFromService.size(), seatNumbers.size());
+		
 	}
 	
 	@Test

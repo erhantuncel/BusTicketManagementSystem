@@ -24,6 +24,7 @@ public interface TicketService {
 	public Integer countTicketByVoyage(Voyage voyage);
 	public Ticket findByVoyageAndSeatNumber(Voyage voyage, Byte seatNumber);
 	public List<Byte> findSeatNumbersByVoyage(Voyage voyage);
+	public List<Byte> findSeatNumbersByVoyageAndArrival(Voyage voyage, City arrival);
 	public Ticket[][] getTicketArray(Set<Ticket> ticketList);
 	public void update(Ticket ticket);
 	public BigDecimal calculateTicketPriceByDepartureAndArrival(City departure, City arrival);

@@ -140,6 +140,13 @@ public class TicketServiceImpl implements TicketService {
 
 	@Override
 	@Transactional
+	public List<Byte> findSeatNumbersByVoyageAndArrival(Voyage voyage, City arrival) {
+		List<Byte> seatNumbers = ticketDAO.findSeatNumbersByVoyageAndArrival(voyage, arrival);
+		return seatNumbers;
+	}
+
+	@Override
+	@Transactional
 	public Ticket[][] getTicketArray(Set<Ticket> ticketSet) {	
 		Ticket[][] ticketArray = new Ticket[13][3];
 		Byte seatNumber = 1;

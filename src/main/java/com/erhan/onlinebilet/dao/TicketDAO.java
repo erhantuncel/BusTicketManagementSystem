@@ -2,6 +2,7 @@ package com.erhan.onlinebilet.dao;
 
 import java.util.List;
 
+import com.erhan.onlinebilet.model.City;
 import com.erhan.onlinebilet.model.Customer;
 import com.erhan.onlinebilet.model.Ticket;
 import com.erhan.onlinebilet.model.Voyage;
@@ -20,5 +21,6 @@ public interface TicketDAO {
 	public Integer countTicketByVoyage(Voyage voyage);
 	public Ticket findByVoyageAndSeatNumber(Voyage voyage, Byte seatNumber);
 	public List<Byte> findSeatNumbersByVoyage(Voyage voyage); 
+	public List<Byte> findSeatNumbersByVoyageAndArrival(Voyage voyage, City arrival);
 	public void update(Ticket ticket);
 }

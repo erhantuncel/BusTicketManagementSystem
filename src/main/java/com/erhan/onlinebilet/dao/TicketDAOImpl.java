@@ -15,6 +15,7 @@ import org.hibernate.type.Type;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.erhan.onlinebilet.model.City;
 import com.erhan.onlinebilet.model.Customer;
 import com.erhan.onlinebilet.model.Ticket;
 import com.erhan.onlinebilet.model.Voyage;
@@ -111,6 +112,7 @@ public class TicketDAOImpl implements TicketDAO {
 		Criteria crt = sessionFactory.getCurrentSession().createCriteria(Ticket.class);
 		crt.add(Restrictions.eq("voyage", voyage));
 		crt.addOrder(Order.asc("seatNumber"));
+		crt.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		List<Ticket> tickets = crt.list();
 		return tickets;
 	}
@@ -151,6 +153,18 @@ public class TicketDAOImpl implements TicketDAO {
 	public List<Byte> findSeatNumbersByVoyage(Voyage voyage) {
 		Criteria crt = sessionFactory.getCurrentSession().createCriteria(Ticket.class);
 		crt.add(Restrictions.eq("voyage", voyage));
+		crt.setProjection(Projections.property("seatNumber"));
+		crt.addOrder(Order.asc("seatNumber"));
+		List<Byte> seatNumbers = crt.list();
+		return seatNumbers;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Byte> findSeatNumbersByVoyageAndArrival(Voyage voyage, City arrival) {
+		Criteria crt = sessionFactory.getCurrentSession().createCriteria(Ticket.class);
+		crt.add(Restrictions.eq("voyage", voyage));
+		crt.add(Restrictions.eq("arrival", arrival));
 		crt.setProjection(Projections.property("seatNumber"));
 		crt.addOrder(Order.asc("seatNumber"));
 		List<Byte> seatNumbers = crt.list();
