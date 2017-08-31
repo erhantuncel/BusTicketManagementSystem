@@ -93,13 +93,13 @@ public class SampleDataServiceImpl implements SampleDataService {
 	@Autowired
 	SessionFactory sessionFactory;
 	
-	@SuppressWarnings("unused")
 	public void populateData() {
 		maleNames = populateNames("maleNames.txt");
 		femaleNames = populateNames("femaleNames.txt");
 		surnames = populateNames("surnames.txt");
 		passwords = populateNames("encodedPasswords.txt");
 		
+		@SuppressWarnings("unused")
 		LinkedList<String> passwordList = getListOfDataFromTxtFile("encodedPasswords.txt");
 		
 
@@ -316,8 +316,6 @@ public class SampleDataServiceImpl implements SampleDataService {
 			GregorianCalendar departureTime = new GregorianCalendar();
 			departureTime.setTime(voyage.getDepartureTime());
 			
-			int passengerCount = 0;
-			
 			
 			Integer minExtraTicketCount = 0;
 			Integer maxExtraTicketCount = 0;
@@ -341,9 +339,6 @@ public class SampleDataServiceImpl implements SampleDataService {
 				maxExtraTicketCount = 35;
 			}
 			
-			
-			// Initialize ticketCountMatrix
-			
 			List<Ticket> ticketList = new ArrayList<Ticket>();
 			boolean ticketForTestCustomer = true;
 			
@@ -363,7 +358,7 @@ public class SampleDataServiceImpl implements SampleDataService {
 			
 			// Adding extra tickets for random departure and arrival stop
 			int extraPassengerCountTemp = 0;
-			int extraPassengerCount = randBetween(minExtraTicketCount, maxPassengerCount);
+			int extraPassengerCount = randBetween(minExtraTicketCount, maxExtraTicketCount);
 			while(extraPassengerCountTemp <= extraPassengerCount) {
 				int departureIndex = randBetween(0, stops.length-2);
 				int arrivalIndex = randBetween(departureIndex+1, stops.length-1);
