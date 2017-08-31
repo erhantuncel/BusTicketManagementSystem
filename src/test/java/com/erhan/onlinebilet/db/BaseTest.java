@@ -300,19 +300,22 @@ public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 		for(Voyage voyage : voyages) {
 			
 			/*
-			 * Güne göre her durakta olması gereken en az ve en çok yolcu sayısını belirle
-			 * Kalkış ve varış duraklarına göre olan tüm kombinasyonlar için rastgele yolcu 
-			   sayısı atayarak matris oluştur.
-			 * Yolcu sayısı kadar kalkış ve varış noktalarına göre koltuk numaralarını belirle.
-			 * - Rastgele Kalkış ve varış şehirlerini seç. (Rotaya uyumlu olarak)
-			 * - Seçilen rotada boş koltukları bul
-			 * - Boş koltuklardan birini seçip yolcu listesine ekle
+			 * En uzak duraklar arası için biletleri ekle
+			 * - Her rota için oluşturulacak bilet sayısını hesapla
+			 * - Kalkış ve varış notları için maksimum koltuk sayısını geçmeyecek şekilde biletleri oluştur.
+			 * Güne göre rastgele eklenecek bilet sayısını belirle
+			 * Rasgele seçilecek kalkış ve varış durakları için maksimum koltuk sayısını geçmeyecek şekilde biletleri oluştur.
+			 * - Seçilen kalkış ve varış duraklarına göre boş koltukları belirle.
+			 * - Boş koltuk listesini karıştırarak bir numara seçerek bileti oluştur.
 			 */
 			
+			Stop[] stops = (Stop[]) voyage.getRoute().getStops().toArray(new Stop[voyage.getRoute().getStops().size()]);
+			int stopCount = stops.length;
+			int maxPassengerCount = 20;
+			int combinationCount = stopCount*((stopCount-1+1)/2);
+			int passengerCountPerCombination = (maxPassengerCount - (maxPassengerCount % combinationCount)) / combinationCount;
 			int seatCount = 37;
 			BigDecimal totalTicketPrice = new BigDecimal(0);
-			
-			Stop[] stops = (Stop[]) voyage.getRoute().getStops().toArray(new Stop[voyage.getRoute().getStops().size()]);
 			
 			GregorianCalendar today = new GregorianCalendar();
 			today.setTime(new Date());
@@ -321,184 +324,210 @@ public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 			GregorianCalendar departureTime = new GregorianCalendar();
 			departureTime.setTime(voyage.getDepartureTime());
 			
-			int passengerCount = 0;
-			Integer[][] seatNumbers = generateSeatArray();
-			String[][] seats = new String[13][3];
 			
-			Integer minPassengerCount = 0;
-			Integer maxPassengerCount = 0;
+			Integer minExtraTicketCount = 0;
+			Integer maxExtraTicketCount = 0;
 			
 			
-//			Set<Stop> voyageStopSet = voyage.getRoute().getStops();
-			List<Stop> voyageStopList = new ArrayList<Stop>(voyage.getRoute().getStops());
 			long differenceOfDepartureAndToday = calculateDifferenceBetweenDatesInDay(departureTime, today);
 			if(differenceOfDepartureAndToday == -2l) {
-//				passengerCount = Math.round((voyageStopSet.size() - 1) * seatCount * 80 / 100);
-				minPassengerCount = 6;
-				maxPassengerCount = 12;
+				minExtraTicketCount = 0;
+				maxExtraTicketCount = 7;
 			} else if (differenceOfDepartureAndToday == -1l) {
-//				passengerCount = randBetween(20, 37);
-				minPassengerCount = 12;
-				maxPassengerCount = 18;
+				minExtraTicketCount = 7;
+				maxExtraTicketCount = 14;
 			} else if(differenceOfDepartureAndToday == 0) {
-//				passengerCount = randBetween(5, 30);
-				minPassengerCount = 18;
-				maxPassengerCount = 24;
+				minExtraTicketCount = 14;
+				maxExtraTicketCount = 21;
 			} else if(differenceOfDepartureAndToday == 1l) {
-//				passengerCount = randBetween(0, 20);
-				minPassengerCount = 24;
-				maxPassengerCount = 30;
+				minExtraTicketCount = 21;
+				maxExtraTicketCount = 28;
 			} else if(differenceOfDepartureAndToday == 2l) {
-//				passengerCount = randBetween(0, 10);
-				minPassengerCount = 30;
-				maxPassengerCount = 37;
+				minExtraTicketCount = 28;
+				maxExtraTicketCount = 35;
 			}
 			
-			
-			// Initialize ticketCountMatrix
-			Integer[][] ticketCountMatrix = new Integer[stops.length][stops.length];
-			populateTicketCountMatrix(stops, ticketCountMatrix, minPassengerCount, maxPassengerCount);
 			
 			List<Ticket> ticketList = new ArrayList<Ticket>();
 			boolean ticketForTestCustomer = true;
-			for(int i=0; i<stops.length; i++) {
+			
+			Date lastTicketRegisteredTime = null;
+			// Adding tickets for first stop as departure and last stop as arrival
+			for(int i=0; i<stops.length-1; i++) {
 				for(int j=i+1; j<stops.length; j++) {
-					passengerCount = ticketCountMatrix[i][j];
-					while(passengerCount > 0) {
-						
-						// Create empty seat number list
-						LinkedList<Byte> emptySeatNumberList = new LinkedList<Byte>();
-						for(int number=1; number<=seatCount; number++) {
-							emptySeatNumberList.add(new Byte(String.valueOf(number)));
+					if(!isMaxCountReachForDepartureAndArrival(i, j, ticketList, seatCount, stops)) {
+						for(int k=0; k<passengerCountPerCombination; k++) {
+							Ticket ticket = createTicket(voyageNumber, voyage, stops, seatCount, totalTicketPrice, dayOfYearForToday, departureTime,
+									ticketList, i, j);
+							totalTicketPrice = totalTicketPrice.add(ticket.getPrice());
 						}
-						
-						// Remove seat number that is selected before
-						if(!ticketList.isEmpty()) {
-							for(Ticket ticket : ticketList) {
-								for(int stopIndex = i+1; stopIndex<stops.length; stopIndex++) {
-									if(ticket.getArrival().equals(stops[stopIndex].getCity())) {
-										emptySeatNumberList.remove(ticket.getSeatNumber());
-									}
-								}
-							}
-						}
-						
-						City departure = stops[i].getCity();
-						City arrival = stops[j].getCity();
-						Collections.shuffle(emptySeatNumberList);
-						if(emptySeatNumberList.isEmpty()) {
-							continue;
-						}
-						Ticket ticket = new Ticket();
-						ticket.setDeparture(departure);
-						ticket.setArrival(arrival);
-						Byte seatNumber = emptySeatNumberList.removeFirst();
-						ticket.setSeatNumber(seatNumber);
-						
-						
-						// Ticket details
-						boolean isReservation = new  Random().nextBoolean();
-//						String pricePerDistance = "0.15";
-//						CityDistance distance = cityDistanceService.findByDepartureAndArrival(ticket.getDeparture(), ticket.getArrival());
-						BigDecimal ticketPrice = ticketService.calculateTicketPriceByDepartureAndArrival(ticket.getDeparture(), ticket.getArrival());
-						if(!isReservation) {
-							ticket.setPrice(ticketPrice);							
-						} else {
-							ticket.setPrice(new BigDecimal(0));
-						}
-						Integer[] seatIndex = findIndexOfSeat(seatNumbers, seatNumber.intValue());
-						Gender gender = generateGenderForSeat(seats, seatIndex);
-						int dayOfYearForDepartureTime = departureTime.get(Calendar.DAY_OF_YEAR);
-						Date ticketRegisterTime = new Date();
-						int randomNumber = randBetween(0, 150);
-						if (randomNumber <= 100) { 
-							// Customer or By Customer
-							Customer customer = null;
-							if(voyageNumber%10 == 0 && ticketForTestCustomer) {
-								customer = customerService.findByTcNumber("12345678910");
-								customer.setTimeOfLastOnline(generateCustomerLastOnlineTimeForTicket(departureTime.getTime()));
-								customerService.update(customer);
-								ticketForTestCustomer = false;
-							} else {
-								UserRole userRoleForCustomer = new UserRole("ROLE_USER");
-								customer = new Customer();
-								customer.setGender(gender);
-								String[] name = generateName(customer.getGender());
-								customer.setTcNumber(generateRandomTcNumber());
-								customer.setName(name[0]);
-								customer.setSurname(name[1]); 
-								customer.setDateOfBirth(generateRandomDateMaximum18Year());
-								customer.setMobileNumber(generateRandomGsmNumber());
-								customer.seteMail(generateNameForEmail(name[0]) + "@abc.com");
-//							customer.setPassword(passwordEncoder.encode(generateRandomPassword()));
-								Collections.shuffle(passwordList);
-								customer.setPassword(passwordList.getFirst());
-								customer.setDateOfRegister(generateCustomerRegisteredTime(150, dayOfYearForToday-dayOfYearForDepartureTime));
-								customer.setTimeOfLastOnline(generateCustomerLastOnlineTimeForTicket(departureTime.getTime()));
-								customer.setEnabled(true);
-								userRoleForCustomer.setUser(customer);
-								userRoleService.create(userRoleForCustomer);	
-							}
-							if(randomNumber <50) {
-								// Customer
-								ticket.setIsReservation(isReservation);
-								ticket.setVoyage(voyage);
-								GregorianCalendar gc = new GregorianCalendar();
-								gc.setTime(customer.getTimeOfLastOnline());
-								gc.add(Calendar.MINUTE, randBetween(5, 20));
-								ticketRegisterTime = gc.getTime();
-								ticket.setRegisterTime(ticketRegisterTime);
-								ticket.setCustomer(customer);
-								ticket.setPassangerTcNumber(customer.getTcNumber());
-								ticket.setPassangerName(customer.getName());
-								ticket.setPassangerSurname(customer.getSurname());
-								ticket.setPassangerGender(customer.getGender());
-								Long ticketId = ticketService.create(ticket);
-							} else if(randomNumber >= 50 & randomNumber <= 100) {
-								// By Customer
-								ticket.setIsReservation(isReservation);
-								ticket.setVoyage(voyage);
-								GregorianCalendar gc = new GregorianCalendar();
-								gc.setTime(customer.getTimeOfLastOnline());
-								gc.add(Calendar.MINUTE, randBetween(5, 20));
-								ticketRegisterTime = gc.getTime();
-								ticket.setRegisterTime(ticketRegisterTime);
-								ticket.setCustomer(customer);
-								ticket.setPassangerTcNumber(generateRandomTcNumber());
-								String[] passangerName = generateName(gender);
-								ticket.setPassangerName(passangerName[0]);
-								ticket.setPassangerSurname(passangerName[1]);
-								ticket.setPassangerGender(gender);
-								Long ticketId = ticketService.create(ticket);
-							}
-						} else {
-							// Not customer
-							ticket.setIsReservation(isReservation);
-							ticket.setVoyage(voyage);
-							ticketRegisterTime = generateTicketRegisteredTimeForNotCustomer(departureTime.getTime());
-							ticket.setRegisterTime(ticketRegisterTime);
-							ticket.setPassangerTcNumber(generateRandomTcNumber());
-							String[] passangerName = generateName(gender);
-							ticket.setPassangerName(passangerName[0]);
-							ticket.setPassangerSurname(passangerName[1]);
-							ticket.setPassangerGender(gender);
-							Long ticketId = ticketService.create(ticket);
-						}
-						ticketList.add(ticket);
-						totalTicketPrice = totalTicketPrice.add(ticket.getPrice());
-						Income incomeFromDb = incomeService.findByVoyage(voyage);
-						if(incomeFromDb == null) {
-							Income income = new Income(voyage, ticketRegisterTime, totalTicketPrice);							
-							incomeService.create(income);
-						} else {
-							incomeFromDb.setPrice(totalTicketPrice);
-							incomeFromDb.setRegisteredTime(ticketRegisterTime);
-							incomeService.update(incomeFromDb);
-						}
-						passengerCount--;
 					}
 				}
 			}
+			
+			// Adding extra tickets for random departure and arrival stop
+			int extraPassengerCountTemp = 0;
+			int extraPassengerCount = randBetween(minExtraTicketCount, maxExtraTicketCount);
+			while(extraPassengerCountTemp <= extraPassengerCount) {
+				int departureIndex = randBetween(0, stops.length-2);
+				int arrivalIndex = randBetween(departureIndex+1, stops.length-1);
+				if(!isMaxCountReachForDepartureAndArrival(departureIndex, arrivalIndex, ticketList, seatCount, stops)) {
+					Ticket ticket = new Ticket();
+					if(voyageNumber%10 == 0 && ticketForTestCustomer) {
+						userSerhan.setTimeOfLastOnline(generateCustomerLastOnlineTimeForTicket(departureTime.getTime()));
+						customerService.update(userSerhan);
+						ticket = createTicletForTestCustomer(userSerhan, voyage, stops, seatCount, ticketList, departureIndex, arrivalIndex);
+						ticketForTestCustomer = false;
+					} else {
+						ticket = createTicket(voyageNumber, voyage, stops, seatCount, totalTicketPrice, dayOfYearForToday, departureTime, 
+								ticketList, departureIndex, arrivalIndex);
+					}
+					totalTicketPrice = totalTicketPrice.add(ticket.getPrice());
+					lastTicketRegisteredTime = ticket.getRegisterTime();						
+					extraPassengerCountTemp++;
+				}
+			}
+			
+			updateIncomeByTotalTicketPrice(voyage, lastTicketRegisteredTime, totalTicketPrice);
+			
+//			for(int i=0; i<stops.length; i++) {
+//				for(int j=i+1; j<stops.length; j++) {
+//					passengerCount = ticketCountMatrix[i][j];
+//					while(passengerCount > 0) {
+//						
+//						// Create empty seat number list
+//						LinkedList<Byte> emptySeatNumberList = new LinkedList<Byte>();
+//						for(int number=1; number<=seatCount; number++) {
+//							emptySeatNumberList.add(new Byte(String.valueOf(number)));
+//						}
+//						
+//						// Remove seat number that is selected before
+//						if(!ticketList.isEmpty()) {
+//							for(Ticket ticket : ticketList) {
+//								for(int stopIndex = i+1; stopIndex<stops.length; stopIndex++) {
+//									if(ticket.getArrival().equals(stops[stopIndex].getCity())) {
+//										emptySeatNumberList.remove(ticket.getSeatNumber());
+//									}
+//								}
+//							}
+//						}
+//						
+//						City departure = stops[i].getCity();
+//						City arrival = stops[j].getCity();
+//						Collections.shuffle(emptySeatNumberList);
+//						if(emptySeatNumberList.isEmpty()) {
+//							continue;
+//						}
+//						Ticket ticket = new Ticket();
+//						ticket.setDeparture(departure);
+//						ticket.setArrival(arrival);
+//						Byte seatNumber = emptySeatNumberList.removeFirst();
+//						ticket.setSeatNumber(seatNumber);
+//						
+//						
+//						// Ticket details
+//						boolean isReservation = new  Random().nextBoolean();
+////						String pricePerDistance = "0.15";
+////						CityDistance distance = cityDistanceService.findByDepartureAndArrival(ticket.getDeparture(), ticket.getArrival());
+//						BigDecimal ticketPrice = ticketService.calculateTicketPriceByDepartureAndArrival(ticket.getDeparture(), ticket.getArrival());
+//						if(!isReservation) {
+//							ticket.setPrice(ticketPrice);							
+//						} else {
+//							ticket.setPrice(new BigDecimal(0));
+//						}
+//						Integer[] seatIndex = findIndexOfSeat(seatNumbers, seatNumber.intValue());
+//						Gender gender = generateGenderForSeat(seats, seatIndex);
+//						int dayOfYearForDepartureTime = departureTime.get(Calendar.DAY_OF_YEAR);
+//						Date ticketRegisterTime = new Date();
+//						int randomNumber = randBetween(0, 150);
+//						if (randomNumber <= 100) { 
+//							// Customer or By Customer
+//							Customer customer = null;
+//							if(voyageNumber%10 == 0 && ticketForTestCustomer) {
+//								customer = customerService.findByTcNumber("12345678910");
+//								customer.setTimeOfLastOnline(generateCustomerLastOnlineTimeForTicket(departureTime.getTime()));
+//								customerService.update(customer);
+//								ticketForTestCustomer = false;
+//							} else {
+//								UserRole userRoleForCustomer = new UserRole("ROLE_USER");
+//								customer = new Customer();
+//								customer.setGender(gender);
+//								String[] name = generateName(customer.getGender());
+//								customer.setTcNumber(generateRandomTcNumber());
+//								customer.setName(name[0]);
+//								customer.setSurname(name[1]); 
+//								customer.setDateOfBirth(generateRandomDateMaximum18Year());
+//								customer.setMobileNumber(generateRandomGsmNumber());
+//								customer.seteMail(generateNameForEmail(name[0]) + "@abc.com");
+////							customer.setPassword(passwordEncoder.encode(generateRandomPassword()));
+//								Collections.shuffle(passwordList);
+//								customer.setPassword(passwordList.getFirst());
+//								customer.setDateOfRegister(generateCustomerRegisteredTime(150, dayOfYearForToday-dayOfYearForDepartureTime));
+//								customer.setTimeOfLastOnline(generateCustomerLastOnlineTimeForTicket(departureTime.getTime()));
+//								customer.setEnabled(true);
+//								userRoleForCustomer.setUser(customer);
+//								userRoleService.create(userRoleForCustomer);	
+//							}
+//							if(randomNumber <50) {
+//								// Customer
+//								ticket.setIsReservation(isReservation);
+//								ticket.setVoyage(voyage);
+//								GregorianCalendar gc = new GregorianCalendar();
+//								gc.setTime(customer.getTimeOfLastOnline());
+//								gc.add(Calendar.MINUTE, randBetween(5, 20));
+//								ticketRegisterTime = gc.getTime();
+//								ticket.setRegisterTime(ticketRegisterTime);
+//								ticket.setCustomer(customer);
+//								ticket.setPassangerTcNumber(customer.getTcNumber());
+//								ticket.setPassangerName(customer.getName());
+//								ticket.setPassangerSurname(customer.getSurname());
+//								ticket.setPassangerGender(customer.getGender());
+//								Long ticketId = ticketService.create(ticket);
+//							} else if(randomNumber >= 50 & randomNumber <= 100) {
+//								// By Customer
+//								ticket.setIsReservation(isReservation);
+//								ticket.setVoyage(voyage);
+//								GregorianCalendar gc = new GregorianCalendar();
+//								gc.setTime(customer.getTimeOfLastOnline());
+//								gc.add(Calendar.MINUTE, randBetween(5, 20));
+//								ticketRegisterTime = gc.getTime();
+//								ticket.setRegisterTime(ticketRegisterTime);
+//								ticket.setCustomer(customer);
+//								ticket.setPassangerTcNumber(generateRandomTcNumber());
+//								String[] passangerName = generateName(gender);
+//								ticket.setPassangerName(passangerName[0]);
+//								ticket.setPassangerSurname(passangerName[1]);
+//								ticket.setPassangerGender(gender);
+//								Long ticketId = ticketService.create(ticket);
+//							}
+//						} else {
+//							// Not customer
+//							ticket.setIsReservation(isReservation);
+//							ticket.setVoyage(voyage);
+//							ticketRegisterTime = generateTicketRegisteredTimeForNotCustomer(departureTime.getTime());
+//							ticket.setRegisterTime(ticketRegisterTime);
+//							ticket.setPassangerTcNumber(generateRandomTcNumber());
+//							String[] passangerName = generateName(gender);
+//							ticket.setPassangerName(passangerName[0]);
+//							ticket.setPassangerSurname(passangerName[1]);
+//							ticket.setPassangerGender(gender);
+//							Long ticketId = ticketService.create(ticket);
+//						}
+//						ticketList.add(ticket);
+//						totalTicketPrice = totalTicketPrice.add(ticket.getPrice());
+//						Income incomeFromDb = incomeService.findByVoyage(voyage);
+//						if(incomeFromDb == null) {
+//							Income income = new Income(voyage, ticketRegisterTime, totalTicketPrice);							
+//							incomeService.create(income);
+//						} else {
+//							incomeFromDb.setPrice(totalTicketPrice);
+//							incomeFromDb.setRegisteredTime(ticketRegisterTime);
+//							incomeService.update(incomeFromDb);
+//						}
+//						passengerCount--;
+//					}
+//				}
+//			}
 			
 //			GregorianCalendar gc = new GregorianCalendar();
 //			gc.setTime(voyage.getDepartureTime());
@@ -759,6 +788,57 @@ public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 		return gender;
 	}
 
+	@SuppressWarnings("unused")
+	private Ticket createTicletForTestCustomer(Customer testCustomer, Voyage voyage, Stop[] stops, int seatCount, List<Ticket> ticketList, int departureIndex,
+			int arrivalIndex) {
+		LinkedList<Byte> emptySeatList = getEmptySeatNumbersForDepartureAndArrival(departureIndex, arrivalIndex, ticketList, seatCount, stops);
+		Collections.shuffle(emptySeatList);
+		Byte seatNumber = emptySeatList.removeFirst();
+		boolean isReservation = new Random().nextBoolean();
+		Ticket ticket = new Ticket();
+		ticket.setDeparture(stops[departureIndex].getCity());
+		ticket.setArrival(stops[arrivalIndex].getCity());
+		ticket.setIsReservation(isReservation);
+		ticket.setSeatNumber(seatNumber);							
+		BigDecimal ticketPrice = getTicketPrice(ticket.getDeparture(), ticket.getArrival(), isReservation);
+		ticket.setPrice(ticketPrice);
+		ticket.setVoyage(voyage);
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.setTime(testCustomer.getTimeOfLastOnline());
+		gc.add(Calendar.MINUTE, randBetween(5, 20));
+		ticket.setRegisterTime(gc.getTime());
+		ticket.setCustomer(testCustomer);
+		ticket.setPassangerTcNumber(testCustomer.getTcNumber());
+		ticket.setPassangerName(testCustomer.getName());
+		ticket.setPassangerSurname(testCustomer.getSurname());
+		ticket.setPassangerGender(testCustomer.getGender());
+		Long ticketId = ticketService.create(ticket);
+		return ticket;
+	}
+	
+	private Ticket createTicket(int voyageNumber, Voyage voyage, Stop[] stops, int seatCount, BigDecimal totalTicketPrice,
+			int dayOfYearForToday, GregorianCalendar departureTime, List<Ticket> ticketList, int departureIndex,
+			int arrivalIndex) {
+		LinkedList<Byte> emptySeatList = getEmptySeatNumbersForDepartureAndArrival(departureIndex, arrivalIndex, ticketList, seatCount, stops);
+		Collections.shuffle(emptySeatList);
+		Byte seatNumber = emptySeatList.removeFirst();
+		City departure = stops[departureIndex].getCity();
+		City arrival = stops[arrivalIndex].getCity();
+//		System.out.println("Departure = " + departure.getCityName() + " Arrival = " + arrival.getCityName());
+		boolean isReservation = new Random().nextBoolean();
+		Ticket ticket = new Ticket();
+		ticket.setDeparture(departure);
+		ticket.setArrival(arrival);
+		ticket.setIsReservation(isReservation);
+		ticket.setSeatNumber(seatNumber);							
+		BigDecimal ticketPrice = getTicketPrice(ticket.getDeparture(), ticket.getArrival(), isReservation);
+		ticket.setPrice(ticketPrice);
+		ticket.setVoyage(voyage);
+		populateTicketWithCustomerAndPassengerInfo(ticket, voyageNumber, departureTime, dayOfYearForToday);
+		ticketList.add(ticket);
+		return ticket;
+	}
+	
 	private List<String> populateNames(String fileName) {
 		List<String> name = new ArrayList<String>();
 
@@ -932,6 +1012,150 @@ public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 		return gc.getTime();
 	}
 
+	private boolean isMaxCountReachForDepartureAndArrival(int departureIndex, int arrivalIndex, List<Ticket> ticketList, int maxSeatCount, Stop[] stops) {
+		int passengerCount = calculatePassengerCountForDepartureAndArrival(departureIndex, arrivalIndex, ticketList, maxSeatCount, stops);
+		if(passengerCount == maxSeatCount) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	private int calculatePassengerCountForDepartureAndArrival(int departureIndex, int arrivalIndex, List<Ticket> ticketList, int maxSeatCount, Stop[] stops) {
+		LinkedList<Byte> seatNumberList = generateSeatNumberList(maxSeatCount);
+		int passengerCount = 0;
+		for(int i=0; i<=arrivalIndex-1; i++) {
+			int jIndex = departureIndex+1;
+			if (i>=departureIndex+1) {
+				jIndex = i+1;
+			}
+			for(int j=jIndex; j<stops.length; j++) {
+				if(ticketList.size() != 0) {
+					for(Ticket ticket : ticketList) {
+						if(ticket.getDeparture().equals(stops[i].getCity()) && ticket.getArrival().equals(stops[j].getCity())) {
+							if(isSeatNumberExist(seatNumberList, ticket.getSeatNumber())){
+								seatNumberList.remove(ticket.getSeatNumber());
+								passengerCount++;
+							} else {
+								continue;
+							}
+						}
+					}
+				}
+			}
+		}
+		return passengerCount;
+	}
+	
+	private LinkedList<Byte> getEmptySeatNumbersForDepartureAndArrival(int departureIndex, int arrivalIndex, List<Ticket> ticketList, int maxSeatCount, Stop[] stops) {
+		LinkedList<Byte> emptySeatNumberList = generateSeatNumberList(maxSeatCount);
+		for(int i=0; i<=arrivalIndex-1; i++) {
+			int jIndex = departureIndex+1;
+			if (i>=departureIndex+1) {
+				jIndex = i+1;
+			}
+			for(int j=jIndex; j<stops.length; j++) {
+				if(ticketList.size() != 0) {
+					for(Ticket ticket : ticketList) {
+						if(ticket.getDeparture().equals(stops[i].getCity()) && ticket.getArrival().equals(stops[j].getCity())) {
+							emptySeatNumberList.remove(ticket.getSeatNumber());
+						}
+					}
+				}
+			}
+		}
+		return emptySeatNumberList;
+	}
+	
+	private LinkedList<Byte> generateSeatNumberList(int maxSeatCount) {
+		LinkedList<Byte> seatNumberList = new LinkedList<Byte>();
+		for(int number=1; number<=maxSeatCount; number++) {
+			seatNumberList.add(new Byte(String.valueOf(number)));
+		}
+		return seatNumberList;
+	}
+	
+	private BigDecimal getTicketPrice(City departure, City arrival, boolean isReservation) {
+		BigDecimal ticketPrice = new BigDecimal(0);
+		if(!isReservation) {
+			ticketPrice = ticketService.calculateTicketPriceByDepartureAndArrival(departure, arrival);
+		}
+		return ticketPrice;
+	}
+	
+	@SuppressWarnings("unused")
+	private void populateTicketWithCustomerAndPassengerInfo(Ticket ticket, int voyageNumber, GregorianCalendar departureTime, int dayOfYearForToday) {
+		Integer[][] seatNumbers = generateSeatArray();
+		String[][] seats = new String[13][3];
+		Integer[] seatIndex = findIndexOfSeat(seatNumbers, ticket.getSeatNumber().intValue());
+		Gender gender = generateGenderForSeat(seats, seatIndex);
+		int dayOfYearForDepartureTime = departureTime.get(Calendar.DAY_OF_YEAR);
+		Date ticketRegisterTime = new Date();
+		int randomNumber = randBetween(0, 150);
+		if (randomNumber <= 100) { 
+			// Customer or By Customer
+			Customer customer = null;
+			UserRole userRoleForCustomer = new UserRole("ROLE_USER");
+			customer = new Customer();
+			customer.setGender(gender);
+			String[] name = generateName(customer.getGender());
+			customer.setTcNumber(generateRandomTcNumber());
+			customer.setName(name[0]);
+			customer.setSurname(name[1]); 
+			customer.setDateOfBirth(generateRandomDateMaximum18Year());
+			customer.setMobileNumber(generateRandomGsmNumber());
+			customer.seteMail(generateNameForEmail(name[0]) + "@abc.com");
+//			customer.setPassword(passwordEncoder.encode(generateRandomPassword()));
+//			customer.setPassword(passwordList.removeFirst());
+//				customer.setPassword("$2a$10$oZWHYFiGSZo/EtUL1S6MzuCRgb9CWDWyXBQZZdvzOBEyjAmzqhDou"); // obsProject
+			customer.setPassword("obsProject1"); // obsProject1
+			customer.setDateOfRegister(generateCustomerRegisteredTime(150, dayOfYearForToday-dayOfYearForDepartureTime));
+			customer.setTimeOfLastOnline(generateCustomerLastOnlineTimeForTicket(departureTime.getTime()));
+			customer.setEnabled(true);
+//				customerService.create(customer);
+			userRoleForCustomer.setUser(customer);
+			userRoleService.create(userRoleForCustomer);
+			if(randomNumber <50) {
+				// Customer
+				GregorianCalendar gc = new GregorianCalendar();
+				gc.setTime(customer.getTimeOfLastOnline());
+				gc.add(Calendar.MINUTE, randBetween(5, 20));
+				ticketRegisterTime = gc.getTime();
+				ticket.setRegisterTime(ticketRegisterTime);
+				ticket.setCustomer(customer);
+				ticket.setPassangerTcNumber(customer.getTcNumber());
+				ticket.setPassangerName(customer.getName());
+				ticket.setPassangerSurname(customer.getSurname());
+				ticket.setPassangerGender(customer.getGender());
+				Long ticketId = ticketService.create(ticket);
+			} else if(randomNumber >= 50 & randomNumber <= 100) {
+				// By Customer
+				GregorianCalendar gc = new GregorianCalendar();
+				gc.setTime(customer.getTimeOfLastOnline());
+				gc.add(Calendar.MINUTE, randBetween(5, 20));
+				ticketRegisterTime = gc.getTime();
+				ticket.setRegisterTime(ticketRegisterTime);
+				ticket.setCustomer(customer);
+				ticket.setPassangerTcNumber(generateRandomTcNumber());
+				String[] passangerName = generateName(gender);
+				ticket.setPassangerName(passangerName[0]);
+				ticket.setPassangerSurname(passangerName[1]);
+				ticket.setPassangerGender(gender);
+				Long ticketId = ticketService.create(ticket);
+			}
+		} else {
+			// Not customer
+			ticketRegisterTime = generateTicketRegisteredTimeForNotCustomer(departureTime.getTime());
+			ticket.setRegisterTime(ticketRegisterTime);
+			ticket.setPassangerTcNumber(generateRandomTcNumber());
+			String[] passangerName = generateName(gender);
+			ticket.setPassangerName(passangerName[0]);
+			ticket.setPassangerSurname(passangerName[1]);
+			ticket.setPassangerGender(gender);
+			Long ticketId = ticketService.create(ticket);
+		}
+	}
+	
 	private void changeRandomHourAndMinute(GregorianCalendar gc) {
 		int hourOfDay = randBetween(0, 23);
 		gc.set(Calendar.HOUR_OF_DAY, hourOfDay);
@@ -1011,47 +1235,30 @@ public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 		}
 		return name.toLowerCase();
 	}
-	
-	private void populateTicketCountMatrix(Stop[] stops, Integer[][] ticketCountMatrix,
-			Integer minPassengerCount, Integer maxPassengerCount) {
-		for(int i=0; i<ticketCountMatrix.length; i++) {
-			int randStart = 0;
-			int randEnd = 0;
-			if(i == 0) {
-				randStart = minPassengerCount / (stops.length-1);
-				randEnd = maxPassengerCount / (stops.length-1);
-			} else  {
-				int passangerCount = calculatePassangerCountForStop(ticketCountMatrix, i-1, i+1);
-				int remainStopsCount = stops.length - (i+1);
-				if(remainStopsCount != 0) {					
-					randStart = (minPassengerCount - passangerCount) / remainStopsCount;
-					if(randStart<0) {
-						randStart = 0;
-					}
-					randEnd = (maxPassengerCount - passangerCount) / remainStopsCount;
-				} else {
-					randStart = 0;
-					randEnd = maxPassengerCount / (stops.length - 1);
-				}
-			} 
-			for(int j=i+1; j<ticketCountMatrix[i].length; j++) {
-				ticketCountMatrix[i][j] = randBetween(randStart, randEnd);
-			}
+
+	private void updateIncomeByTotalTicketPrice(Voyage voyage, Date ticketRegisterTime, BigDecimal totalTicketPrice) {
+		Income incomeFromDb = incomeService.findByVoyage(voyage);
+		if(incomeFromDb == null) {
+			Income income = new Income(voyage, ticketRegisterTime, totalTicketPrice);							
+			incomeService.create(income);
+		} else {
+			incomeFromDb.setPrice(totalTicketPrice);
+			incomeFromDb.setRegisteredTime(ticketRegisterTime);
+			incomeService.update(incomeFromDb);
 		}
 	}
 	
-	private static Integer calculatePassangerCountForStop(Integer[][] ticketCountMatrix, int rowIndex, int columnIndex) {
-		Integer sum = 0;
-		for(int i=rowIndex; i>=0; i--) {
-			for(int j=columnIndex; j<ticketCountMatrix[rowIndex].length; j++) {
-				if(ticketCountMatrix[i][j] == null) {
-					continue;
-				} else {					
-					sum = sum + ticketCountMatrix[i][j];
+	private boolean isSeatNumberExist(LinkedList<Byte> seatNumberList, Byte seatNumberForSearch) {
+		boolean isFound = false;
+		if(!seatNumberList.isEmpty()) {
+			for(Byte seatNumber : seatNumberList) {
+				if(seatNumber.equals(seatNumberForSearch)) {
+					isFound = true;
+					break;
 				}
 			}
 		}
-		return sum;
+		return isFound;
 	}
 	
 	private static long calculateDifferenceBetweenDatesInDay(GregorianCalendar startDate, GregorianCalendar endDate) {
