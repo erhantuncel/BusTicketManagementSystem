@@ -343,8 +343,6 @@ public class SampleDataServiceImpl implements SampleDataService {
 			
 			
 			// Initialize ticketCountMatrix
-			Integer[][] ticketCountMatrix = new Integer[stops.length][stops.length];
-			populateTicketCountMatrix(stops, ticketCountMatrix, minExtraTicketCount, maxExtraTicketCount);
 			
 			List<Ticket> ticketList = new ArrayList<Ticket>();
 			boolean ticketForTestCustomer = true;
@@ -768,34 +766,6 @@ public class SampleDataServiceImpl implements SampleDataService {
 		return gc.getTime();
 	}
 	
-	private void populateTicketCountMatrix(Stop[] stops, Integer[][] ticketCountMatrix,
-			Integer minPassengerCount, Integer maxPassengerCount) {
-		for(int i=0; i<ticketCountMatrix.length; i++) {
-			int randStart = 0;
-			int randEnd = 0;
-			if(i == 0) {
-				randStart = minPassengerCount / (stops.length-1);
-				randEnd = maxPassengerCount / (stops.length-1);
-			} else  {
-				int passangerCount = calculatePassangerCountForStop(ticketCountMatrix, i-1, i+1);
-				int remainStopsCount = stops.length - (i+1);
-				if(remainStopsCount != 0) {					
-					randStart = (minPassengerCount - passangerCount) / remainStopsCount;
-					if(randStart<0) {
-						randStart = 0;
-					}
-					randEnd = (maxPassengerCount - passangerCount) / remainStopsCount;
-				} else {
-					randStart = 0;
-					randEnd = maxPassengerCount / (stops.length - 1);
-				}
-			} 
-			for(int j=i+1; j<ticketCountMatrix[i].length; j++) {
-				ticketCountMatrix[i][j] = randBetween(randStart, randEnd);
-			}
-		}
-	}
-	
 	private boolean isMaxCountReachForDepartureAndArrival(int departureIndex, int arrivalIndex, List<Ticket> ticketList, int maxSeatCount, Stop[] stops) {
 		int passengerCount = calculatePassengerCountForDepartureAndArrival(departureIndex, arrivalIndex, ticketList, maxSeatCount, stops);
 		if(passengerCount == maxSeatCount) {
@@ -950,20 +920,6 @@ public class SampleDataServiceImpl implements SampleDataService {
 			incomeFromDb.setRegisteredTime(ticketRegisterTime);
 			incomeService.update(incomeFromDb);
 		}
-	}
-	
-	private static Integer calculatePassangerCountForStop(Integer[][] ticketCountMatrix, int rowIndex, int columnIndex) {
-		Integer sum = 0;
-		for(int i=rowIndex; i>=0; i--) {
-			for(int j=columnIndex; j<ticketCountMatrix[rowIndex].length; j++) {
-				if(ticketCountMatrix[i][j] == null) {
-					continue;
-				} else {					
-					sum = sum + ticketCountMatrix[i][j];
-				}
-			}
-		}
-		return sum;
 	}
 	
 	private boolean isSeatNumberExist(LinkedList<Byte> seatNumberList, Byte seatNumberForSearch) {
