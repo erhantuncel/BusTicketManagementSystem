@@ -21,7 +21,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
@@ -115,7 +114,8 @@ public class Customer {
 	@JsonBackReference
 	private Set<UserRole> userRole = new HashSet<UserRole>(0);
 	
-	@OneToMany(mappedBy="customer", cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+//	@OneToMany(mappedBy="customer", cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="customer", fetch=FetchType.EAGER)
 	@JsonBackReference
 	private List<Ticket> ticketList = new ArrayList<Ticket>(0);
 	

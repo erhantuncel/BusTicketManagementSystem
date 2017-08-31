@@ -73,7 +73,7 @@ public class Ticket {
 	private Date registerTime;
 	
 	@ManyToOne()
-	@Cascade(CascadeType.SAVE_UPDATE)
+//	@Cascade(CascadeType.SAVE_UPDATE)
 	@JoinColumn(name = "MUSTERI_ID")
 	@JsonManagedReference
 	private Customer customer;
