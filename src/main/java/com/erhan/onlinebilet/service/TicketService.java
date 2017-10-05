@@ -2,6 +2,7 @@ package com.erhan.onlinebilet.service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.erhan.onlinebilet.model.City;
@@ -25,6 +26,7 @@ public interface TicketService {
 	public Ticket findByVoyageAndSeatNumber(Voyage voyage, Byte seatNumber);
 	public List<Byte> findSeatNumbersByVoyage(Voyage voyage);
 	public List<Byte> findSeatNumbersByVoyageAndArrival(Voyage voyage, City arrival);
+	public Map<Byte, String> findSeatNumbersAndGenderByVoyageAndStop(Voyage voyage, City departure, City arrival);
 	public Ticket[][] getTicketArray(Set<Ticket> ticketList);
 	public void update(Ticket ticket);
 	public BigDecimal calculateTicketPriceByDepartureAndArrival(City departure, City arrival);

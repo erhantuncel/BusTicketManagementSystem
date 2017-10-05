@@ -5,7 +5,9 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.erhan.onlinebilet.dao.TicketDAO;
 import com.erhan.onlinebilet.model.City;
 import com.erhan.onlinebilet.model.Customer;
+import com.erhan.onlinebilet.model.Stop;
 import com.erhan.onlinebilet.model.Ticket;
 import com.erhan.onlinebilet.model.Voyage;
 
@@ -143,6 +146,38 @@ public class TicketServiceImpl implements TicketService {
 	public List<Byte> findSeatNumbersByVoyageAndArrival(Voyage voyage, City arrival) {
 		List<Byte> seatNumbers = ticketDAO.findSeatNumbersByVoyageAndArrival(voyage, arrival);
 		return seatNumbers;
+	}
+
+	@Override
+	@Transactional
+	public Map<Byte, String> findSeatNumbersAndGenderByVoyageAndStop(Voyage voyage, City departure, City arrival) {
+		Set<Stop> stopSet = voyage.getRoute().getStops();
+		Stop[] stopArray = (Stop[]) voyage.getRoute().getStops().toArray(new Stop[stopSet.size()]);
+		int departureIndex = 0;
+		int arrivalIndex = 0;
+		for(int i=0; i<stopArray.length; i++) {
+			if(stopArray[i].getCity().getCityName().equals(departure.getCityName())) {
+				departureIndex = i;
+			} 
+			if(stopArray[i].getCity().getCityName().equals(arrival.getCityName())) {
+				arrivalIndex = i;
+			}
+		}
+		
+		List<Ticket> ticketList = ticketDAO.findByVoyage(voyage);
+		Map<Byte, String> seatAndGenderMap = new TreeMap<Byte, String>();
+		for(int i=0; i<arrivalIndex; i++) {
+			for(int j=departureIndex+1; j<stopArray.length; j++) {
+				for(Ticket ticket : ticketList) {
+					if(ticket.getDeparture().getCityName().equals(stopArray[i].getCity().getCityName()) 
+							&& ticket.getArrival().getCityName().equals(stopArray[j].getCity().getCityName())) {
+						seatAndGenderMap.put(ticket.getSeatNumber(), ticket.getPassangerGender().name());
+					}
+				}
+			}
+		}
+		
+		return seatAndGenderMap;
 	}
 
 	@Override

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.junit.Test;
@@ -249,6 +250,25 @@ public class TicketTest extends BaseTest {
 		System.out.println("Seat Numbers Count - Loop = " + seatNumbers.size()); 
 		assertEquals(seatNumbersFromService.size(), seatNumbers.size());
 		
+	}
+	
+	@Test
+	public void testFindSeatNumberAndGenderByVoyageAndStop() {
+		renewTransaction();
+		
+		Voyage voyage15 = voyageService.findById(15L);
+		Set<Stop> stopSet = voyage15.getRoute().getStops();
+		Stop[] stopArray = (Stop[]) voyage15.getRoute().getStops().toArray(new Stop[stopSet.size()]);
+		City departureCity = stopArray[1].getCity();
+		City arrivalCity = stopArray[stopArray.length-2].getCity();
+		System.out.println("Route Name = " + voyage15.getRoute().getRouteName());
+		System.out.println("Departure = " + departureCity.getCityName() + "\t Arrival = " + arrivalCity.getCityName());
+		Map<Byte, String> seatNumberAndGenderMap = ticketService.findSeatNumbersAndGenderByVoyageAndStop(voyage15, departureCity, arrivalCity);
+		
+		for(Map.Entry<Byte, String> entry : seatNumberAndGenderMap.entrySet()) {
+			System.out.println("Seat Number : " + entry.getKey() + " Gender = " + entry.getValue());
+		}
+		System.out.println("Seat Count = " + seatNumberAndGenderMap.size());
 	}
 	
 	@Test
