@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +22,7 @@ import com.erhan.onlinebilet.model.Ticket;
 import com.erhan.onlinebilet.model.Vehicle;
 import com.erhan.onlinebilet.model.VehicleBrand;
 import com.erhan.onlinebilet.model.VehicleModel;
+import com.erhan.onlinebilet.model.Voyage;
 import com.erhan.onlinebilet.service.CityDistanceService;
 import com.erhan.onlinebilet.service.CityService;
 import com.erhan.onlinebilet.service.CustomerService;
@@ -27,11 +30,13 @@ import com.erhan.onlinebilet.service.RouteService;
 import com.erhan.onlinebilet.service.TicketService;
 import com.erhan.onlinebilet.service.VehicleBrandService;
 import com.erhan.onlinebilet.service.VehicleService;
+import com.erhan.onlinebilet.service.VoyageService;
 import com.erhan.onlinebilet.web.model.AjaxResponseBodyForMonthlyDataCount;
 import com.erhan.onlinebilet.web.model.AjaxResponseBodyForRouteDistance;
 import com.erhan.onlinebilet.web.model.AjaxResponseBodyForTicket;
 import com.erhan.onlinebilet.web.model.AjaxResponseBodyForVehicle;
 import com.erhan.onlinebilet.web.model.AjaxResponseBodyForVehicleModelMap;
+import com.erhan.onlinebilet.web.model.AjaxResposeBodyForSeatNumbers;
 
 
 @RestController
@@ -42,6 +47,9 @@ public class AjaxController {
 	
 	@Autowired
 	CityService cityService;
+	
+	@Autowired
+	VoyageService voyageService;
 	
 	@Autowired
 	CityDistanceService cityDistanceService;
@@ -143,6 +151,28 @@ public class AjaxController {
 		result.setMessage("");
 		result.setCode("200");
 		result.setData(data);
+		return result;
+	}
+	
+	@RequestMapping(value="/musteri/koltukNumaralari/sefer/{voyageId}/kalkis/{departureId}/varis/{arrivalId}", method=RequestMethod.GET)
+	public AjaxResposeBodyForSeatNumbers getSeatNumbersForBuyTicketByStop(@PathVariable(value="voyageId") String voyageId, 
+								@PathVariable(value="departureId") String departureId,
+								@PathVariable(value="arrivalId") String arrivalId, HttpSession session) {
+		Voyage voyage = voyageService.findById(new Long(voyageId));
+		City departureCity = cityService.findById(new Long(departureId));
+		City arrivalCity = cityService.findById(new Long(arrivalId));
+		Map<Byte, String> seatNumberAndGenderMap = ticketService.findSeatNumbersAndGenderByVoyageAndStop(voyage, departureCity, arrivalCity);
+		
+		Ticket ticketForSave = (Ticket) session.getAttribute("ticketForSave");
+		if(ticketForSave != null) {
+			ticketForSave.setVoyage(voyage);
+		}
+		session.setAttribute("ticketForSave", ticketForSave);
+		
+		AjaxResposeBodyForSeatNumbers result = new AjaxResposeBodyForSeatNumbers();
+		result.setMessage("");
+		result.setCode("200");
+		result.setSeatNumbersAndGender(seatNumberAndGenderMap);
 		return result;
 	}
 	
