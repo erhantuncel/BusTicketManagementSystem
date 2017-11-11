@@ -56,13 +56,13 @@ public class Voyage implements Comparable<Voyage> {
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "KALKIS_ZAMANI")
-	@JsonFormat(shape=Shape.STRING, pattern="dd.MM.yyyy HH:mm")
+	@JsonFormat(shape=Shape.STRING, pattern="dd.MM.yyyy HH:mm", timezone="Europe/Istanbul")
 	@NotNull
  	private Date departureTime; 
  	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "KAYIT_ZAMANI")
-	@JsonFormat(shape=Shape.STRING, pattern="dd.MM.yyyy HH:mm:ss")
+	@JsonFormat(shape=Shape.STRING, pattern="dd.MM.yyyy HH:mm:ss", timezone="Europe/Istanbul")
  	private Date registerTime;
 	
 	@OneToMany(mappedBy="voyage", fetch=FetchType.EAGER, orphanRemoval=true)

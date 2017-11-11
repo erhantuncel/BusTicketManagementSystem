@@ -16,8 +16,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.erhan.onlinebilet.validator.TcNumber;
@@ -69,7 +67,7 @@ public class Ticket {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "KAYIT_ZAMANI")
 	@NotNull
-	@JsonFormat(shape=Shape.STRING, pattern="dd.MM.yyyy HH:mm:ss")
+	@JsonFormat(shape=Shape.STRING, pattern="dd.MM.yyyy HH:mm:ss", timezone="Europe/Istanbul")
 	private Date registerTime;
 	
 	@ManyToOne()
@@ -97,7 +95,7 @@ public class Ticket {
 	
 	@Column(name = "REZERVASYON_BITIS_ZAMANI", nullable = true)
 	@Temporal(TemporalType.TIMESTAMP)
-	@JsonFormat(shape=Shape.STRING, pattern="dd.MM.yyyy HH:mm:ss")
+	@JsonFormat(shape=Shape.STRING, pattern="dd.MM.yyyy HH:mm:ss", timezone="Europe/Istanbul")
 	private Date reservExpirationDate;
 
 	public Ticket() {
