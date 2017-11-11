@@ -39,7 +39,6 @@ public class CustomerMyTicketsController {
 		List<Ticket> ticketListForCustomer = ticketService.findForFutureByCustomer(customer);
 		
 		model.addObject("title", "Online Bilet Sistemi | Biletlerim");
-		model.addObject("customer", customer);
 		model.addObject("ticketLists", ticketListForCustomer);
 		model.setViewName("musteri/biletlerim");
 		return model;
