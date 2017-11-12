@@ -76,14 +76,24 @@ public class VoyageDAOImpl implements VoyageDAO {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Voyage> findAllByRouteAndDate(Route route, Date date) {
+		GregorianCalendar now = new GregorianCalendar();
+		now.setTime(new Date());
 		
-		GregorianCalendar gc = new GregorianCalendar();
-		gc.setTime(date);
-		Date startDate = gc.getTime();
-		gc.set(Calendar.HOUR_OF_DAY, 23);
-		gc.set(Calendar.MINUTE, 59);
-		gc.set(Calendar.SECOND, 59);
-		Date endDate = gc.getTime();
+		GregorianCalendar startGc = new GregorianCalendar();
+		startGc.setTime(date);
+		if(startGc.get(Calendar.DAY_OF_YEAR) == now.get(Calendar.DAY_OF_YEAR)) {
+			startGc.set(Calendar.HOUR_OF_DAY, now.get(Calendar.HOUR_OF_DAY));
+			startGc.set(Calendar.MINUTE, now.get(Calendar.MINUTE));
+			startGc.set(Calendar.SECOND, now.get(Calendar.SECOND));			
+		}
+		Date startDate = startGc.getTime();
+		
+		GregorianCalendar endGc = new GregorianCalendar();
+		endGc.setTime(date);
+		endGc.set(Calendar.HOUR_OF_DAY, 23);
+		endGc.set(Calendar.MINUTE, 59);
+		endGc.set(Calendar.SECOND, 59);
+		Date endDate = endGc.getTime();
 		
 		Criteria crt = sessionFactory.getCurrentSession().createCriteria(Voyage.class);
 		crt.add(Restrictions.eq("route", route));
