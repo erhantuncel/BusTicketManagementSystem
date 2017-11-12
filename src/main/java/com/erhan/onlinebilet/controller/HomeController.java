@@ -40,14 +40,14 @@ public class HomeController {
 		return model;
 	}
 	
-	@RequestMapping(value = "/musteri/{page}", method = RequestMethod.GET)
-	public ModelAndView customer(@PathVariable(value="page") String page) {
-		ModelAndView model = new ModelAndView();
-		model.addObject("title", "Online Bilet Sistemi");
-		model.addObject("customer", getCustomer());
-		model.setViewName("public/" + page);
-		return model;
-	}
+//	@RequestMapping(value = "/musteri/{page}", method = RequestMethod.GET)
+//	public ModelAndView customer(@PathVariable(value="page") String page) {
+//		ModelAndView model = new ModelAndView();
+//		model.addObject("title", "Online Bilet Sistemi");
+//		model.addObject("customer", getCustomer());
+//		model.setViewName("public/" + page);
+//		return model;
+//	}
 	
 	private Customer getCustomer() {
 		String tcNumber = null;

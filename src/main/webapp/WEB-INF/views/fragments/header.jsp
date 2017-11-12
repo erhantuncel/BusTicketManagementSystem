@@ -162,7 +162,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 								<div class="collapse navbar-collapse pull-left"
 									id="navbar-collapse">
 									<ul class="nav navbar-nav">
-										<li><a href="<c:url value="/seferler"/>">Bilet Al / Rezervasyon Yap<span class="sr-only">(current)</span>
+										<li><a href="<c:url value="/musteri/seferler"/>">Bilet Al<span class="sr-only">(current)</span>
 										</a></li>
 										<li><a href="<c:url value="/musteri/biletlerim"/>">Biletlerim</a></li>
 										<li><a href="<c:url value="/musteri/bilgiGuncelle"/>">Bilgilerimi Güncelle</a></li>
