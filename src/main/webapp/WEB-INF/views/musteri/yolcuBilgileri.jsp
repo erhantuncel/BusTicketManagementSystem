@@ -155,14 +155,14 @@
 											<tr>
 												<th style="width: 48%">Tarih :</th>
 												<td style="width: 52%">
-													<fmt:formatDate value="${ticketForSave.voyage.departureTime}" 
+													<fmt:formatDate value="${ticketForSave.departureTime}" 
 														type="date" pattern="dd.MM.yyyy" var="departureDate" />${departureDate}
 												</td>
 											</tr>
 											<tr>
 												<th>Saat :</th>
 												<td>
-													<fmt:formatDate value="${ticketForSave.voyage.departureTime}" 
+													<fmt:formatDate value="${ticketForSave.departureTime}" 
 														type="date" pattern="HH:mm" var="departureHour" />${departureHour}
 												</td>
 											</tr>

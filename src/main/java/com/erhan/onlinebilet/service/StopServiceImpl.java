@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.erhan.onlinebilet.dao.StopDAO;
+import com.erhan.onlinebilet.model.City;
 import com.erhan.onlinebilet.model.Stop;
 import com.erhan.onlinebilet.model.Voyage;
 
@@ -42,5 +43,18 @@ public class StopServiceImpl implements StopService {
 			lastStopDuration = stop.getDuration();
 		}
 		return stopMap;
+	}
+
+	@Override
+	@Transactional
+	public Date getStopTimeByVoyageAndStopcity(Voyage voyage, City stopCity) {
+		Date stopTime = null;
+		Map<String, Date> stopMap = getStopMapByVoyage(voyage);
+		for(String stopCityName : stopMap.keySet()) {
+			if(stopCityName.equals(stopCity.getCityName())) {
+				stopTime = stopMap.get(stopCityName);
+			}
+		}
+		return stopTime;
 	}
 }

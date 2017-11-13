@@ -367,7 +367,7 @@ public class SampleDataServiceImpl implements SampleDataService {
 					if(voyageNumber%10 == 0 && ticketForTestCustomer) {
 						userSerhan.setTimeOfLastOnline(generateCustomerLastOnlineTimeForTicket(departureTime.getTime()));
 						customerService.update(userSerhan);
-						ticket = createTicletForTestCustomer(userSerhan, voyage, stops, seatCount, ticketList, departureIndex, arrivalIndex);
+						ticket = createTicketForTestCustomer(userSerhan, voyage, stops, seatCount, ticketList, departureIndex, arrivalIndex);
 						ticketForTestCustomer = false;
 					} else {
 						ticket = createTicket(voyageNumber, voyage, stops, seatCount, totalTicketPrice, dayOfYearForToday, departureTime, 
@@ -446,7 +446,7 @@ public class SampleDataServiceImpl implements SampleDataService {
 	}
 
 	@SuppressWarnings("unused")
-	private Ticket createTicletForTestCustomer(Customer testCustomer, Voyage voyage, Stop[] stops, int seatCount, List<Ticket> ticketList, int departureIndex,
+	private Ticket createTicketForTestCustomer(Customer testCustomer, Voyage voyage, Stop[] stops, int seatCount, List<Ticket> ticketList, int departureIndex,
 			int arrivalIndex) {
 		LinkedList<Byte> emptySeatList = getEmptySeatNumbersForDepartureAndArrival(departureIndex, arrivalIndex, ticketList, seatCount, stops);
 		Collections.shuffle(emptySeatList);
@@ -464,6 +464,7 @@ public class SampleDataServiceImpl implements SampleDataService {
 		gc.setTime(testCustomer.getTimeOfLastOnline());
 		gc.add(Calendar.MINUTE, randBetween(5, 20));
 		ticket.setRegisterTime(gc.getTime());
+		ticket.setDepartureTime(stopService.getStopTimeByVoyageAndStopcity(voyage, ticket.getDeparture()));
 		ticket.setCustomer(testCustomer);
 		ticket.setPassangerTcNumber(testCustomer.getTcNumber());
 		ticket.setPassangerName(testCustomer.getName());
@@ -491,6 +492,7 @@ public class SampleDataServiceImpl implements SampleDataService {
 		BigDecimal ticketPrice = getTicketPrice(ticket.getDeparture(), ticket.getArrival(), isReservation);
 		ticket.setPrice(ticketPrice);
 		ticket.setVoyage(voyage);
+		ticket.setDepartureTime(stopService.getStopTimeByVoyageAndStopcity(voyage, ticket.getDeparture()));
 		populateTicketWithCustomerAndPassengerInfo(ticket, voyageNumber, departureTime, dayOfYearForToday);
 		ticketList.add(ticket);
 		return ticket;

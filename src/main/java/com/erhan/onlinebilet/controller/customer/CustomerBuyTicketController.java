@@ -32,12 +32,14 @@ import com.erhan.onlinebilet.model.City;
 import com.erhan.onlinebilet.model.Customer;
 import com.erhan.onlinebilet.model.Gender;
 import com.erhan.onlinebilet.model.SeatForBuyTicketForm;
+import com.erhan.onlinebilet.model.Stop;
 import com.erhan.onlinebilet.model.Route;
 import com.erhan.onlinebilet.model.Ticket;
 import com.erhan.onlinebilet.model.Voyage;
 import com.erhan.onlinebilet.service.CityService;
 import com.erhan.onlinebilet.service.CustomerService;
 import com.erhan.onlinebilet.service.RouteService;
+import com.erhan.onlinebilet.service.StopService;
 import com.erhan.onlinebilet.service.TicketService;
 import com.erhan.onlinebilet.service.VoyageService;
 
@@ -59,6 +61,9 @@ public class CustomerBuyTicketController {
 	@Autowired
 	CustomerService customerService;
 	
+	@Autowired
+	StopService stopService;
+	
 	
 	@RequestMapping(value="/musteri/seferler", method=RequestMethod.GET)
 	public ModelAndView showSearchVoyagePage(ModelAndView model) {
@@ -76,9 +81,8 @@ public class CustomerBuyTicketController {
 												ModelAndView model, HttpSession session) {
 		City departureCity = cityService.findById(new Long(departureCityId));
 		City arrivalCity = cityService.findById(new Long(arrivalCityId));
-		List<Route> routeList = routeService.findAllByDepartureAndArrival(departureCity, arrivalCity);
-		List<Voyage> voyageList = voyageService.findAllByRouteAndDate(routeList, date);
-		model.addObject("voyageList", voyageList);
+		Map<Long, Date> voyageMap = createVoyageMapForDepartureArrivalAndDate(departureCity, arrivalCity, date);
+		model.addObject("voyageMap", voyageMap);
 				
 		Ticket ticketForSave = new Ticket();
 		ticketForSave.setDeparture(departureCity);
@@ -179,6 +183,21 @@ public class CustomerBuyTicketController {
 			cityMap.put(city.getId().toString(), city.getCityName());
 		}
 		model.addObject("cityMap", cityMap);
+	}
+	
+	private Map<Long, Date> createVoyageMapForDepartureArrivalAndDate(City departureCity, City arrivalCity, Date date) {
+		Map<Long, Date> voyageMap = new LinkedHashMap<Long, Date>();
+		List<Route> routeList = routeService.findAllByDepartureAndArrival(departureCity, arrivalCity);
+		List<Voyage> voyageList = voyageService.findAllByRouteAndDate(routeList, date);
+		for(Voyage voyage : voyageList) {
+			Map<String, Date> stopMapForVoyage = stopService.getStopMapByVoyage(voyage);
+			for(String stopCityName : stopMapForVoyage.keySet()) {
+				if(stopCityName.equals(departureCity.getCityName())) {
+					voyageMap.put(voyage.getId(), stopMapForVoyage.get(stopCityName));
+				}
+			}
+		}
+		return voyageMap;
 	}
 	
 	private Customer getCustomer() {

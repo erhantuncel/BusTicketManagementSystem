@@ -383,7 +383,7 @@
 		$("#passangerGender").html(data.ticket.passangerGender);
 		$("#arrival").html(data.ticket.arrival.cityName);
 		$("#seatNumber").html(data.ticket.seatNumber);
-		var departureTimeArr = data.ticket.voyage.departureTime.split(" ");
+		var departureTimeArr = data.ticket.departureTime.split(" ");
 		$("#departureDate").html(departureTimeArr[0]);
 		$("#registerTime").html(data.ticket.registerTime);
 		$("#departureTime").html(departureTimeArr[1]);

@@ -1,5 +1,6 @@
 package com.erhan.onlinebilet.web.controller;
 
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -27,6 +28,7 @@ import com.erhan.onlinebilet.service.CityDistanceService;
 import com.erhan.onlinebilet.service.CityService;
 import com.erhan.onlinebilet.service.CustomerService;
 import com.erhan.onlinebilet.service.RouteService;
+import com.erhan.onlinebilet.service.StopService;
 import com.erhan.onlinebilet.service.TicketService;
 import com.erhan.onlinebilet.service.VehicleBrandService;
 import com.erhan.onlinebilet.service.VehicleService;
@@ -65,6 +67,9 @@ public class AjaxController {
 	
 	@Autowired
 	CustomerService customerService;
+	
+	@Autowired
+	StopService stopService;
 	
 	@RequestMapping(value = "/admin/biletDetay/{id}")
 	public AjaxResponseBodyForTicket getTicketSearchResultById2(@PathVariable(value="id") String id) {
@@ -166,6 +171,7 @@ public class AjaxController {
 		Ticket ticketForSave = (Ticket) session.getAttribute("ticketForSave");
 		if(ticketForSave != null) {
 			ticketForSave.setVoyage(voyage);
+			ticketForSave.setDepartureTime(stopService.getStopTimeByVoyageAndStopcity(voyage, ticketForSave.getDeparture()));
 		}
 		session.setAttribute("ticketForSave", ticketForSave);
 		

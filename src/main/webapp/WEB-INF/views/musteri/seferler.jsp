@@ -95,16 +95,16 @@
 									</thead>
 									<tbody>
 										<c:choose>
-											<c:when test="${not empty voyageList}">
-												<c:forEach items="${voyageList}" var="voyage">
+											<c:when test="${not empty voyageMap}">
+												<c:forEach items="${voyageMap}" var="voyageMap">
 													<tr>
-														<td>${voyage.id}</td>
-														<td><fmt:formatDate value="${voyage.departureTime}"
+														<td>${voyageMap.key}</td>
+														<td><fmt:formatDate value="${voyageMap.value}"
 																type="date" pattern="dd.MM.yyyy" var="voyageDepartureDate" />
 															${voyageDepartureDate}
 														</td>
 														<td>
-															<fmt:formatDate value="${voyage.departureTime}"
+															<fmt:formatDate value="${voyageMap.value}"
 																type="date" pattern="HH:mm" var="voyageDepartureTime" />
 															${voyageDepartureTime}							
 														</td>
@@ -113,14 +113,11 @@
 	                  										<fmt:formatNumber type="currency" currencySymbol="" maxFractionDigits="2" groupingUsed="true" value="${ticketForSave.price}" />
 														</td>
 														<td class="text-center"> 
-															<a class="btn btn-xs btn-success btn-flat showStopsButton" data-id="${voyage.id}">Duraklar</a>
-															<a class="btn btn-primary btn-xs btn-flat selectVoyageButton" href="${home}musteri/yolcubilgileri/sefer/${voyage.id}" data-id="${voyage.id}">Seç</a>
-															<!-- 
-															<a class="btn btn-primary btn-xs btn-flat selectVoyageButton" href="${home}musteri/yolcubilgileri/sefer/${voyage.id}" data-id="${voyage.id}">Seç</a>
-															 -->
+															<a class="btn btn-xs btn-success btn-flat showStopsButton" data-id="${voyageMap.key}">Duraklar</a>
+															<a class="btn btn-primary btn-xs btn-flat selectVoyageButton" href="${home}musteri/yolcubilgileri/sefer/${voyageMap.key}" data-id="${voyageMap.key}">Seç</a>
 														</td>
-													</tr>		
-												</c:forEach>											
+													</tr>
+												</c:forEach>
 											</c:when>
 											<c:otherwise>
 												<tr>

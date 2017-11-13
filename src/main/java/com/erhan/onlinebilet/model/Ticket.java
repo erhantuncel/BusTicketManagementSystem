@@ -70,6 +70,12 @@ public class Ticket {
 	@JsonFormat(shape=Shape.STRING, pattern="dd.MM.yyyy HH:mm:ss", timezone="Europe/Istanbul")
 	private Date registerTime;
 	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "KALKIS_ZAMANI")
+	@NotNull
+	@JsonFormat(shape=Shape.STRING, pattern="dd.MM.yyyy HH:mm", timezone="Europe/Istanbul")
+	private Date departureTime;
+	
 	@ManyToOne()
 //	@Cascade(CascadeType.SAVE_UPDATE)
 	@JoinColumn(name = "MUSTERI_ID")
@@ -102,10 +108,10 @@ public class Ticket {
 	
 	}
 
-	public Ticket(Boolean isReservation, Voyage voyage, City departure, City arrival, Byte seatNumber, BigDecimal price,
-			Date registerTime, Customer customer, String passangerTcNumber, String passangerName,
-			String passangerSurname, Gender passangerGender, Date reservExpirationDate) {
-		super();
+	public Ticket(Long id, Boolean isReservation, Voyage voyage, City departure, City arrival, Byte seatNumber,
+			BigDecimal price, Date registerTime, Date departureTime, Customer customer, String passangerTcNumber,
+			String passangerName, String passangerSurname, Gender passangerGender, Date reservExpirationDate) {
+		this.id = id;
 		this.isReservation = isReservation;
 		this.voyage = voyage;
 		this.departure = departure;
@@ -113,6 +119,7 @@ public class Ticket {
 		this.seatNumber = seatNumber;
 		this.price = price;
 		this.registerTime = registerTime;
+		this.departureTime = departureTime;
 		this.customer = customer;
 		this.passangerTcNumber = passangerTcNumber;
 		this.passangerName = passangerName;
@@ -185,6 +192,14 @@ public class Ticket {
 		this.registerTime = registerTime;
 	}
 
+	public Date getDepartureTime() {
+		return departureTime;
+	}
+
+	public void setDepartureTime(Date departureTime) {
+		this.departureTime = departureTime;
+	}
+
 	public Customer getCustomer() {
 		return customer;
 	}
@@ -240,6 +255,7 @@ public class Ticket {
 		result = prime * result + ((arrival == null) ? 0 : arrival.hashCode());
 		result = prime * result + ((customer == null) ? 0 : customer.hashCode());
 		result = prime * result + ((departure == null) ? 0 : departure.hashCode());
+		result = prime * result + ((departureTime == null) ? 0 : departureTime.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((isReservation == null) ? 0 : isReservation.hashCode());
 		result = prime * result + ((passangerGender == null) ? 0 : passangerGender.hashCode());
@@ -277,6 +293,11 @@ public class Ticket {
 			if (other.departure != null)
 				return false;
 		} else if (!departure.equals(other.departure))
+			return false;
+		if (departureTime == null) {
+			if (other.departureTime != null)
+				return false;
+		} else if (!departureTime.equals(other.departureTime))
 			return false;
 		if (id == null) {
 			if (other.id != null)
@@ -337,8 +358,9 @@ public class Ticket {
 	public String toString() {
 		return "Ticket [id=" + id + ", isReservation=" + isReservation + ", voyage=" + voyage + ", departure="
 				+ departure + ", arrival=" + arrival + ", seatNumber=" + seatNumber + ", price=" + price
-				+ ", registerTime=" + registerTime + ", customer=" + customer + ", passangerTcNumber="
-				+ passangerTcNumber + ", passangerName=" + passangerName + ", passangerSurname=" + passangerSurname
-				+ ", passangerGender=" + passangerGender + ", reservExpirationDate=" + reservExpirationDate + "]";
+				+ ", registerTime=" + registerTime + ", departureTime=" + departureTime + ", customer=" + customer
+				+ ", passangerTcNumber=" + passangerTcNumber + ", passangerName=" + passangerName
+				+ ", passangerSurname=" + passangerSurname + ", passangerGender=" + passangerGender
+				+ ", reservExpirationDate=" + reservExpirationDate + "]";
 	}
 }
