@@ -83,6 +83,18 @@
 					<div class="col-sm-6">
 						<div class="box box-primary">
 							<div class="box-body table-responsive" style="height: 74vh;">
+								<div class="row" style="font-size: medium; padding-bottom: 10px;">
+									<div class="col-sm-5">
+										<b>Kalkýþ : </b> ${departureCityForVoyageList.cityName}
+									</div>
+									<div class="col-sm-1">
+									</div>
+									<div class="col-sm-5">
+										<b>Varýþ : </b> ${arrivalCityForVoyageList.cityName}
+									</div>
+									<div class="col-sm-1">
+									</div>
+								</div>
 								<table id="voyageListTable" class="table table-condensed">
 									<thead>
 										<tr>
@@ -238,7 +250,7 @@
 							
 						</div>
 						<div class="col-xs-10 text-center">
-							<table class="table table-condensed" style="font-size: medium;">
+							<table id="stopsModalTable" class="table table-condensed" style="font-size: medium;">
 								<tr>
 									<th style="width: 28%">17:00 - </th>
 									<td class="text-left" style="width: 75%">BOLU</td>
@@ -313,7 +325,29 @@
 	
 	$(".showStopsButton").click(function(e) {
 		var voyageId = $(this).data("id");
-		$(".deleteMessage").html(voyageId + " numaralý sefere ait biletler de silinecek. Onaylýyor musunuz?");
+		$.ajax({
+			type : "GET",
+			contentType : "application/json",
+			url : "${home}musteri/duraklar/sefer/" + voyageId,
+			dataType : 'json',
+			success : function(data) {
+				$("#stopsModalTable").empty();
+				$.each(data.stopMap, function(cityName, time) {
+					// console.log("Durak = " + cityName + " Saat = " + time);
+					$("#stopsModalTable").append('<tr><th style="width: 28%">' + time + 
+							' - </th><td class="text-left" style="width: 75%">' + cityName + '</td></tr>');
+				});
+				
+			},
+			error : function(e) {
+				
+			},
+			done : function(e) {
+				console.log("DONE");
+			}
+		});
+		
+		
 		$("#stopsModal").modal("show");
 	});
 	

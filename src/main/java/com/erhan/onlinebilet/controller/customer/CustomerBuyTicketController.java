@@ -32,7 +32,6 @@ import com.erhan.onlinebilet.model.City;
 import com.erhan.onlinebilet.model.Customer;
 import com.erhan.onlinebilet.model.Gender;
 import com.erhan.onlinebilet.model.SeatForBuyTicketForm;
-import com.erhan.onlinebilet.model.Stop;
 import com.erhan.onlinebilet.model.Route;
 import com.erhan.onlinebilet.model.Ticket;
 import com.erhan.onlinebilet.model.Voyage;
@@ -97,6 +96,8 @@ public class CustomerBuyTicketController {
 		ticketForSave.setPrice(ticketPrice);						
 		session.setAttribute("ticketForSave", ticketForSave);
 		
+		model.addObject("departureCityForVoyageList", departureCity);
+		model.addObject("arrivalCityForVoyageList", arrivalCity);
 		populateModelWithCity(cityService.findAll(), model);
 		model.setViewName("musteri/seferler");
 		return model;
