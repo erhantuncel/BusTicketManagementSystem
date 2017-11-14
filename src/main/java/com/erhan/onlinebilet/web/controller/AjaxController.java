@@ -1,5 +1,6 @@
 package com.erhan.onlinebilet.web.controller;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -35,6 +36,7 @@ import com.erhan.onlinebilet.service.VehicleService;
 import com.erhan.onlinebilet.service.VoyageService;
 import com.erhan.onlinebilet.web.model.AjaxResponseBodyForMonthlyDataCount;
 import com.erhan.onlinebilet.web.model.AjaxResponseBodyForRouteDistance;
+import com.erhan.onlinebilet.web.model.AjaxResponseBodyForStopTimes;
 import com.erhan.onlinebilet.web.model.AjaxResponseBodyForTicket;
 import com.erhan.onlinebilet.web.model.AjaxResponseBodyForVehicle;
 import com.erhan.onlinebilet.web.model.AjaxResponseBodyForVehicleModelMap;
@@ -179,6 +181,42 @@ public class AjaxController {
 		result.setMessage("");
 		result.setCode("200");
 		result.setSeatNumbersAndGender(seatNumberAndGenderMap);
+		return result;
+	}
+	
+	@RequestMapping(value="/musteri/duraklar/sefer/{seferId}", method=RequestMethod.GET)
+	public AjaxResponseBodyForStopTimes getStopTimesForSearchVoyage(@PathVariable(value="seferId") String voyageId, HttpSession session) {
+		
+		Map<String, Date> stopMapForResult = new LinkedHashMap<String, Date>(0);
+		Ticket ticketForSave = (Ticket) session.getAttribute("ticketForSave");		
+		
+		if(ticketForSave != null) {			
+			Voyage voyage = voyageService.findById(new Long(voyageId));
+			Map<String, Date> stopMap = stopService.getStopMapByVoyage(voyage);
+			Set<Stop> stopSet = voyage.getRoute().getStops();
+			Stop[] stopArray = (Stop[]) stopSet.toArray(new Stop[stopSet.size()]);
+			Stop[] stopArrayForTicket = null;
+			int departureIndex = 0;
+			int arrivalIndex = 0;
+			for(int i=0; i<stopArray.length; i++) {
+				if(stopArray[i].getCity().equals(ticketForSave.getDeparture())) {
+//					stopArrayForTicket = Arrays.copyOfRange(stopArray, i, stopArray.length);
+					departureIndex = i;
+				} else if(stopArray[i].getCity().equals(ticketForSave.getArrival())) {
+					arrivalIndex = i;
+				}
+			}
+			stopArrayForTicket = Arrays.copyOfRange(stopArray, departureIndex, arrivalIndex+1);
+			
+			for(Stop stop : stopArrayForTicket) {
+				stopMapForResult.put(stop.getCity().getCityName(), stopMap.get(stop.getCity().getCityName()));
+			}
+		}
+		
+		AjaxResponseBodyForStopTimes result = new AjaxResponseBodyForStopTimes();
+		result.setMessage("");
+		result.setCode("200");
+		result.setStopMap(stopMapForResult);
 		return result;
 	}
 	
