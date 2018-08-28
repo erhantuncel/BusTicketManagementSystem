@@ -49,7 +49,6 @@
               <a href="#"><i class="fa fa-user"></i> <span>Müşteri Yönetimi</span> <i class="fa fa-angle-left pull-right"></i></a>
               <ul class="treeview-menu">
                 <li><a href="<c:url value="/admin/musteriler"/>">Müşteriler</a></li>
-                <li><a href="<c:url value="/admin/musteriEkle"/>">Müşteri Ekle</a></li>
               </ul>
             </li>
             <li class="treeview">

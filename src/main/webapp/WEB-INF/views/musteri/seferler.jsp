@@ -126,7 +126,10 @@
 														</td>
 														<td class="text-center"> 
 															<a class="btn btn-xs btn-success btn-flat showStopsButton" data-id="${voyageMap.key}">Duraklar</a>
-															<a class="btn btn-primary btn-xs btn-flat selectVoyageButton" href="${home}musteri/yolcubilgileri/sefer/${voyageMap.key}" data-id="${voyageMap.key}">Seç</a>
+															<!-- 
+															<a class="btn btn-primary btn-xs btn-flat selectVoyageButton" href="${home}musteri/yolcubilgileri/sefer/${voyageMap.key}" data-id="${voyageMap.key}">Seç</a>	
+															 -->
+															<a class="btn btn-primary btn-xs btn-flat selectVoyageButton" data-id="${voyageMap.key}">Seç</a>
 														</td>
 													</tr>
 												</c:forEach>

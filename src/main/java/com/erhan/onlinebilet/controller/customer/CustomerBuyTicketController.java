@@ -154,6 +154,7 @@ public class CustomerBuyTicketController {
 				Ticket tempTicket = new Ticket();
 				tempTicket.setIsReservation(ticketForSave.getIsReservation());
 				tempTicket.setRegisterTime(gc.getTime());
+				tempTicket.setDepartureTime(ticketForSave.getDepartureTime());
 				tempTicket.setDeparture(ticketForSave.getDeparture());
 				tempTicket.setArrival(ticketForSave.getArrival());
 				tempTicket.setVoyage(ticketForSave.getVoyage());
