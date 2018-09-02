@@ -44,7 +44,7 @@
 										<fmt:formatDate value="${voyage.departureTime}" type="date" var="departureTime" pattern="dd.MM.yyy HH:mm"/>
 										${departureTime}
 									</td>
-									<td><a href="<c:url value="/admin/seferDetay/${voyage.id}"/>"
+									<td><a href="<c:url value="/admin/sefer/${voyage.id}/detay"/>"
 										class="btn btn-xs btn-success btn-flat" title="Detay"><i
 											class="fa fa-search"></i></a></td>
 								</tr>
