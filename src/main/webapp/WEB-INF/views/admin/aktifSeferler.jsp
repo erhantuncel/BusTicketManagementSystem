@@ -48,7 +48,7 @@
 									<td>
 										${voyageMap.value}
 									</td>
-									<td><a href="<c:url value="/admin/seferDetay/${voyageMap.key.id}"/>"
+									<td><a href="<c:url value="/admin/sefer/${voyageMap.key.id}/detay"/>"
 										class="btn btn-xs btn-success btn-flat" title="Detay"><i
 											class="fa fa-search"></i></a></td>
 								</tr>
