@@ -58,6 +58,7 @@
                 <li><a href="<c:url value="/admin/giderler"/>">Giderler</a></li>
               </ul>
             </li>
+            <!-- 
             <li class="treeview">
               <a href="#"><i class="fa fa-file-text-o"></i> <span>Raporlar</span> <i class="fa fa-angle-left pull-right"></i></a>
               <ul class="treeview-menu">
@@ -67,6 +68,7 @@
                 <li><a href="giderler.html">Kullanıcı Raporları</a></li>
               </ul>
             </li>
+             -->
             <li>
             	<form action="<c:url value="/logout"/>" method="POST" id="logoutForm">
             		<input type="hidden"
