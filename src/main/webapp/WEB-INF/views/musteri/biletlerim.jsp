@@ -63,7 +63,7 @@
 												<td>${ticket.departure.cityName}</td>
 												<td>${ticket.arrival.cityName}</td>
 												<td id="depatureColumn">
-													<fmt:formatDate value="${ticket.voyage.departureTime}"
+													<fmt:formatDate value="${ticket.departureTime}"
 															type="date" pattern="dd.MM.yyyy HH:mm" var="ticketDepartureTime"/>
 														${ticketDepartureTime}
 												</td>
