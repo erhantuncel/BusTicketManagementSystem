@@ -174,14 +174,20 @@ public class AdminVoyageController {
 		Voyage voyage = voyageService.findById(new Long(id));
 		String resultMessage = null;
 
-		try {
-			voyageService.delete(voyage);			
-		} catch (HibernateException e) {
-			resultMessage = "" + id + " numaralı sefer iptal edilmedi.";
+		List<Ticket> ticketListForVoyage = ticketService.findByVoyage(voyage);
+		if(ticketListForVoyage.size() == 0) {
+			try {
+				voyageService.delete(voyage);			
+			} catch (HibernateException e) {
+				resultMessage = "" + id + " numaralı sefer iptal edilmedi.";
+				redir.addFlashAttribute("warningType", "danger");
+			}
+			resultMessage = "" + id + " numaralı sefer iptal edildi.";
+			redir.addFlashAttribute("warningType", "info");			
+		} else {
+			resultMessage = "" + id + " numaralı seferde alınmış biletler mevcut.";
 			redir.addFlashAttribute("warningType", "danger");
 		}
-		resultMessage = "" + id + " numaralı sefer iptal edildi.";
-		redir.addFlashAttribute("warningType", "info");
 
 		String referer = request.getHeader("Referer");
 		ModelAndView model = new ModelAndView("redirect:" + referer);
