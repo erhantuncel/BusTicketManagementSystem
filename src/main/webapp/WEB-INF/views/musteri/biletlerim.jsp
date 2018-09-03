@@ -74,9 +74,13 @@
 													</c:if>
 												</td>
 												<td>
-													<fmt:formatDate value="${ticket.reservExpirationDate}"
-															type="date" pattern="dd.MM.yyyy HH:mm:ss" var="ticketReservExpirationDate"/>
-														${ticketReservExpirationDate}
+													<c:choose>
+														<c:when test="${ticket.isReservation}">
+															<fmt:formatDate value="${ticket.reservExpirationDate}"
+																	type="date" pattern="dd.MM.yyyy HH:mm:ss" var="ticketReservExpirationDate"/>
+																${ticketReservExpirationDate}													
+														</c:when>													
+													</c:choose>
 												</td>
 												<td>
 													<c:choose>
