@@ -34,3 +34,6 @@ hs_err_pid*
 
 # Spring files
 .springBeans
+
+# SQL Files
+*.sql
