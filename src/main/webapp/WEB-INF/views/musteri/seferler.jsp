@@ -4,6 +4,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 
 <jsp:include page="../fragments/header.jsp" />
 
@@ -39,7 +40,7 @@
 					<div class="col-sm-3">
 						<div class="box box-primary">
 							<div class="box-body table-responsive" style="height: 74vh;">
-								<form id="searchForm" action="${home}musteri/seferler" method="POST">
+								<form id="searchForm" action="${home}seferler" method="POST">
 									<div class="form-group">
 										<label class="control-label">Kalkýþ</label> 
 										<select id="departureCitySelect" class="form-control" name="departureCity">
@@ -67,9 +68,11 @@
 											<input class="form-control datepicker" id="voyageDate" name="date" />
 										</div>
 									</div>
-									<div class="checkbox">
-										<label> <input type="checkbox" name="isReservation" value="ticketIsReservation">Rezervasyon Yap</label>
-									</div>
+									<sec:authorize access="isAuthenticated()">
+										<div class="checkbox">
+											<label> <input type="checkbox" name="isReservation" value="ticketIsReservation">Rezervasyon Yap</label>
+										</div>										
+									</sec:authorize>
 									<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 									<div class="form-group">
 										<button class="btn btn-primary btn-flat form-control">Sefer Ara</button>
@@ -146,7 +149,7 @@
 						</div>
 					</div>
 					<div class="col-sm-3">
-						<form id="seatNumberForm" action="${home}musteri/yolcubilgileri" method="POST">
+						<form id="seatNumberForm" action="${home}/yolcubilgileri" method="POST">
 							<div class="box box-primary">
 								<div class="box-body table-responsive" style="height: 67vh;">
 									<div id="busSchemaContainer" class="col-xs-12">
@@ -331,7 +334,7 @@
 		$.ajax({
 			type : "GET",
 			contentType : "application/json",
-			url : "${home}musteri/duraklar/sefer/" + voyageId,
+			url : "${home}/duraklar/sefer/" + voyageId,
 			dataType : 'json',
 			success : function(data) {
 				$("#stopsModalTable").empty();
@@ -364,7 +367,7 @@
 			$.ajax({
 				type : "GET",
 				contentType : "application/json",
-				url : "${home}musteri/koltukNumaralari/sefer/" + voyageId + "/kalkis/" + departureId + "/varis/" + arrivalId,
+				url : "${home}/koltukNumaralari/sefer/" + voyageId + "/kalkis/" + departureId + "/varis/" + arrivalId,
 				dataType : 'json',
 				success : function(data) {
 					$.each(data.seatNumbersAndGender, function(number, genderTr) {

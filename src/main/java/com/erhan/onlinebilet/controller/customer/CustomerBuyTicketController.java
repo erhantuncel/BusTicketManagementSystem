@@ -9,9 +9,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -64,15 +64,23 @@ public class CustomerBuyTicketController {
 	StopService stopService;
 	
 	
-	@RequestMapping(value="/musteri/seferler", method=RequestMethod.GET)
+	@RequestMapping(value = {"/musteri/seferler", "seferler"}, method=RequestMethod.GET)
 	public ModelAndView showSearchVoyagePage(ModelAndView model) {
 		
 		populateModelWithCity(cityService.findAll(), model);	
+		
+//		String mappingPattern = (String) request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
+//		
+//		if(mappingPattern.equals("/seferler")) {
+//			model.setViewName("public/seferler");
+//		} else if(mappingPattern.equals("/musteri/seferler")) {
+//			model.setViewName("musteri/seferler");
+//		}
 		model.setViewName("musteri/seferler");
 		return model;
 	}
 	
-	@RequestMapping(value="musteri/seferler", method=RequestMethod.POST)
+	@RequestMapping(value= "seferler", method=RequestMethod.POST)
 	public ModelAndView searchVoyageForBuyTicket(@RequestParam(value = "date") @DateTimeFormat(pattern = "dd.MM.yyyy") Date date, 
 												@RequestParam("departureCity") String departureCityId,
 												@RequestParam("arrivalCity") String arrivalCityId,
@@ -99,14 +107,24 @@ public class CustomerBuyTicketController {
 		model.addObject("departureCityForVoyageList", departureCity);
 		model.addObject("arrivalCityForVoyageList", arrivalCity);
 		populateModelWithCity(cityService.findAll(), model);
+		
+//		String mappingPattern = (String) request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
+//		System.out.println("PATTERN : " + mappingPattern);
+//		
+//		if(mappingPattern.equals("/seferler")) {
+//			model.setViewName("public/seferler");
+//		} else if(mappingPattern.equals("/musteri/seferler")) {
+//			model.setViewName("musteri/seferler");
+//		}
+		
 		model.setViewName("musteri/seferler");
 		return model;
 	}
 	
 	
-	@RequestMapping(value="/musteri/yolcubilgileri", method=RequestMethod.POST)
+	@RequestMapping(value= "yolcubilgileri", method=RequestMethod.POST)
 	public ModelAndView passangerInfoPOST(@RequestParam("selectedSeatNumbers") List<String> seatNumbers, 
-			HttpSession session, ModelAndView model) {
+			HttpSession session, ModelAndView model, HttpServletRequest request) {
 		List<SeatForBuyTicketForm> seatListForBuyTicket = new ArrayList<SeatForBuyTicketForm>(0);
 		
 		for(String seatNumber : seatNumbers) {
@@ -116,12 +134,14 @@ public class CustomerBuyTicketController {
 		}
 		
 		session.setAttribute("seatListForBuyTicket", seatListForBuyTicket);
-		model.setViewName("redirect:" + "/musteri/yolcubilgileri");	
+//		String pattern = (String) request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
+//		model.setViewName("redirect:" + pattern);
+		model.setViewName("redirect:" + "/yolcubilgileri");	
 		return model;
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/musteri/yolcubilgileri", method=RequestMethod.GET)
+	@RequestMapping(value="yolcubilgileri", method=RequestMethod.GET)
 	public ModelAndView passangerInfoGET(HttpSession session, SessionStatus status, ModelAndView model) {
 		List<SeatForBuyTicketForm> seatListForBuyTicket = (List<SeatForBuyTicketForm>) session.getAttribute("seatListForBuyTicket");
 		BuyTicketForm buyTicketForm = new BuyTicketForm();
@@ -132,18 +152,21 @@ public class CustomerBuyTicketController {
 		return model;
 	}
 	
-	@RequestMapping(value="/musteri/odemeRezervasyon", method=RequestMethod.POST)
+	@RequestMapping(value= "odemeRezervasyon", method=RequestMethod.POST)
 	public ModelAndView payTicketPrice(@ModelAttribute("buyTicketForm") @Valid BuyTicketForm buyTicketForm, BindingResult result,
-			RedirectAttributes redir, ModelAndView model, HttpSession session) {
+			RedirectAttributes redir, ModelAndView model, HttpSession session, HttpServletRequest request) {
 		
 		if(result.hasErrors()) {
 			for(ObjectError error : result.getAllErrors()) {
 				System.out.println(error.toString());
 			}
 			model.setViewName("musteri/yolcuBilgileri");
-		} else {			
+		} else {	
+			Customer customer = getCustomer();
+			
 			Ticket ticketForSave = (Ticket) session.getAttribute("ticketForSave");
-			List<Long> createdTicketIdList = new ArrayList<Long>(0);
+//			List<Long> createdTicketIdList = new ArrayList<Long>(0);
+			List<Ticket> createdTicketList = new ArrayList<Ticket>(0);
 			
 			GregorianCalendar gc = new GregorianCalendar();
 			LocalTime localTime = LocalTime.now();
@@ -164,16 +187,21 @@ public class CustomerBuyTicketController {
 				tempTicket.setPassangerGender(seat.getPassangerGender());
 				tempTicket.setPassangerName(seat.getPassangerName());
 				tempTicket.setPassangerSurname(seat.getPassangerSurname());
-				Customer customer = getCustomer();
 				if(customer != null) {
 					tempTicket.setCustomer(customer);
 				}
 				Long id = ticketService.create(tempTicket);
-				createdTicketIdList.add(id);
+				createdTicketList.add(tempTicket);
+//				createdTicketIdList.add(id);
 			}
-			
-			if(createdTicketIdList.size() == buyTicketForm.getSeatList().size()) {
-				model.setViewName("redirect:" + "/musteri/biletlerim");				
+			model.addObject("createdTicketList", createdTicketList);
+//			if(createdTicketIdList.size() == buyTicketForm.getSeatList().size()) {
+			if(createdTicketList.size() == buyTicketForm.getSeatList().size()) {
+				if(customer != null) {
+					model.setViewName("redirect:" + "/musteri/biletlerim");
+				} else {
+					model.setViewName("public/biletDetaylari");					
+				}
 			}
 		}
 		return model;

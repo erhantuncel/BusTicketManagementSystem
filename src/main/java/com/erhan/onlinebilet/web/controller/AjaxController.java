@@ -73,7 +73,7 @@ public class AjaxController {
 	@Autowired
 	StopService stopService;
 	
-	@RequestMapping(value = "/admin/biletDetay/{id}")
+	@RequestMapping(value = {"/admin/biletDetay/{id}", "/biletDetay/{id}"})
 	public AjaxResponseBodyForTicket getTicketSearchResultById2(@PathVariable(value="id") String id) {
 		
 		AjaxResponseBodyForTicket result = new AjaxResponseBodyForTicket();
@@ -161,7 +161,7 @@ public class AjaxController {
 		return result;
 	}
 	
-	@RequestMapping(value="/musteri/koltukNumaralari/sefer/{voyageId}/kalkis/{departureId}/varis/{arrivalId}", method=RequestMethod.GET)
+	@RequestMapping(value="/koltukNumaralari/sefer/{voyageId}/kalkis/{departureId}/varis/{arrivalId}", method=RequestMethod.GET)
 	public AjaxResposeBodyForSeatNumbers getSeatNumbersForBuyTicketByStop(@PathVariable(value="voyageId") String voyageId, 
 								@PathVariable(value="departureId") String departureId,
 								@PathVariable(value="arrivalId") String arrivalId, HttpSession session) {
@@ -184,7 +184,7 @@ public class AjaxController {
 		return result;
 	}
 	
-	@RequestMapping(value="/musteri/duraklar/sefer/{seferId}", method=RequestMethod.GET)
+	@RequestMapping(value="/duraklar/sefer/{seferId}", method=RequestMethod.GET)
 	public AjaxResponseBodyForStopTimes getStopTimesForSearchVoyage(@PathVariable(value="seferId") String voyageId, HttpSession session) {
 		
 		Map<String, Date> stopMapForResult = new LinkedHashMap<String, Date>(0);

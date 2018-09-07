@@ -41,7 +41,7 @@
 
 	<!-- Main content -->
 	<section class="content">
-		<form:form action="${home}musteri/odemeRezervasyon" modelAttribute="buyTicketForm" method="POST">
+		<form:form action="${home}odemeRezervasyon" modelAttribute="buyTicketForm" method="POST">
 			<!-- Your Page Content Here -->
 			<div class="row">
 				<div class="col-md-1"></div>
