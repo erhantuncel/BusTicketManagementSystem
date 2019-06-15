@@ -69,9 +69,7 @@
 												</td>
 												<td>${ticket.seatNumber}</td>
 												<td>
-													<c:if test="${not ticket.isReservation}">
-														<span class="fa fa-turkish-lira"></span> ${ticket.price}												
-													</c:if>
+													<span class="fa fa-turkish-lira"></span> ${ticket.price}
 												</td>
 												<td>
 													<c:choose>
@@ -164,7 +162,8 @@
 						<span aria-hidden="true">&times;</span>
 					</button>
 					 -->
-					<h4 class="modal-title"></h4>
+					 
+					<h4 class="modal-title"><strong>Bilet ücretini kart ile ödemek için lütfen kart bilgilerinizi giriniz.</strong></h4>
 				</div>
 				<div class="modal-body">
 					<div class="row">
@@ -173,27 +172,27 @@
 						</div>
 						<div class="col-xs-10 text-center">
 							<div class="form-group">
-       							<label for="cardNumber" class="col-sm-2 control-label">Kart Numarasý</label>
+       							<label for="cardNumber" class="col-sm-3 control-label">Kart Numarasý</label>
        							<div class="col-sm-4">
-       								<input id="cardNumber" type="text" class="form-control" value="0000000000000000">
+       								<input id="cardNumber" type="text" class="form-control" value="0000000000000000" disabled="disabled">
        							</div>
        						</div>
        						<div class="form-group">
-       							<label for="month" class="col-sm-2 control-label">Ay</label>
+       							<label for="month" class="col-sm-3 control-label">Ay</label>
        							<div class="col-sm-4">
-       								<input id="month" type="text" class="form-control" value="11">
+       								<input id="month" type="text" class="form-control" value="11" disabled="disabled">
        							</div>
        						</div>
        						<div class="form-group">
-       							<label for="year" class="col-sm-2 control-label">Yýl</label>
+       							<label for="year" class="col-sm-3 control-label">Yýl</label>
        							<div class="col-sm-4">
-       								<input id="year" type="text" class="form-control" value="2019">
+       								<input id="year" type="text" class="form-control" value="2019" disabled="disabled">
        							</div>
        						</div>
        						<div class="form-group">
-       							<label for="cvc" class="col-sm-2 control-label">CVC</label>
+       							<label for="cvc" class="col-sm-3 control-label">CVC</label>
        							<div class="col-sm-4">
-       								<input id="cvc" type="password" class="form-control" value="374">
+       								<input id="cvc" type="password" class="form-control" value="374" disabled="disabled">
        							</div>
        						</div>							
 						</div>

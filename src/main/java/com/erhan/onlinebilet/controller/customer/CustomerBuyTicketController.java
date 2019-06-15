@@ -194,12 +194,22 @@ public class CustomerBuyTicketController {
 				createdTicketList.add(tempTicket);
 //				createdTicketIdList.add(id);
 			}
-			model.addObject("createdTicketList", createdTicketList);
+			String proccessType = null;
+			if(ticketForSave.getIsReservation()) {
+				proccessType = "Rezervasyon";
+			} else {
+				proccessType = "Bilet alma";
+			}
 //			if(createdTicketIdList.size() == buyTicketForm.getSeatList().size()) {
 			if(createdTicketList.size() == buyTicketForm.getSeatList().size()) {
+				String resultMessage = null;
 				if(customer != null) {
+					resultMessage = proccessType + " işleminiz tamamlandı.";
+					redir.addFlashAttribute("warningType", "info");
+					redir.addFlashAttribute("msg", resultMessage);
 					model.setViewName("redirect:" + "/musteri/biletlerim");
 				} else {
+					model.addObject("createdTicketList", createdTicketList);
 					model.setViewName("public/biletDetaylari");					
 				}
 			}
