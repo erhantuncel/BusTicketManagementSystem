@@ -31,12 +31,14 @@ import com.erhan.onlinebilet.model.BuyTicketForm;
 import com.erhan.onlinebilet.model.City;
 import com.erhan.onlinebilet.model.Customer;
 import com.erhan.onlinebilet.model.Gender;
+import com.erhan.onlinebilet.model.Income;
 import com.erhan.onlinebilet.model.SeatForBuyTicketForm;
 import com.erhan.onlinebilet.model.Route;
 import com.erhan.onlinebilet.model.Ticket;
 import com.erhan.onlinebilet.model.Voyage;
 import com.erhan.onlinebilet.service.CityService;
 import com.erhan.onlinebilet.service.CustomerService;
+import com.erhan.onlinebilet.service.IncomeService;
 import com.erhan.onlinebilet.service.RouteService;
 import com.erhan.onlinebilet.service.StopService;
 import com.erhan.onlinebilet.service.TicketService;
@@ -62,6 +64,11 @@ public class CustomerBuyTicketController {
 	
 	@Autowired
 	StopService stopService;
+	
+	@Autowired
+	IncomeService incomeService;
+
+	private Income icomeFromDb;
 	
 	
 	@RequestMapping(value = {"/musteri/seferler", "seferler"}, method=RequestMethod.GET)
@@ -191,6 +198,14 @@ public class CustomerBuyTicketController {
 					tempTicket.setCustomer(customer);
 				}
 				Long id = ticketService.create(tempTicket);
+				if(!tempTicket.getIsReservation()) {
+					Income incomeFromDB = incomeService.findByVoyage(ticketForSave.getVoyage());
+					BigDecimal newVoyageIncomePrice = incomeFromDB.getPrice().add(ticketForSave.getPrice());
+					incomeFromDB.setPrice(newVoyageIncomePrice);
+					incomeFromDB.setRegisteredTime(gc.getTime());
+					incomeService.update(incomeFromDB);
+					System.out.println();
+				}
 				createdTicketList.add(tempTicket);
 //				createdTicketIdList.add(id);
 			}
