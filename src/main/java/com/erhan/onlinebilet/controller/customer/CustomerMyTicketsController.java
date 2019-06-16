@@ -17,8 +17,10 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.erhan.onlinebilet.model.Customer;
+import com.erhan.onlinebilet.model.Income;
 import com.erhan.onlinebilet.model.Ticket;
 import com.erhan.onlinebilet.service.CustomerService;
+import com.erhan.onlinebilet.service.IncomeService;
 import com.erhan.onlinebilet.service.TicketService;
 
 @Controller
@@ -29,6 +31,9 @@ public class CustomerMyTicketsController {
 	
 	@Autowired
 	TicketService ticketService;
+	
+	@Autowired
+	IncomeService incomeService;
 	
 	
 	@RequestMapping(value="/musteri/biletlerim", method=RequestMethod.GET)
@@ -47,11 +52,16 @@ public class CustomerMyTicketsController {
 	@RequestMapping(value="/musteri/bilet/{id}/sil", method=RequestMethod.GET)
 	public ModelAndView deleteTicket(@PathVariable(value="id") String id, ModelAndView model, HttpServletRequest request, RedirectAttributes redir) {
 		
+		Ticket ticket = ticketService.findById(new Long(id));
 		int result = ticketService.delete(new Long(id));
 		String referer = request.getHeader("Referer");
 		model.setViewName("redirect:" + referer); 
 		String resultMessage = null;
-		if(result > 0) {			
+		if(result > 0) {
+			Income voyageIncome = incomeService.findByVoyage(ticket.getVoyage());
+			BigDecimal newVoyageIncomePrice = voyageIncome.getPrice().subtract(ticket.getPrice());
+			voyageIncome.setPrice(newVoyageIncomePrice);
+			incomeService.update(voyageIncome);
 			resultMessage = "" + id + " numaralı bilet iptal edildi.";
 			redir.addFlashAttribute("warningType", "info");
 		} else {

@@ -91,7 +91,7 @@
 														<c:otherwise>													
 															<a class="btn btn-xs btn-danger deleteTicketButton" style="width: 85px;" 
 																	data-id="${ticket.id}">
-																<i class="glyphicon glyphicon-trash"></i>&nbsp;Sil
+																<i class="glyphicon glyphicon-trash"></i>&nbsp;Ýptal Et
 															</a>
 														</c:otherwise>
 													</c:choose>
