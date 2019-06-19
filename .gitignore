@@ -37,3 +37,6 @@ hs_err_pid*
 
 # SQL Files
 *.sql
+
+# Maven Files
+.factorypath
