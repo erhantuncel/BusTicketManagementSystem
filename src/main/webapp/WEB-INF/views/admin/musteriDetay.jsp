@@ -147,7 +147,7 @@
 										<td>${ticket.seatNumber}</td>
 										<td>
 											<fmt:formatDate value="${ticket.registerTime}" type="date" pattern="dd.MM.yyyy HH:mm:ss" var="registerTime"/>
-											${dateOfRegister}
+											${registerTime}
 										</td>
 										<td>
 											<fmt:formatDate value="${ticket.reservExpirationDate}" type="date" pattern="dd.MM.yyyy HH:mm:ss" var="reservExpirationDate"/>
