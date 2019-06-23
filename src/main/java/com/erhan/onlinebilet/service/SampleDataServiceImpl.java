@@ -3,7 +3,6 @@ package com.erhan.onlinebilet.service;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -990,11 +989,5 @@ public class SampleDataServiceImpl implements SampleDataService {
 
 		long diffInMilliSeconds = endDate.getTimeInMillis() - startDate.getTimeInMillis();
 		return diffInMilliSeconds / (24 * 60 * 60 * 1000);
-	}
-
-	private static long calculateDifferenceBetweenDatesInSecond(GregorianCalendar startDate, GregorianCalendar endDate) {
-
-		long diffInMilliSeconds = endDate.getTimeInMillis() - startDate.getTimeInMillis();
-		return diffInMilliSeconds / 1000;
 	}
 }
