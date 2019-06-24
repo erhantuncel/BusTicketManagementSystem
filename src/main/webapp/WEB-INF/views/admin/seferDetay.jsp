@@ -359,6 +359,17 @@
 					$("#reservExpirationDate").html(" ");
 					$("#printButton").show();
 				}
+				
+				var currentDate = new Date();
+				var departureTimeArr = data.ticket.departureTime.split(" ");
+				var departureDateArray = departureTimeArr[0].split(".");
+				var departureTimeArray = departureTimeArr[1].split(":");
+				
+				var departureTimeJson = new Date(departureDateArray[2], departureDateArray[1]-1, departureDateArray[0], 
+						departureTimeArray[0], departureTimeArray[1]);
+				if(departureTimeJson < currentDate) {
+					$("#deleteButton").hide();
+				}
 				$("#ticketModal").modal("show");
 			},
 			error : function(e) {

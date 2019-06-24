@@ -9,6 +9,8 @@
 
 <c:url var="home" value="/" scope="request" />
 
+<jsp:useBean id="now" class="java.util.Date" />
+
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
 	<!-- Content Header (Page header) -->
@@ -72,11 +74,16 @@
 										<td>${voyage.route.routeName}</td>
 										<td>${voyage.vehicle.plateCode}</td>
 										
-										<td><a href="<c:url value="/admin/sefer/${voyage.id}/detay"/>"
-											class="btn btn-xs btn-success btn-flat" title="Detay"><i class="fa fa-search"></i></a>
-											<a class="btn btn-xs btn-danger btn-flat deleteVoyageButton" title="Sil" data-id="${voyage.id}" >
-												<i class="fa fa-remove"></i>
+										<td>
+											<a href="<c:url value="/admin/sefer/${voyage.id}/detay"/>" class="btn btn-xs btn-success btn-flat" 
+												title="Detay">
+												<i class="fa fa-search"></i>
 											</a>
+											<c:if test="${voyage.departureTime > now}">
+												<a class="btn btn-xs btn-danger btn-flat deleteVoyageButton" title="Sil" data-id="${voyage.id}" >
+													<i class="fa fa-remove"></i>
+												</a>
+											</c:if>
 										</td>
 										<!-- 
 										<td><a href="<c:url value="/admin/seferDetay"/>"
