@@ -278,7 +278,7 @@ public class SampleDataServiceImpl implements SampleDataService {
 					departureTime.set(Calendar.SECOND, 0);
 					GregorianCalendar registerTime = new GregorianCalendar();
 					registerTime.setTime(departureTime.getTime());
-					registerTime.set(Calendar.DAY_OF_YEAR, departureTime.get(Calendar.DAY_OF_YEAR) - 14);
+					registerTime.set(Calendar.DAY_OF_YEAR, departureTime.get(Calendar.DAY_OF_YEAR) - (totalUpcomingDays + 7));
 					registerTime.set(Calendar.HOUR_OF_DAY, randBetween(0, 23));
 					registerTime.set(Calendar.MINUTE, randBetween(0, 59));
 					registerTime.set(Calendar.SECOND, randBetween(0, 59));
