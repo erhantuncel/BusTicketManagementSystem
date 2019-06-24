@@ -293,6 +293,7 @@ public class SampleDataServiceImpl implements SampleDataService {
 
 		// Tickets
 		int voyageNumber = 0;
+		List<Date> userSerhanLastOnlineDates = new ArrayList<>();
 		for (Voyage voyage : voyages) {
 
 			/*
@@ -369,8 +370,9 @@ public class SampleDataServiceImpl implements SampleDataService {
 					Ticket ticket = new Ticket();
 					if (voyageNumber % 10 == 0 && ticketForTestCustomer) {
 						boolean isReservation = specifyIsReservationStatus(voyage, today);
-						userSerhan.setTimeOfLastOnline(
-								generateCustomerLastOnlineTimeForTicket(departureTime.getTime(), isReservation));
+						Date generatedDateForLastOnline = generateCustomerLastOnlineTimeForTicket(departureTime.getTime(), isReservation);
+						userSerhan.setTimeOfLastOnline(generatedDateForLastOnline);
+						userSerhanLastOnlineDates.add(generatedDateForLastOnline);
 						customerService.update(userSerhan);
 						ticket = createTicketForTestCustomer(userSerhan, voyage, stops, seatCount, ticketList,
 								departureIndex, arrivalIndex, today, isReservation);
@@ -388,6 +390,10 @@ public class SampleDataServiceImpl implements SampleDataService {
 			updateIncomeByTotalTicketPrice(voyage, lastTicketRegisteredTime, totalTicketPrice);
 			voyageNumber++;
 		}
+		Collections.sort(userSerhanLastOnlineDates, Collections.reverseOrder());
+		Date lastOnlineForUserSerhan = userSerhanLastOnlineDates.get(0);
+		userSerhan.setTimeOfLastOnline(lastOnlineForUserSerhan);
+		customerService.update(userSerhan);
 		logger.info("Tickets are created.");
 
 		// Expenses
@@ -630,11 +636,21 @@ public class SampleDataServiceImpl implements SampleDataService {
 		GregorianCalendar gc = new GregorianCalendar();
 		gc.setTime(new Date());
 
-		int dayOfYear = randBetween(gc.get(Calendar.DAY_OF_YEAR) - start, gc.get(Calendar.DAY_OF_YEAR) - end);
+		int dayOfYear = randBetween(gc.get(Calendar.DAY_OF_YEAR) - start, end);
 		gc.set(Calendar.DAY_OF_YEAR, dayOfYear);
 
 		changeRandomHourAndMinute(gc);
 
+		return gc.getTime();
+	}
+	
+	private Date generateCustomerRegisteredTimeForTicket(int start, int end, GregorianCalendar lastOnline) {
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.setTime(generateCustomerRegisteredTime(start, end));
+		if(gc.get(Calendar.DAY_OF_YEAR) == lastOnline.get(Calendar.DAY_OF_YEAR)) {
+			gc.set(Calendar.HOUR_OF_DAY, randBetween(0, lastOnline.get(Calendar.HOUR_OF_DAY)-1));
+		}
+		
 		return gc.getTime();
 	}
 
@@ -766,8 +782,13 @@ public class SampleDataServiceImpl implements SampleDataService {
 		GregorianCalendar gc = new GregorianCalendar();
 		gc.setTime(departureTime);
 
-		int randomStartDayOfYear = gc.get(Calendar.DAY_OF_YEAR) - 7;
-		int randomEndDayOfYear = gc.get(Calendar.DAY_OF_YEAR);
+		int randomStartDayOfYear = now.get(Calendar.DAY_OF_YEAR) - 7;
+		int randomEndDayOfYear = 0;
+		if(calculateDifferenceBetweenDatesInDay(departureCalendar, now) < 0) {
+			randomEndDayOfYear = now.get(Calendar.DAY_OF_YEAR);
+		} else {
+			randomEndDayOfYear = gc.get(Calendar.DAY_OF_YEAR);	
+		}
 		if (isReservation == true) {
 			randomEndDayOfYear = randomEndDayOfYear - 4;
 		}
@@ -796,12 +817,19 @@ public class SampleDataServiceImpl implements SampleDataService {
 	}
 
 	private Date generateTicketRegisteredTimeForNotCustomer(Date departureTime) {
+		GregorianCalendar now = (GregorianCalendar) GregorianCalendar.getInstance();
+		
 		GregorianCalendar gc = new GregorianCalendar();
 		gc.setTime(departureTime);
 
-		gc.set(Calendar.DAY_OF_YEAR, gc.get(Calendar.DAY_OF_YEAR) - randBetween(1, 10));
-
-		changeRandomHourAndMinute(gc);
+		if(calculateDifferenceBetweenDatesInDay(gc, now) < 0) {
+			gc.set(Calendar.DAY_OF_YEAR, now.get(Calendar.DAY_OF_YEAR) - randBetween(1, 10));
+			gc.set(Calendar.HOUR_OF_DAY, randBetween(0, now.get(Calendar.HOUR_OF_DAY)));
+			gc.set(Calendar.MINUTE, randBetween(0, now.get(Calendar.MINUTE)));
+		} else {
+			gc.set(Calendar.DAY_OF_YEAR, gc.get(Calendar.DAY_OF_YEAR) - randBetween(1, 10));
+			changeRandomHourAndMinute(gc);
+		}
 
 		return gc.getTime();
 	}
@@ -910,10 +938,12 @@ public class SampleDataServiceImpl implements SampleDataService {
 //			customer.setPassword(passwordList.removeFirst());
 //				customer.setPassword("$2a$10$oZWHYFiGSZo/EtUL1S6MzuCRgb9CWDWyXBQZZdvzOBEyjAmzqhDou"); // obsProject
 			customer.setPassword("obsProject1"); // obsProject1
-			customer.setDateOfRegister(
-					generateCustomerRegisteredTime(150, dayOfYearForToday - dayOfYearForDepartureTime));
 			customer.setTimeOfLastOnline(
 					generateCustomerLastOnlineTimeForTicket(departureTime.getTime(), ticket.getIsReservation()));
+			GregorianCalendar lastOnlineGC = new GregorianCalendar();
+			lastOnlineGC.setTime(customer.getTimeOfLastOnline());
+			customer.setDateOfRegister(
+					generateCustomerRegisteredTimeForTicket(150, lastOnlineGC.get(Calendar.DAY_OF_YEAR), lastOnlineGC));
 			customer.setEnabled(true);
 //				customerService.create(customer);
 			userRoleForCustomer.setUser(customer);
