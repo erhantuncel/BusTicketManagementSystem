@@ -398,7 +398,6 @@
 		$("#departureDate").html(departureTimeArr[0]);
 		$("#registerTime").html(data.ticket.registerTime);
 		$("#departureTime").html(departureTimeArr[1]);
-		$("#price").html(data.ticket.price);
 		$("#plateCode").html(data.ticket.voyage.vehicle.plateCode);
 		$("#price").html(data.ticket.price);
 		if(data.ticket.isReservation) {

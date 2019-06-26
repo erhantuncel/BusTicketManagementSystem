@@ -381,7 +381,9 @@ public class SampleDataServiceImpl implements SampleDataService {
 						ticket = createTicket(voyageNumber, voyage, stops, seatCount, totalTicketPrice,
 								dayOfYearForToday, departureTime, ticketList, departureIndex, arrivalIndex, today);
 					}
-					totalTicketPrice = totalTicketPrice.add(ticket.getPrice());
+					if(!ticket.getIsReservation()) {						
+						totalTicketPrice = totalTicketPrice.add(ticket.getPrice());
+					}
 					lastTicketRegisteredTime = ticket.getRegisterTime();
 					extraPassengerCountTemp++;
 				}
@@ -478,7 +480,8 @@ public class SampleDataServiceImpl implements SampleDataService {
 		ticket.setArrival(stops[arrivalIndex].getCity());
 		ticket.setIsReservation(isReservation);
 		ticket.setSeatNumber(seatNumber);
-		BigDecimal ticketPrice = getTicketPrice(ticket.getDeparture(), ticket.getArrival(), isReservation);
+//		BigDecimal ticketPrice = getTicketPrice(ticket.getDeparture(), ticket.getArrival(), isReservation);
+		BigDecimal ticketPrice = ticketService.calculateTicketPriceByDepartureAndArrival(ticket.getDeparture(), ticket.getArrival());
 		ticket.setPrice(ticketPrice);
 		ticket.setVoyage(voyage);
 		GregorianCalendar gc = new GregorianCalendar();
@@ -512,7 +515,8 @@ public class SampleDataServiceImpl implements SampleDataService {
 		ticket.setArrival(arrival);
 		ticket.setIsReservation(isReservation);
 		ticket.setSeatNumber(seatNumber);
-		BigDecimal ticketPrice = getTicketPrice(ticket.getDeparture(), ticket.getArrival(), isReservation);
+//		BigDecimal ticketPrice = getTicketPrice(ticket.getDeparture(), ticket.getArrival(), isReservation);
+		BigDecimal ticketPrice = ticketService.calculateTicketPriceByDepartureAndArrival(ticket.getDeparture(), ticket.getArrival());
 		ticket.setPrice(ticketPrice);
 		ticket.setVoyage(voyage);
 		ticket.setDepartureTime(stopService.getStopTimeByVoyageAndStopcity(voyage, ticket.getDeparture()));
