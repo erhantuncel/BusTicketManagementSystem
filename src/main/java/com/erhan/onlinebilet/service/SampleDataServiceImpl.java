@@ -412,56 +412,61 @@ public class SampleDataServiceImpl implements SampleDataService {
 		int penaltyPrice = 0;
 		List<Voyage> voyageList = voyageService.findAll();
 		for (Voyage voyage : voyageList) {
-			switch (voyage.getRoute().getRouteName()) {
-			case "Ankara-Kocaeli":
-				fuelPrice = randBetween(403 - 40, 403 + 40);
-				terminalPrice = randBetween(45 - 5, 45 + 5);
-				snackPrice = randBetween(183 - 20, 183 + 20);
-				maintenancePrice = randBetween(0, 200);
-				penaltyPrice = randBetween(0, 250);
-			case "Ankara-Düzce":
-				fuelPrice = randBetween(275 - 40, 275 + 40);
-				terminalPrice = randBetween(28 - 5, 28 + 5);
-				snackPrice = randBetween(97 - 20, 97 + 20);
-				maintenancePrice = randBetween(0, 100);
-				penaltyPrice = randBetween(0, 200);
-			case "İstanbul-İzmir":
-				fuelPrice = randBetween(555 - 40, 555 + 40);
-				terminalPrice = randBetween(52 - 5, 52 + 5);
-				snackPrice = randBetween(183 - 20, 183 + 20);
-				maintenancePrice = randBetween(0, 400);
-				penaltyPrice = randBetween(0, 350);
-			case "Ankara-Antalya":
-				fuelPrice = randBetween(603 - 40, 603 + 40);
-				terminalPrice = randBetween(44 - 5, 44 + 5);
-				snackPrice = randBetween(183 - 20, 183 + 20);
-				maintenancePrice = randBetween(0, 600);
-				penaltyPrice = randBetween(0, 400);
-			}
-
-			GregorianCalendar expenseTime = new GregorianCalendar();
-			expenseTime.setTime(voyage.getDepartureTime());
-			expenseTime.set(Calendar.HOUR_OF_DAY, 18);
-			Expense fuelExpense = new Expense(new BigDecimal(fuelPrice), fuelExpenseType, expenseTime.getTime(),
-					voyage);
-			expenseService.create(fuelExpense);
-			Expense terminalExpense = new Expense(new BigDecimal(terminalPrice), terminalExpenseType,
-					expenseTime.getTime(), voyage);
-			expenseService.create(terminalExpense);
-			Expense snackExpense = new Expense(new BigDecimal(snackPrice), snackExpenseType, expenseTime.getTime(),
-					voyage);
-			expenseService.create(snackExpense);
-
-			int rnd = randBetween(0, 15);
-			if (rnd > 5 & rnd <= 10) {
-				Expense penaltyExpense = new Expense(new BigDecimal(penaltyPrice), penaltyExpenseType,
+			GregorianCalendar now = (GregorianCalendar) GregorianCalendar.getInstance();
+			GregorianCalendar departureCalendar = new GregorianCalendar();
+			departureCalendar.setTime(voyage.getDepartureTime());
+			if(calculateDifferenceBetweenDatesInSecond(now, departureCalendar) < 0) {				
+				switch (voyage.getRoute().getRouteName()) {
+				case "Ankara-Kocaeli":
+					fuelPrice = randBetween(403 - 40, 403 + 40);
+					terminalPrice = randBetween(45 - 5, 45 + 5);
+					snackPrice = randBetween(183 - 20, 183 + 20);
+					maintenancePrice = randBetween(0, 200);
+					penaltyPrice = randBetween(0, 250);
+				case "Ankara-Düzce":
+					fuelPrice = randBetween(275 - 40, 275 + 40);
+					terminalPrice = randBetween(28 - 5, 28 + 5);
+					snackPrice = randBetween(97 - 20, 97 + 20);
+					maintenancePrice = randBetween(0, 100);
+					penaltyPrice = randBetween(0, 200);
+				case "İstanbul-İzmir":
+					fuelPrice = randBetween(555 - 40, 555 + 40);
+					terminalPrice = randBetween(52 - 5, 52 + 5);
+					snackPrice = randBetween(183 - 20, 183 + 20);
+					maintenancePrice = randBetween(0, 400);
+					penaltyPrice = randBetween(0, 350);
+				case "Ankara-Antalya":
+					fuelPrice = randBetween(603 - 40, 603 + 40);
+					terminalPrice = randBetween(44 - 5, 44 + 5);
+					snackPrice = randBetween(183 - 20, 183 + 20);
+					maintenancePrice = randBetween(0, 600);
+					penaltyPrice = randBetween(0, 400);
+				}
+				
+				GregorianCalendar expenseTime = new GregorianCalendar();
+				expenseTime.setTime(voyage.getDepartureTime());
+				expenseTime.set(Calendar.HOUR_OF_DAY, 18);
+				Expense fuelExpense = new Expense(new BigDecimal(fuelPrice), fuelExpenseType, expenseTime.getTime(),
+						voyage);
+				expenseService.create(fuelExpense);
+				Expense terminalExpense = new Expense(new BigDecimal(terminalPrice), terminalExpenseType,
 						expenseTime.getTime(), voyage);
-				expenseService.create(penaltyExpense);
-			} else if (rnd > 10) {
-				Expense maintenanceExpense = new Expense(new BigDecimal(maintenancePrice), maintenanceExpenseType,
-						expenseTime.getTime(), voyage);
-				expenseService.create(maintenanceExpense);
-			}
+				expenseService.create(terminalExpense);
+				Expense snackExpense = new Expense(new BigDecimal(snackPrice), snackExpenseType, expenseTime.getTime(),
+						voyage);
+				expenseService.create(snackExpense);
+				
+				int rnd = randBetween(0, 15);
+				if (rnd > 5 & rnd <= 10) {
+					Expense penaltyExpense = new Expense(new BigDecimal(penaltyPrice), penaltyExpenseType,
+							expenseTime.getTime(), voyage);
+					expenseService.create(penaltyExpense);
+				} else if (rnd > 10) {
+					Expense maintenanceExpense = new Expense(new BigDecimal(maintenancePrice), maintenanceExpenseType,
+							expenseTime.getTime(), voyage);
+					expenseService.create(maintenanceExpense);
+				}
+			}			
 		}
 		logger.info("Expenses are created.");
 	}
@@ -907,14 +912,6 @@ public class SampleDataServiceImpl implements SampleDataService {
 		return seatNumberList;
 	}
 
-	private BigDecimal getTicketPrice(City departure, City arrival, boolean isReservation) {
-		BigDecimal ticketPrice = new BigDecimal(0);
-		if (!isReservation) {
-			ticketPrice = ticketService.calculateTicketPriceByDepartureAndArrival(departure, arrival);
-		}
-		return ticketPrice;
-	}
-
 	@SuppressWarnings("unused")
 	private void populateTicketWithCustomerAndPassengerInfo(Ticket ticket, int voyageNumber,
 			GregorianCalendar departureTime, int dayOfYearForToday) {
@@ -1023,5 +1020,11 @@ public class SampleDataServiceImpl implements SampleDataService {
 
 		long diffInMilliSeconds = endDate.getTimeInMillis() - startDate.getTimeInMillis();
 		return diffInMilliSeconds / (24 * 60 * 60 * 1000);
+	}
+	
+	private static long calculateDifferenceBetweenDatesInSecond(GregorianCalendar startDate, GregorianCalendar endDate) {
+
+		long diffInMilliSeconds = endDate.getTimeInMillis() - startDate.getTimeInMillis();
+		return diffInMilliSeconds / 1000;
 	}
 }
