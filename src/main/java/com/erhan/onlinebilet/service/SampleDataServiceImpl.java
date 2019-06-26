@@ -423,26 +423,29 @@ public class SampleDataServiceImpl implements SampleDataService {
 					snackPrice = randBetween(183 - 20, 183 + 20);
 					maintenancePrice = randBetween(0, 200);
 					penaltyPrice = randBetween(0, 250);
+					break;
 				case "Ankara-Düzce":
 					fuelPrice = randBetween(275 - 40, 275 + 40);
 					terminalPrice = randBetween(28 - 5, 28 + 5);
 					snackPrice = randBetween(97 - 20, 97 + 20);
 					maintenancePrice = randBetween(0, 100);
 					penaltyPrice = randBetween(0, 200);
+					break;
 				case "İstanbul-İzmir":
 					fuelPrice = randBetween(555 - 40, 555 + 40);
 					terminalPrice = randBetween(52 - 5, 52 + 5);
 					snackPrice = randBetween(183 - 20, 183 + 20);
 					maintenancePrice = randBetween(0, 400);
 					penaltyPrice = randBetween(0, 350);
+					break;
 				case "Ankara-Antalya":
 					fuelPrice = randBetween(603 - 40, 603 + 40);
 					terminalPrice = randBetween(44 - 5, 44 + 5);
 					snackPrice = randBetween(183 - 20, 183 + 20);
 					maintenancePrice = randBetween(0, 600);
 					penaltyPrice = randBetween(0, 400);
+					break;
 				}
-				
 				GregorianCalendar expenseTime = new GregorianCalendar();
 				expenseTime.setTime(voyage.getDepartureTime());
 				expenseTime.set(Calendar.HOUR_OF_DAY, 18);
