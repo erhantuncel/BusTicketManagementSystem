@@ -96,11 +96,7 @@
 								<tr>
 									<th>Gider:</th>
 									<td>
-										<c:set var="expenseTotal" value="${0}" /> 
-										<c:forEach items="${voyage.expenseList}" var="expense">
-											<c:set var="expenseTotal" value="${expenseTotal + expense.price}" />
-										</c:forEach> 
-										<fmt:formatNumber value="${expenseTotal}" type="number" 
+										<fmt:formatNumber value="${totalExpense}" type="number" 
 											maxFractionDigits="2" minFractionDigits="2" var="expense" />
 										&#8378;${expense}
 									</td>
@@ -108,7 +104,7 @@
 								<tr>
 									<th>Kar / Zarar:</th>
 									<td>
-										<c:set var="difference" value="${incomeTotal - expenseTotal}" /> 
+										<c:set var="difference" value="${incomeTotal - totalExpense}" /> 
 										<c:choose>
 											<c:when test="${difference > 0}">
 												<span class="text-green">&#8378;${difference}</span>

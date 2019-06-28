@@ -2,7 +2,9 @@ package com.erhan.onlinebilet.model;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -69,7 +71,7 @@ public class Voyage implements Comparable<Voyage> {
 	@Cascade(CascadeType.ALL)
 	@Column(nullable = true)
 	@JsonBackReference
-	private List<Expense> expenseList = new ArrayList<Expense>(0);
+	private Set<Expense> expenseList = new HashSet<>();
 	
 	@OneToMany(mappedBy="voyage")
 	@Cascade(CascadeType.ALL)
@@ -127,14 +129,14 @@ public class Voyage implements Comparable<Voyage> {
 		this.registerTime = registerTime;
 	}
 
-	public List<Expense> getExpenseList() {
+	public Set<Expense> getExpenseList() {
 		return expenseList;
 	}
-
-	public void setExpenseList(List<Expense> expenseList) {
+	
+	public void setExpenseList(Set<Expense> expenseList) {
 		this.expenseList = expenseList;
 	}
-
+	
 	public List<Ticket> getTicketList() {
 		return ticketList;
 	}

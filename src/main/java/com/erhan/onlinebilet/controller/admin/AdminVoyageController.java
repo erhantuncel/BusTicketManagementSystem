@@ -1,6 +1,7 @@
 package com.erhan.onlinebilet.controller.admin;
 
 import java.beans.PropertyEditorSupport;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.erhan.onlinebilet.model.Expense;
 import com.erhan.onlinebilet.model.Income;
 import com.erhan.onlinebilet.model.Route;
 import com.erhan.onlinebilet.model.Ticket;
@@ -130,6 +132,11 @@ public class AdminVoyageController {
 		if(income != null) {			
 			model.addObject("incomeTotal", income.getPrice());
 		}
+		BigDecimal totalExpense = BigDecimal.ZERO;
+		for(Expense expense : voyage.getExpenseList()) {
+			totalExpense = totalExpense.add(expense.getPrice());
+		}
+		model.addObject("totalExpense", totalExpense);
 		List<Ticket> ticketList = ticketService.findByVoyage(voyage);
 		Set<Ticket> ticketSet = new LinkedHashSet<Ticket>(ticketList);
 		model.addObject("ticketSet", ticketSet);
