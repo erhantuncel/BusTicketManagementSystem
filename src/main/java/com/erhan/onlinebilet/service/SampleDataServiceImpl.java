@@ -446,9 +446,20 @@ public class SampleDataServiceImpl implements SampleDataService {
 					penaltyPrice = randBetween(0, 400);
 					break;
 				}
+				String[] totalDistanceAndDurationForRoute = routeService.getTotalDistanceAndDurationForRoute(voyage.getRoute(), 90, 15, 15);
+				String durationString = totalDistanceAndDurationForRoute[1];
+				String[] splitHour = durationString.split(" sa. ");
+				String[] splitMinute = splitHour[1].split(" dk.");
+				String hour = splitHour[0];
+				String minute = splitMinute[0];
+				
 				GregorianCalendar expenseTime = new GregorianCalendar();
 				expenseTime.setTime(voyage.getDepartureTime());
-				expenseTime.set(Calendar.HOUR_OF_DAY, 18);
+				expenseTime.add(Calendar.HOUR_OF_DAY, Integer.valueOf(hour));
+				expenseTime.add(Calendar.MINUTE, Integer.valueOf(minute));
+				expenseTime.add(Calendar.HOUR_OF_DAY, 2);
+				expenseTime.set(Calendar.MINUTE, randBetween(0, 59));
+				expenseTime.set(Calendar.SECOND, randBetween(0, 59));
 				Expense fuelExpense = new Expense(new BigDecimal(fuelPrice), fuelExpenseType, expenseTime.getTime(),
 						voyage);
 				expenseService.create(fuelExpense);
