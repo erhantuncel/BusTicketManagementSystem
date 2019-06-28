@@ -7,6 +7,8 @@
 
 <jsp:include page="../fragments/mainSideBar.jsp" />
 
+<jsp:useBean id="now" class="java.util.Date" />
+
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
 	<!-- Content Header (Page header) -->
@@ -24,9 +26,11 @@
 					<div class="box-header">
 						<h3 class="box-title">Bilgiler</h3>
 						<div class="box-tools" style="font-size: medium;">
-							<a class="btn btn-xs btn-success btn-flat" title="Gider Ekle" href="<c:url value="/admin/giderEkle/sefer/${voyage.id}"/>">
-								<i class="fa fa-plus"></i>&nbsp;&nbsp;Gider Ekle
-							</a>					
+							<c:if test="${now > arrivalTime}">
+								<a class="btn btn-xs btn-success btn-flat" title="Gider Ekle" href="<c:url value="/admin/giderEkle/sefer/${voyage.id}"/>">
+									<i class="fa fa-plus"></i>&nbsp;&nbsp;Gider Ekle
+								</a>					
+							</c:if>
 						</div>
 					</div>
 					<!-- /.box-header -->

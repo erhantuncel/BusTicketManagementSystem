@@ -143,6 +143,8 @@ public class AdminVoyageController {
 		Ticket[][] ticketArray = ticketService.getTicketArray(ticketSet);
 		model.addObject("ticketArray", ticketArray);
 		
+		GregorianCalendar arrivalTime = getArrivalTime(voyage.getRoute(), voyage.getDepartureTime());
+		model.addObject("arrivalTime", arrivalTime.getTime());
 		
 		model.setViewName("admin/seferDetay");
 		return model;
@@ -262,5 +264,19 @@ public class AdminVoyageController {
 			routeMap.put(route.getId().toString(), route.getRouteName());
 		}
 		model.addObject("routeMap", routeMap);
+	}
+	
+	private GregorianCalendar getArrivalTime(Route route, Date departureTime) {
+		String[] distanceAndDurationForRoute = routeService.getTotalDistanceAndDurationForRoute(route, 90, 15, 15);
+		String durationStr = distanceAndDurationForRoute[1];
+		String[] splitHour = durationStr.split(" sa. ");
+		String[] splitMinute = splitHour[1].split(" dk.");
+		String hour = splitHour[0];
+		String minute = splitMinute[0];
+		GregorianCalendar arrivalTime = new GregorianCalendar();
+		arrivalTime.setTime(departureTime);
+		arrivalTime.add(Calendar.HOUR_OF_DAY, Integer.valueOf(hour));
+		arrivalTime.add(Calendar.MINUTE, Integer.valueOf(minute));
+		return arrivalTime;
 	}
 }
