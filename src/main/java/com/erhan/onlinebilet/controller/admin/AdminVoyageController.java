@@ -168,13 +168,22 @@ public class AdminVoyageController {
 	}
 	
 	@RequestMapping(value = "/admin/seferler", method=RequestMethod.POST)
-	public ModelAndView voyagesForDate(@RequestParam(value = "date") @DateTimeFormat(pattern = "dd.MM.yyyy") Date date) {
+	public ModelAndView voyagesForDate(@RequestParam(value = "date") @DateTimeFormat(pattern = "dd.MM.yyyy") Date date,
+			RedirectAttributes redir) {
 
+		String resultMessage = null;
 		ModelAndView model = new ModelAndView();
-		model.addObject("title", "Online Bilet Sistemi | Yönetim Paneli - Seferler");
-		List<Voyage> voyageListForDate = voyageService.findAllByDate(date);
-		model.addObject("voyageList", voyageListForDate);
-		model.setViewName("admin/seferler");
+		if(date != null) {
+			model.addObject("title", "Online Bilet Sistemi | Yönetim Paneli - Seferler");
+			List<Voyage> voyageListForDate = voyageService.findAllByDate(date);
+			model.addObject("voyageList", voyageListForDate);
+			model.setViewName("admin/seferler");			
+		} else {
+			resultMessage = "Tarih seçmelisiniz.";
+			redir.addFlashAttribute("warningType", "danger");
+			redir.addFlashAttribute("msg", resultMessage);
+			model.setViewName("redirect:" + "/admin/seferler");
+		}
 		return model;
 	}
 	

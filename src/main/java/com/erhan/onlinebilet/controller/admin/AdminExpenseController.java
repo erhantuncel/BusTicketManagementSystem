@@ -95,11 +95,20 @@ public class AdminExpenseController {
 	}
 	
 	@RequestMapping(value="/admin/giderler", method=RequestMethod.POST)
-	public ModelAndView expensesForDate(@RequestParam(value="date") @DateTimeFormat(pattern = "dd.MM.yyyy") Date date, ModelAndView model) {
-		model.addObject("title", "Online Bilet Sistemi | Yönetim Paneli - Giderler");
-		List<Expense> expenseList = expenseService.findAllByDate(date);
-		model.addObject("expenseList", expenseList);
-		model.setViewName("admin/giderler");
+	public ModelAndView expensesForDate(@RequestParam(value="date") @DateTimeFormat(pattern = "dd.MM.yyyy") Date date, ModelAndView model, 
+			RedirectAttributes redir) {
+		String resultMessage = null;
+		if(date != null) {
+			model.addObject("title", "Online Bilet Sistemi | Yönetim Paneli - Giderler");
+			List<Expense> expenseList = expenseService.findAllByDate(date);
+			model.addObject("expenseList", expenseList);
+			model.setViewName("admin/giderler");			
+		} else {
+			resultMessage = "Tarih seçmelisiniz.";
+			redir.addFlashAttribute("warningType", "danger");
+			redir.addFlashAttribute("msg", resultMessage);
+			model.setViewName("redirect:" + "/admin/giderler");
+		}
 		return model;
 	}
 	
