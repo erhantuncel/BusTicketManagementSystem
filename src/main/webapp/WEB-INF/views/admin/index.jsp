@@ -85,7 +85,7 @@
 						<!-- /.box-tools -->
 					</div>
 					<!-- /.box-header -->
-					<div class="box-body no-padding">
+					<div class="box-body no-padding" style="height: 133px;">
 						<table class="table table-bordered table-condensed">
 							<tr>
 								<th style="width: 13%;">Sefer No</th>
