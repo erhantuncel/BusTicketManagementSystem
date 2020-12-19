@@ -17,6 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -558,10 +559,11 @@ public class SampleDataServiceImpl implements SampleDataService {
 	private List<String> populateNames(String fileName) {
 		List<String> name = new ArrayList<String>();
 
-		ClassLoader classLoader = getClass().getClassLoader();
-		File file = new File(classLoader.getResource(fileName).getFile());
+		// ClassLoader classLoader = getClass().getClassLoader();
+		// File file = new File(classLoader.getResource(fileName).getFile());
 
 		try {
+			File file = new ClassPathResource(fileName).getFile();
 			Scanner scanner = new Scanner(file);
 			while (scanner.hasNextLine()) {
 				String line = scanner.nextLine();
@@ -713,10 +715,11 @@ public class SampleDataServiceImpl implements SampleDataService {
 
 		LinkedList<String> listOfData = new LinkedList<String>();
 
-		ClassLoader classLoader = getClass().getClassLoader();
-		File file = new File(classLoader.getResource(fileName).getFile());
+		// ClassLoader classLoader = getClass().getClassLoader();
+		// File file = new File(classLoader.getResource(fileName).getFile());
 
 		try {
+			File file = new ClassPathResource(fileName).getFile();
 			Scanner scanner = new Scanner(file);
 			while (scanner.hasNextLine()) {
 				String line = scanner.nextLine();
