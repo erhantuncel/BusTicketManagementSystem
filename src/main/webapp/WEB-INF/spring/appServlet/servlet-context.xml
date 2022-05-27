@@ -25,10 +25,10 @@
 	
 	<context:annotation-config />
 	
-	<context:component-scan base-package="com.erhan.onlinebilet" />
-	<context:component-scan base-package="com.erhan.onlinebilet.model" />
-	<context:component-scan base-package="com.erhan.onlinebilet.dao" />
-	<context:component-scan base-package="com.erhan.onlinebilet.service" />
+	<context:component-scan base-package="com.erhan.onlineticket" />
+	<context:component-scan base-package="com.erhan.onlineticket.model" />
+	<context:component-scan base-package="com.erhan.onlineticket.dao" />
+	<context:component-scan base-package="com.erhan.onlineticket.service" />
 	
 	<tx:annotation-driven transaction-manager="transactionManager"/>
 	

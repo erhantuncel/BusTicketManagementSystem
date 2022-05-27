@@ -20,10 +20,10 @@
 		</Logger>
 
 		<!-- Log SQL statements -->
-		<Logger name="org.hibernate.SQL" level="debug"
-			additivity="false">
-			<AppenderRef ref="File" />
-		</Logger>
+<!-- 		<Logger name="org.hibernate.SQL" level="debug" -->
+<!-- 			additivity="false"> -->
+<!-- 			<AppenderRef ref="File" /> -->
+<!-- 		</Logger> -->
 
 		<Root level="info">
 			<AppenderRef ref="Console" />

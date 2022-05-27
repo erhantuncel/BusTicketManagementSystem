@@ -61,16 +61,16 @@
 		</beans:constructor-arg>
 	</beans:bean>
 	
-	<context:component-scan base-package="com.erhan.onlinebilet" />
+	<context:component-scan base-package="com.erhan.onlineticket" />
 	<!-- 
 	<context:component-scan base-package="com.erhan.onlinebilet.controller" />
 	<context:component-scan base-package="com.erhan.onlinebilet.controller.admin" />
 	 -->
-	<context:component-scan base-package="com.erhan.onlinebilet.model" />
-	<context:component-scan base-package="com.erhan.onlinebilet.dao" />
-	<context:component-scan base-package="com.erhan.onlinebilet.service" />
+	<context:component-scan base-package="com.erhan.onlineticket.model" />
+	<context:component-scan base-package="com.erhan.onlineticket.dao" />
+	<context:component-scan base-package="com.erhan.onlineticket.service" />
 
-	<beans:bean id="myUserDetailsService" class="com.erhan.onlinebilet.service.MyUserDetailsService" />
+	<beans:bean id="myUserDetailsService" class="com.erhan.onlineticket.service.MyUserDetailsService" />
 	<beans:bean id="myBcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
 	
 </beans:beans>
