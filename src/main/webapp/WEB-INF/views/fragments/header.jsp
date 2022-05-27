@@ -126,8 +126,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 				<c:when test="${fn:contains(reqURL, 'admin')}">
 					<!-- Logo -->
 					<a href="<c:url value="/admin"/>" class="logo"> <!-- mini logo for sidebar mini 50x50 pixels -->
-						<span class="logo-mini"><b>OBS</b></span> <!-- logo for regular state and mobile devices -->
-						<span class="logo-lg"><b>OBS</b> Yönetim Paneli</span>
+						<span class="logo-mini"><b>OBYS</b></span> <!-- logo for regular state and mobile devices -->
+						<span class="logo-lg"><b>OBYS</b> Yönetim Paneli</span>
 					</a>
 
 					<!-- Header Navbar -->
@@ -151,7 +151,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 					<nav class="navbar navbar-static-top">
 						<div class="container">
 							<div class="navbar-header">
-								<a href="<c:url value="/musteri"/>" class="navbar-brand"><b>Online Bilet Sistemi</b></a>
+								<a href="<c:url value="/musteri"/>" class="navbar-brand"><b>Otobüs Bilet Yönetim Sistemi</b></a>
 								<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
 									<i class="fa fa-bars"></i>
 								</button>

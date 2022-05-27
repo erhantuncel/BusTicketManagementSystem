@@ -22,7 +22,7 @@
 		<property name="dataSource" ref="dataSource"/>
 		<property name="packagesToScan">
 			<list>
-				<value>com.erhan.onlineticket</value>
+				<value>com.erhan.busticket</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">

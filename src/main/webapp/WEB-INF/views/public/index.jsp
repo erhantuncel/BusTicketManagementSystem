@@ -23,7 +23,7 @@
 							<div class="col-sm-12">
 								<div class="box box-primary box-solid">
 									<div class="box-header text-center" style="font-size: 18pt;">
-										<strong>ONLINE BÝLET SÝSTEMÝ</strong>
+										<strong>OTOBÜS BÝLET YÖNETÝM SÝSTEMÝ</strong>
 									</div>
 									<div class="box-body table-responsive">
 										<div class="col-sm-6" style="border-right: thin dotted silver;">
