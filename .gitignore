@@ -9,6 +9,18 @@ target/*
 .classpath
 .project
 
+# IntelliJ IDEA files
+.idea
+*/out/*
+out/*
+*.iml
+
+# Docker
+/docker/
+
+# Only Local
+zOnlyLocal
+
 # Log file
 *.log
 
@@ -40,3 +52,4 @@ hs_err_pid*
 
 # Maven Files
 .factorypath
+/target/

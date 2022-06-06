@@ -1,0 +1,26 @@
+version: '3.9'
+services:
+  mysql:
+    restart: always
+    image: mysql:8.0.12
+    container_name: mysql-8-0-12
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: testpass
+      MYSQL_DATABASE: obsdb
+    security_opt:
+      - seccomp:unconfined
+    volumes:
+      - ./docker/mysql-volume:/var/lib/mysql
+  tomcat:
+    restart: always
+    depends_on:
+      - mysql
+    container_name: tomcat-8-5-41
+    build: .
+    command: sh -c './wait-for mysql:3306 -- catalina.sh run'
+    ports:
+      - 8080:8080
+volumes:
+  mysql-volume:
